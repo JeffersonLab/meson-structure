@@ -15,7 +15,7 @@ This page, for convenience, has full tree structure. You can explore it yourself
 
 The next is printout of uproot-browser
 ```
-📁 k_lambda_18x275_5000evt_001.edm4eic.root
+📁 k_lambda_10x100_5000evt_010.edm4eic.root
 ┣━━ 🌴 events (5000)
 ┃   ┣━━ 🌿 B0ECalClusterAssociations vector<edm4eic::MCRecoClusterParticleAssociationData>
 ┃   ┃   ┣━━ 🍃 B0ECalClusterAssociations.recID uint32_t[]
@@ -78,8 +78,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 B0ECalRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 B0ECalRecHits.timeError float[]
 ┃   ┣━━ 🌿 B0TrackerHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 B0TrackerHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 B0TrackerHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 B0TrackerHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 B0TrackerHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 B0TrackerHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 B0TrackerHits.momentum.z float[]
@@ -108,8 +108,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 B0TrackerRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 B0TrackerRecHits.timeError float[]
 ┃   ┣━━ 🌿 BackwardMPGDEndcapHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapHits.momentum.z float[]
@@ -137,6 +137,9 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapRecHits.positionError.zz float[]
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 BackwardMPGDEndcapRecHits.timeError float[]
+┃   ┣━━ 🌿 BarrelClusters_objIdx vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 BarrelClusters_objIdx.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 BarrelClusters_objIdx.index int32_t[]
 ┃   ┣━━ 🌿 CalorimeterTrackProjections vector<edm4eic::TrackSegmentData>
 ┃   ┃   ┣━━ 🍃 CalorimeterTrackProjections.length float[]
 ┃   ┃   ┣━━ 🍃 CalorimeterTrackProjections.lengthError float[]
@@ -1253,10 +1256,12 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 EventHeader.eventNumber int32_t[]
 ┃   ┃   ┣━━ 🍃 EventHeader.runNumber int32_t[]
 ┃   ┃   ┣━━ 🍃 EventHeader.timeStamp uint64_t[]
-┃   ┃   ┗━━ 🍃 EventHeader.weight float[]
+┃   ┃   ┣━━ 🍃 EventHeader.weight double[]
+┃   ┃   ┣━━ 🍃 EventHeader.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 EventHeader.weights_end uint32_t[]
 ┃   ┣━━ 🌿 ForwardMPGDEndcapHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 ForwardMPGDEndcapHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 ForwardMPGDEndcapHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 ForwardMPGDEndcapHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 ForwardMPGDEndcapHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 ForwardMPGDEndcapHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 ForwardMPGDEndcapHits.momentum.z float[]
@@ -1317,6 +1322,10 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 ForwardOffMRecParticles.type int32_t[]
 ┃   ┣━━ 🌿 ForwardOffMTrackerRawHitAssociations vector<edm4eic::MCRecoTrackerHitAssociationData>
 ┃   ┃   ┗━━ 🍃 ForwardOffMTrackerRawHitAssociations.weight float[]
+┃   ┣━━ 🌿 ForwardOffMTrackerRawHits vector<edm4eic::RawTrackerHitData>
+┃   ┃   ┣━━ 🍃 ForwardOffMTrackerRawHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 ForwardOffMTrackerRawHits.charge int32_t[]
+┃   ┃   ┗━━ 🍃 ForwardOffMTrackerRawHits.timeStamp int32_t[]
 ┃   ┣━━ 🌿 ForwardOffMTrackerRecHits vector<edm4eic::TrackerHitData>
 ┃   ┃   ┣━━ 🍃 ForwardOffMTrackerRecHits.cellID uint64_t[]
 ┃   ┃   ┣━━ 🍃 ForwardOffMTrackerRecHits.edep float[]
@@ -1331,6 +1340,10 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 ForwardOffMTrackerRecHits.timeError float[]
 ┃   ┣━━ 🌿 ForwardRomanPotRawHitAssociations vector<edm4eic::MCRecoTrackerHitAssociationData>
 ┃   ┃   ┗━━ 🍃 ForwardRomanPotRawHitAssociations.weight float[]
+┃   ┣━━ 🌿 ForwardRomanPotRawHits vector<edm4eic::RawTrackerHitData>
+┃   ┃   ┣━━ 🍃 ForwardRomanPotRawHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 ForwardRomanPotRawHits.charge int32_t[]
+┃   ┃   ┗━━ 🍃 ForwardRomanPotRawHits.timeStamp int32_t[]
 ┃   ┣━━ 🌿 ForwardRomanPotRecHits vector<edm4eic::TrackerHitData>
 ┃   ┃   ┣━━ 🍃 ForwardRomanPotRecHits.cellID uint64_t[]
 ┃   ┃   ┣━━ 🍃 ForwardRomanPotRecHits.edep float[]
@@ -2236,12 +2249,12 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 MCParticles.endpoint.z double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.generatorStatus int32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.mass double[]
-┃   ┃   ┣━━ 🍃 MCParticles.momentum.x float[]
-┃   ┃   ┣━━ 🍃 MCParticles.momentum.y float[]
-┃   ┃   ┣━━ 🍃 MCParticles.momentum.z float[]
-┃   ┃   ┣━━ 🍃 MCParticles.momentumAtEndpoint.x float[]
-┃   ┃   ┣━━ 🍃 MCParticles.momentumAtEndpoint.y float[]
-┃   ┃   ┣━━ 🍃 MCParticles.momentumAtEndpoint.z float[]
+┃   ┃   ┣━━ 🍃 MCParticles.momentum.x double[]
+┃   ┃   ┣━━ 🍃 MCParticles.momentum.y double[]
+┃   ┃   ┣━━ 🍃 MCParticles.momentum.z double[]
+┃   ┃   ┣━━ 🍃 MCParticles.momentumAtEndpoint.x double[]
+┃   ┃   ┣━━ 🍃 MCParticles.momentumAtEndpoint.y double[]
+┃   ┃   ┣━━ 🍃 MCParticles.momentumAtEndpoint.z double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.parents_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.parents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.simulatorStatus int32_t[]
@@ -2264,12 +2277,12 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.endpoint.z double[]
 ┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.generatorStatus int32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.mass double[]
-┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentum.x float[]
-┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentum.y float[]
-┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentum.z float[]
-┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentumAtEndpoint.x float[]
-┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentumAtEndpoint.y float[]
-┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentumAtEndpoint.z float[]
+┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentum.x double[]
+┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentum.y double[]
+┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentum.z double[]
+┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentumAtEndpoint.x double[]
+┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentumAtEndpoint.y double[]
+┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.momentumAtEndpoint.z double[]
 ┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.parents_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.parents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticlesHeadOnFrameNoBeamFX.simulatorStatus int32_t[]
@@ -2290,8 +2303,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 MCScatteredProtons_objIdx.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 MCScatteredProtons_objIdx.index int32_t[]
 ┃   ┣━━ 🌿 MPGDBarrelHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 MPGDBarrelHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 MPGDBarrelHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 MPGDBarrelHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 MPGDBarrelHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 MPGDBarrelHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 MPGDBarrelHits.momentum.z float[]
@@ -2320,8 +2333,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 MPGDBarrelRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 MPGDBarrelRecHits.timeError float[]
 ┃   ┣━━ 🌿 OuterMPGDBarrelHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.momentum.z float[]
@@ -2500,6 +2513,13 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedParticles.tracks_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedParticles.tracks_end uint32_t[]
 ┃   ┃   ┗━━ 🍃 ReconstructedChargedParticles.type int32_t[]
+┃   ┣━━ 🌿 ReconstructedChargedRealPIDParticleIDs vector<edm4hep::ParticleIDData>
+┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticleIDs.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticleIDs.algorithmType int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticleIDs.likelihood float[]
+┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticleIDs.parameters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticleIDs.parameters_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedChargedRealPIDParticleIDs.type int32_t[]
 ┃   ┣━━ 🌿 ReconstructedChargedRealPIDParticles vector<edm4eic::ReconstructedParticleData>
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticles.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticles.charge float[]
@@ -2735,8 +2755,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 ScatteredElectronsTruth_objIdx.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 ScatteredElectronsTruth_objIdx.index int32_t[]
 ┃   ┣━━ 🌿 SiBarrelHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 SiBarrelHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 SiBarrelHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 SiBarrelHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 SiBarrelHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 SiBarrelHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 SiBarrelHits.momentum.z float[]
@@ -2805,8 +2825,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 TOFBarrelADCTDC.charge int32_t[]
 ┃   ┃   ┗━━ 🍃 TOFBarrelADCTDC.timeStamp int32_t[]
 ┃   ┣━━ 🌿 TOFBarrelHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 TOFBarrelHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 TOFBarrelHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TOFBarrelHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 TOFBarrelHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 TOFBarrelHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 TOFBarrelHits.momentum.z float[]
@@ -2835,8 +2855,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 TOFBarrelRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 TOFBarrelRecHits.timeError float[]
 ┃   ┣━━ 🌿 TOFEndcapHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 TOFEndcapHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 TOFEndcapHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TOFEndcapHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 TOFEndcapHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 TOFEndcapHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 TOFEndcapHits.momentum.z float[]
@@ -2864,120 +2884,244 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 TOFEndcapRecHits.positionError.zz float[]
 ┃   ┃   ┣━━ 🍃 TOFEndcapRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 TOFEndcapRecHits.timeError float[]
-┃   ┣━━ 🌿 TaggerTrackerM1L0ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.rawHits_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerCombinedPulses vector<edm4eic::SimPulseData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.amplitude_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.amplitude_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.calorimeterHits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.calorimeterHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.integral float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.interval float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.position.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.position.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.position.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.pulses_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.pulses_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.time float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulses.trackerHits_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerCombinedPulses.trackerHits_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerCombinedPulsesWithNoise vector<edm4eic::SimPulseData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.amplitude_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.amplitude_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.calorimeterHits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.calorimeterHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.integral float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.interval float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.position.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.position.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.position.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.pulses_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.pulses_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.time float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.trackerHits_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerCombinedPulsesWithNoise.trackerHits_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerHitPulses vector<edm4eic::SimPulseData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.amplitude_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.amplitude_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.calorimeterHits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.calorimeterHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.integral float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.interval float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.position.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.position.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.position.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.pulses_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.pulses_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.time float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHitPulses.trackerHits_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerHitPulses.trackerHits_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerHits vector<edm4hep::SimTrackerHitData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.eDep float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.momentum.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.momentum.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.momentum.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.pathLength float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.position.x double[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.position.y double[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.position.z double[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerHits.quality int32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerHits.time float[]
+┃   ┣━━ 🌿 TaggerTrackerLocalTrackAssociations_objIdx vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 TaggerTrackerLocalTrackAssociations_objIdx.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerLocalTrackAssociations_objIdx.index int32_t[]
+┃   ┣━━ 🌿 TaggerTrackerLocalTracks_objIdx vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 TaggerTrackerLocalTracks_objIdx.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerLocalTracks_objIdx.index int32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM1L0ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM1L0ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM1L1ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.rawHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L0ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM1L0ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM1L1ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM1L1ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM1L2ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.rawHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L1ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM1L1ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM1L2ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM1L2ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM1L3ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.rawHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L2ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM1L2ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM1L3ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM1L3ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM1Tracks vector<edm4eic::TrackSegmentData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1Tracks.length float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1Tracks.lengthError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM1Tracks.points_begin uint32_t[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM1Tracks.points_end uint32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM2L0ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.rawHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1L3ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM1L3ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM1LocalTrackAssociations vector<edm4eic::MCRecoTrackParticleAssociationData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTrackAssociations.recID uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTrackAssociations.simID uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM1LocalTrackAssociations.weight float[]
+┃   ┣━━ 🌿 TaggerTrackerM1LocalTracks vector<edm4eic::TrackData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.charge float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.chi2 float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.measurements_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.measurements_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.momentum.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.momentum.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.momentum.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.ndf uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.pdg int32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.position.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.position.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.position.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.positionMomentumCovariance.covariance[21] float[][21]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.time float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.timeError float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM1LocalTracks.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM1LocalTracks.type int32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM2L0ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM2L0ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM2L1ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.rawHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L0ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM2L0ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM2L1ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM2L1ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM2L2ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.rawHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L1ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM2L1ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM2L2ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM2L2ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM2L3ClusterPositions vector<edm4hep::TrackerHitData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.covMatrix[6] float[][6]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.eDep float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.eDepError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.position.x double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.position.y double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.position.z double[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.quality int32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.rawHits_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.rawHits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L2ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM2L2ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM2L3ClusterPositions vector<edm4eic::Measurement2DData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.covariance.xx float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.covariance.xy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.covariance.xz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.covariance.yy float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.covariance.yz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.covariance.zz float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.hits_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.hits_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.loc.a float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.loc.b float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.surface uint64_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.time float[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM2L3ClusterPositions.type int32_t[]
-┃   ┣━━ 🌿 TaggerTrackerM2Tracks vector<edm4eic::TrackSegmentData>
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2Tracks.length float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2Tracks.lengthError float[]
-┃   ┃   ┣━━ 🍃 TaggerTrackerM2Tracks.points_begin uint32_t[]
-┃   ┃   ┗━━ 🍃 TaggerTrackerM2Tracks.points_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2L3ClusterPositions.weights_begin uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM2L3ClusterPositions.weights_end uint32_t[]
+┃   ┣━━ 🌿 TaggerTrackerM2LocalTrackAssociations vector<edm4eic::MCRecoTrackParticleAssociationData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTrackAssociations.recID uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTrackAssociations.simID uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM2LocalTrackAssociations.weight float[]
+┃   ┣━━ 🌿 TaggerTrackerM2LocalTracks vector<edm4eic::TrackData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.charge float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.chi2 float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.measurements_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.measurements_end uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.momentum.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.momentum.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.momentum.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.ndf uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.pdg int32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.position.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.position.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.position.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.positionMomentumCovariance.covariance[21] float[][21]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.time float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.timeError float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerM2LocalTracks.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerM2LocalTracks.type int32_t[]
 ┃   ┣━━ 🌿 TaggerTrackerProjectedTracks vector<edm4eic::TrackParametersData>
 ┃   ┃   ┣━━ 🍃 TaggerTrackerProjectedTracks.covariance.covariance[21] float[][21]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerProjectedTracks.loc.a float[]
@@ -3026,6 +3170,22 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 TaggerTrackerReconstructedParticles.tracks_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerReconstructedParticles.tracks_end uint32_t[]
 ┃   ┃   ┗━━ 🍃 TaggerTrackerReconstructedParticles.type int32_t[]
+┃   ┣━━ 🌿 TaggerTrackerSharedHits vector<edm4hep::SimTrackerHitData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.eDep float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.momentum.x float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.momentum.y float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.momentum.z float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.pathLength float[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.position.x double[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.position.y double[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.position.z double[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerSharedHits.quality int32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerSharedHits.time float[]
+┃   ┣━━ 🌿 TaggerTrackerTrackAssociations vector<edm4eic::MCRecoTrackParticleAssociationData>
+┃   ┃   ┣━━ 🍃 TaggerTrackerTrackAssociations.recID uint32_t[]
+┃   ┃   ┣━━ 🍃 TaggerTrackerTrackAssociations.simID uint32_t[]
+┃   ┃   ┗━━ 🍃 TaggerTrackerTrackAssociations.weight float[]
 ┃   ┣━━ 🌿 TaggerTrackerTrackParameters vector<edm4eic::TrackParametersData>
 ┃   ┃   ┣━━ 🍃 TaggerTrackerTrackParameters.covariance.covariance[21] float[][21]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerTrackParameters.loc.a float[]
@@ -3073,9 +3233,11 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 TaggerTrackerTrajectories.trackParameters_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 TaggerTrackerTrajectories.trackParameters_end uint32_t[]
 ┃   ┃   ┗━━ 🍃 TaggerTrackerTrajectories.type uint32_t[]
+┃   ┣━━ 🌿 TrackClusterMatches vector<edm4eic::TrackClusterMatchData>
+┃   ┃   ┗━━ 🍃 TrackClusterMatches.weight float[]
 ┃   ┣━━ 🌿 TrackerEndcapHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 TrackerEndcapHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 TrackerEndcapHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 TrackerEndcapHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 TrackerEndcapHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 TrackerEndcapHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 TrackerEndcapHits.momentum.z float[]
@@ -3086,8 +3248,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 TrackerEndcapHits.quality int32_t[]
 ┃   ┃   ┗━━ 🍃 TrackerEndcapHits.time float[]
 ┃   ┣━━ 🌿 VertexBarrelHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 VertexBarrelHits.EDep float[]
 ┃   ┃   ┣━━ 🍃 VertexBarrelHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 VertexBarrelHits.eDep float[]
 ┃   ┃   ┣━━ 🍃 VertexBarrelHits.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 VertexBarrelHits.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 VertexBarrelHits.momentum.z float[]
@@ -3124,9 +3286,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _B0ECalRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _B0ECalRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _B0ECalRecHits_rawHit.index int32_t[]
-┃   ┣━━ 🌿 _B0TrackerHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _B0TrackerHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _B0TrackerHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _B0TrackerHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _B0TrackerHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _B0TrackerHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _B0TrackerRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _B0TrackerRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _B0TrackerRawHitAssociations_rawHit.index int32_t[]
@@ -3136,9 +3298,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _B0TrackerRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _B0TrackerRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _B0TrackerRecHits_rawHit.index int32_t[]
-┃   ┣━━ 🌿 _BackwardMPGDEndcapHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _BackwardMPGDEndcapHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _BackwardMPGDEndcapHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _BackwardMPGDEndcapHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _BackwardMPGDEndcapHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _BackwardMPGDEndcapHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _BackwardMPGDEndcapRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _BackwardMPGDEndcapRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _BackwardMPGDEndcapRawHitAssociations_rawHit.index int32_t[]
@@ -3338,9 +3500,21 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 _CentralTrackerMeasurements_hits.index int32_t[]
 ┃   ┣━━ 🍃 _CentralTrackerMeasurements_weights std::vector<float>
 ┃   ┣━━ 🍃 _CombinedTOFParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _CombinedTOFParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _CombinedTOFParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _CombinedTOFParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🍃 _CombinedTOFTruthSeededParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _CombinedTOFTruthSeededParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _CombinedTOFTruthSeededParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _CombinedTOFTruthSeededParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🍃 _DIRCParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _DIRCParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _DIRCParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _DIRCParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🍃 _DIRCTruthSeededParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _DIRCTruthSeededParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _DIRCTruthSeededParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _DIRCTruthSeededParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🌿 _DRICHAerogelIrtCherenkovParticleID_chargedParticle vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _DRICHAerogelIrtCherenkovParticleID_chargedParticle.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _DRICHAerogelIrtCherenkovParticleID_chargedParticle.index int32_t[]
@@ -3434,6 +3608,9 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 _DRICHGasTracks_track.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _DRICHGasTracks_track.index int32_t[]
 ┃   ┣━━ 🍃 _DRICHParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _DRICHParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _DRICHParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _DRICHParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🌿 _DRICHRawHitsAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _DRICHRawHitsAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _DRICHRawHitsAssociations_rawHit.index int32_t[]
@@ -3441,6 +3618,9 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 _DRICHRawHitsAssociations_simHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _DRICHRawHitsAssociations_simHit.index int32_t[]
 ┃   ┣━━ 🍃 _DRICHTruthSeededParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _DRICHTruthSeededParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _DRICHTruthSeededParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _DRICHTruthSeededParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🌿 _EcalBarrelClusterAssociations_rec vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _EcalBarrelClusterAssociations_rec.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _EcalBarrelClusterAssociations_rec.index int32_t[]
@@ -3792,9 +3972,10 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 _EcalLumiSpecTruthClusters_particleIDs.index int32_t[]
 ┃   ┣━━ 🍃 _EcalLumiSpecTruthClusters_shapeParameters std::vector<float>
 ┃   ┣━━ 🍃 _EcalLumiSpecTruthClusters_subdetectorEnergies std::vector<float>
-┃   ┣━━ 🌿 _ForwardMPGDEndcapHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ForwardMPGDEndcapHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ForwardMPGDEndcapHits_MCParticle.index int32_t[]
+┃   ┣━━ 🍃 _EventHeader_weights std::vector<double>
+┃   ┣━━ 🌿 _ForwardMPGDEndcapHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ForwardMPGDEndcapHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ForwardMPGDEndcapHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _ForwardMPGDEndcapRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ForwardMPGDEndcapRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ForwardMPGDEndcapRawHitAssociations_rawHit.index int32_t[]
@@ -4257,9 +4438,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _MCParticles_parents vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _MCParticles_parents.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _MCParticles_parents.index int32_t[]
-┃   ┣━━ 🌿 _MPGDBarrelHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _MPGDBarrelHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _MPGDBarrelHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _MPGDBarrelHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _MPGDBarrelHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _MPGDBarrelHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _MPGDBarrelRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _MPGDBarrelRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _MPGDBarrelRawHitAssociations_rawHit.index int32_t[]
@@ -4269,9 +4450,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _MPGDBarrelRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _MPGDBarrelRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _MPGDBarrelRecHits_rawHit.index int32_t[]
-┃   ┣━━ 🌿 _OuterMPGDBarrelHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _OuterMPGDBarrelHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _OuterMPGDBarrelHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _OuterMPGDBarrelHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _OuterMPGDBarrelHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _OuterMPGDBarrelHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _OuterMPGDBarrelRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _OuterMPGDBarrelRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _OuterMPGDBarrelRawHitAssociations_rawHit.index int32_t[]
@@ -4282,6 +4463,9 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 _OuterMPGDBarrelRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _OuterMPGDBarrelRecHits_rawHit.index int32_t[]
 ┃   ┣━━ 🍃 _RICHEndcapNParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _RICHEndcapNParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _RICHEndcapNParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _RICHEndcapNParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🌿 _RICHEndcapNRawHitsAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _RICHEndcapNRawHitsAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _RICHEndcapNRawHitsAssociations_rawHit.index int32_t[]
@@ -4289,6 +4473,9 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 _RICHEndcapNRawHitsAssociations_simHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _RICHEndcapNRawHitsAssociations_simHit.index int32_t[]
 ┃   ┣━━ 🍃 _RICHEndcapNTruthSeededParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _RICHEndcapNTruthSeededParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _RICHEndcapNTruthSeededParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _RICHEndcapNTruthSeededParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🌿 _ReconstructedBreitFrameParticles_clusters vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedBreitFrameParticles_clusters.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedBreitFrameParticles_clusters.index int32_t[]
@@ -4367,6 +4554,10 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _ReconstructedChargedParticles_tracks vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedChargedParticles_tracks.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedChargedParticles_tracks.index int32_t[]
+┃   ┣━━ 🍃 _ReconstructedChargedRealPIDParticleIDs_parameters std::vector<float>
+┃   ┣━━ 🌿 _ReconstructedChargedRealPIDParticleIDs_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedChargedRealPIDParticleIDs_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedChargedRealPIDParticleIDs_particle.index int32_t[]
 ┃   ┣━━ 🌿 _ReconstructedChargedRealPIDParticles_clusters vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedChargedRealPIDParticles_clusters.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedChargedRealPIDParticles_clusters.index int32_t[]
@@ -4505,9 +4696,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _ReconstructedTruthSeededChargedParticles_tracks vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedTruthSeededChargedParticles_tracks.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedTruthSeededChargedParticles_tracks.index int32_t[]
-┃   ┣━━ 🌿 _SiBarrelHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _SiBarrelHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _SiBarrelHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _SiBarrelHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _SiBarrelHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _SiBarrelHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _SiBarrelRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _SiBarrelRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _SiBarrelRawHitAssociations_rawHit.index int32_t[]
@@ -4535,9 +4726,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _SiEndcapTrackerRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _SiEndcapTrackerRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _SiEndcapTrackerRecHits_rawHit.index int32_t[]
-┃   ┣━━ 🌿 _TOFBarrelHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _TOFBarrelHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _TOFBarrelHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _TOFBarrelHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TOFBarrelHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TOFBarrelHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _TOFBarrelRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TOFBarrelRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TOFBarrelRawHitAssociations_rawHit.index int32_t[]
@@ -4547,9 +4738,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _TOFBarrelRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TOFBarrelRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TOFBarrelRecHits_rawHit.index int32_t[]
-┃   ┣━━ 🌿 _TOFEndcapHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _TOFEndcapHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _TOFEndcapHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _TOFEndcapHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TOFEndcapHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TOFEndcapHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _TOFEndcapRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TOFEndcapRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TOFEndcapRawHitAssociations_rawHit.index int32_t[]
@@ -4559,96 +4750,110 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _TOFEndcapRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TOFEndcapRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TOFEndcapRecHits_rawHit.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM1L0ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L0ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L0ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM1L1ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L1ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L1ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM1L2ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L2ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L2ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM1L3ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L3ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L3ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM1Tracks_points vector<edm4eic::TrackPoint>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.directionError.xx float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.directionError.xy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.directionError.yy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentum.x float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentum.y float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentum.z float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentumError.xx float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentumError.xy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentumError.xz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentumError.yy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentumError.yz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.momentumError.zz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.pathlength float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.pathlengthError float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.phi float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.position.x float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.position.y float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.position.z float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.positionError.xx float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.positionError.xy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.positionError.xz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.positionError.yy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.positionError.yz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.positionError.zz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.surface uint64_t[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.system uint32_t[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.theta float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_points.time float[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM1Tracks_points.timeError float[]
-┃   ┣━━ 🌿 _TaggerTrackerM1Tracks_track vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM1Tracks_track.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM1Tracks_track.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM2L0ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L0ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L0ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM2L1ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L1ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L1ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM2L2ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L2ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L2ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM2L3ClusterPositions_rawHits vector<edm4hep::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L3ClusterPositions_rawHits.collectionID int32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L3ClusterPositions_rawHits.index int32_t[]
-┃   ┣━━ 🌿 _TaggerTrackerM2Tracks_points vector<edm4eic::TrackPoint>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.directionError.xx float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.directionError.xy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.directionError.yy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentum.x float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentum.y float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentum.z float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentumError.xx float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentumError.xy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentumError.xz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentumError.yy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentumError.yz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.momentumError.zz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.pathlength float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.pathlengthError float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.phi float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.position.x float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.position.y float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.position.z float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.positionError.xx float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.positionError.xy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.positionError.xz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.positionError.yy float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.positionError.yz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.positionError.zz float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.surface uint64_t[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.system uint32_t[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.theta float[]
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_points.time float[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM2Tracks_points.timeError float[]
-┃   ┣━━ 🌿 _TaggerTrackerM2Tracks_track vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _TaggerTrackerM2Tracks_track.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _TaggerTrackerM2Tracks_track.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_amplitude std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulsesWithNoise_calorimeterHits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_calorimeterHits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_calorimeterHits.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulsesWithNoise_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_particles.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulsesWithNoise_pulses vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_pulses.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_pulses.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulsesWithNoise_trackerHits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_trackerHits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulsesWithNoise_trackerHits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerCombinedPulses_amplitude std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulses_calorimeterHits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulses_calorimeterHits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulses_calorimeterHits.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulses_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulses_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulses_particles.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulses_pulses vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulses_pulses.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulses_pulses.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerCombinedPulses_trackerHits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerCombinedPulses_trackerHits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerCombinedPulses_trackerHits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerHitPulses_amplitude std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerHitPulses_calorimeterHits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerHitPulses_calorimeterHits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerHitPulses_calorimeterHits.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerHitPulses_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerHitPulses_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerHitPulses_particles.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerHitPulses_pulses vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerHitPulses_pulses.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerHitPulses_pulses.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerHitPulses_trackerHits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerHitPulses_trackerHits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerHitPulses_trackerHits.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerHits_particle.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM1L0ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L0ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L0ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM1L0ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM1L1ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L1ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L1ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM1L1ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM1L2ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L2ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L2ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM1L2ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM1L3ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1L3ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1L3ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM1L3ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM1LocalTrackAssociations_rec vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1LocalTrackAssociations_rec.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1LocalTrackAssociations_rec.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM1LocalTrackAssociations_sim vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1LocalTrackAssociations_sim.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1LocalTrackAssociations_sim.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM1LocalTracks_measurements vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1LocalTracks_measurements.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1LocalTracks_measurements.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM1LocalTracks_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1LocalTracks_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1LocalTracks_tracks.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM1LocalTracks_trajectory vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM1LocalTracks_trajectory.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM1LocalTracks_trajectory.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM2L0ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L0ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L0ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM2L0ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM2L1ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L1ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L1ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM2L1ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM2L2ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L2ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L2ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM2L2ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM2L3ClusterPositions_hits vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2L3ClusterPositions_hits.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2L3ClusterPositions_hits.index int32_t[]
+┃   ┣━━ 🍃 _TaggerTrackerM2L3ClusterPositions_weights std::vector<float>
+┃   ┣━━ 🌿 _TaggerTrackerM2LocalTrackAssociations_rec vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2LocalTrackAssociations_rec.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2LocalTrackAssociations_rec.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM2LocalTrackAssociations_sim vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2LocalTrackAssociations_sim.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2LocalTrackAssociations_sim.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM2LocalTracks_measurements vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2LocalTracks_measurements.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2LocalTracks_measurements.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM2LocalTracks_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2LocalTracks_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2LocalTracks_tracks.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerM2LocalTracks_trajectory vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerM2LocalTracks_trajectory.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerM2LocalTracks_trajectory.index int32_t[]
 ┃   ┣━━ 🌿 _TaggerTrackerRawHitAssociations_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TaggerTrackerRawHitAssociations_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TaggerTrackerRawHitAssociations_rawHit.index int32_t[]
@@ -4673,6 +4878,15 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _TaggerTrackerReconstructedParticles_tracks vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TaggerTrackerReconstructedParticles_tracks.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TaggerTrackerReconstructedParticles_tracks.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerSharedHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerSharedHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerSharedHits_particle.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerTrackAssociations_rec vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerTrackAssociations_rec.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerTrackAssociations_rec.index int32_t[]
+┃   ┣━━ 🌿 _TaggerTrackerTrackAssociations_sim vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TaggerTrackerTrackAssociations_sim.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TaggerTrackerTrackAssociations_sim.index int32_t[]
 ┃   ┣━━ 🌿 _TaggerTrackerTracks_measurements vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TaggerTrackerTracks_measurements.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TaggerTrackerTracks_measurements.index int32_t[]
@@ -4696,26 +4910,36 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _TaggerTrackerTrajectories_trackParameters vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _TaggerTrackerTrajectories_trackParameters.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _TaggerTrackerTrajectories_trackParameters.index int32_t[]
-┃   ┣━━ 🌿 _TrackerEndcapHits_MCParticle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _TrackerEndcapHits_MCParticle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _TrackerEndcapHits_MCParticle.index int32_t[]
-┃   ┗━━ 🌿 _VertexBarrelHits_MCParticle vector<podio::ObjectID>
-┃       ┣━━ 🍃 _VertexBarrelHits_MCParticle.collectionID uint32_t[]
-┃       ┗━━ 🍃 _VertexBarrelHits_MCParticle.index int32_t[]
+┃   ┣━━ 🌿 _TrackClusterMatches_cluster vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TrackClusterMatches_cluster.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TrackClusterMatches_cluster.index int32_t[]
+┃   ┣━━ 🌿 _TrackClusterMatches_track vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TrackClusterMatches_track.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TrackClusterMatches_track.index int32_t[]
+┃   ┣━━ 🌿 _TrackerEndcapHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _TrackerEndcapHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _TrackerEndcapHits_particle.index int32_t[]
+┃   ┗━━ 🌿 _VertexBarrelHits_particle vector<podio::ObjectID>
+┃       ┣━━ 🍃 _VertexBarrelHits_particle.collectionID uint32_t[]
+┃       ┗━━ 🍃 _VertexBarrelHits_particle.index int32_t[]
 ┗━━ 🌴 podio_metadata (1)
-┣━━ 🌿 EDMDefinitions vector<tuple<string,string> >
-┃   ┣━━ 🍁 EDMDefinitions._0 std::string[]
-┃   ┗━━ 🍁 EDMDefinitions._1 std::string[]
-┣━━ 🌿 PodioBuildVersion podio::version::Version
-┃   ┣━━ 🍁 major uint16_t
-┃   ┣━━ 🍁 minor uint16_t
-┃   ┗━━ 🍁 patch uint16_t
-┣━━ 🌿 events___CollectionTypeInfo vector<tuple<unsigned int,string,bool,unsigned int> >
-┃   ┣━━ 🍃 events___CollectionTypeInfo._0 uint32_t[]
-┃   ┣━━ 🍁 events___CollectionTypeInfo._1 std::string[]
-┃   ┣━━ 🍃 events___CollectionTypeInfo._2 bool[]
-┃   ┗━━ 🍃 events___CollectionTypeInfo._3 uint32_t[]
-┗━━ 🌿 events___idTable podio::CollectionIDTable
-┣━━ 🍃 m_collectionIDs std::vector<uint32_t>
-┗━━ 🍁 m_names std::vector<std::string>
+    ┣━━ 🌿 EDMDefinitions vector<tuple<string,string> >
+    ┃   ┣━━ 🍁 EDMDefinitions._0 std::string[]
+    ┃   ┗━━ 🍁 EDMDefinitions._1 std::string[]
+    ┣━━ 🌿 PodioBuildVersion podio::version::Version
+    ┃   ┣━━ 🍁 major uint16_t
+    ┃   ┣━━ 🍁 minor uint16_t
+    ┃   ┗━━ 🍁 patch uint16_t
+    ┣━━ 🌿 edm4hep___Version podio::version::Version
+    ┃   ┣━━ 🍁 major uint16_t
+    ┃   ┣━━ 🍁 minor uint16_t
+    ┃   ┗━━ 🍁 patch uint16_t
+    ┣━━ 🌿 events___CollectionTypeInfo vector<tuple<unsigned int,string,bool,unsigned int> >
+    ┃   ┣━━ 🍃 events___CollectionTypeInfo._0 uint32_t[]
+    ┃   ┣━━ 🍁 events___CollectionTypeInfo._1 std::string[]
+    ┃   ┣━━ 🍃 events___CollectionTypeInfo._2 bool[]
+    ┃   ┗━━ 🍃 events___CollectionTypeInfo._3 uint32_t[]
+    ┗━━ 🌿 events___idTable podio::CollectionIDTable
+        ┣━━ 🍃 m_collectionIDs std::vector<uint32_t>
+        ┗━━ 🍁 m_names std::vector<std::string>
 ```

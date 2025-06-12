@@ -15,15 +15,30 @@ find_package(ROOT REQUIRED COMPONENTS Core RIO Tree Hist Gpad Graf)
 find_package(podio CONFIG REQUIRED)
 find_package(EDM4HEP CONFIG REQUIRED)
 find_package(EDM4EIC CONFIG REQUIRED)
+find_package(fmt REQUIRED)
+find_package(nlohmann_json)
+
 
 # -----------------------------------------------------------------------------#
 #  Build executable                                                            #
 # -----------------------------------------------------------------------------#
-add_executable(e01_edm4hep test_edm4eic.cxx)
+add_executable(test_edm4eic test_edm4eic.cxx)
 
-target_link_libraries(e01_edm4hep
+target_link_libraries(test_edm4eic
         PRIVATE
         ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
-        podio::podio podio::podioRootIO
-        EDM4HEP::edm4hep
-        EDM4EIC::edm4eic)
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)
+
+
+add_executable(mclam_to_csv mclam_to_csv.cxx)
+
+target_link_libraries(mclam_to_csv
+        PRIVATE
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)

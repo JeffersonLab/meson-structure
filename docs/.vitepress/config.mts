@@ -51,6 +51,7 @@ export default withMermaid({
                     { text: 'Data Access', link: '/data' },
                     { text: 'MC Variables', link: '/mc-variables' },
                     { text: 'EDM4EIC Tree', link: '/edm4eic-tree' },
+                    { text: 'EDM4EIC Diagram', link: '/edm4eic-diagram' },
                     { text: 'Analysis', link: '/analysis' },
 
                 ]
