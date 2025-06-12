@@ -1,6 +1,6 @@
 {
   "name": "eic-meson-structure-docs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Documentation site for the Electron Ion Collider (EIC) Meson Structure group, covering simulation, reconstruction, analysis, data access, and tutorials.",
   "scripts": {

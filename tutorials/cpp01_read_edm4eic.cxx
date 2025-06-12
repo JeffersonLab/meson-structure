@@ -188,9 +188,9 @@ void process_event(const podio::Frame& event, int event_number) {
 
 // ---------------------------------------------------------------------------
 // ROOT-macro entry point.
-// Call it from the prompt:  root -x -l -b -q 'test_edm4eic.cxx("file.root",100)'
+// Call it from the prompt:  root -x -l -b -q 'cpp01_read_edm4eic.cxx("file.root",100)'
 // ---------------------------------------------------------------------------
-void test_edm4eic(const char* infile,
+void cpp01_read_edm4eic(const char* infile,
                   int events = -1) {
 
     fmt::print("'test_edm4eic' entry point is used\n");

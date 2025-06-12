@@ -24,7 +24,7 @@ std::ofstream csv;
 bool header_written = false;
 
 struct Vec3 { double x{}, y{}, z{}; };
-inline void write_particle(std::ostream& out, const MCParticle* p) {
+inline void particle_to_csv(std::ostream& out, const MCParticle* p) {
   if (!p) { out << ",,,,,,,,,,,,"; return; }                        // 13 empties
   auto m  = p->getMomentum();
   auto v  = p->getVertex();
@@ -63,6 +63,7 @@ void write_header() {
 void process_event(const podio::Frame& evt, int evt_id) {
   const auto& parts = evt.get<MCParticleCollection>("MCParticles");
 
+
   for (const auto& lam : parts) {
     if (lam.getPDG() != 3122) continue;                          // not Λ⁰
 
@@ -88,9 +89,8 @@ void process_event(const podio::Frame& evt, int evt_id) {
     if (prot && pimin) { channel = 1; }
     else if (neut && pi0) {
       channel = 2;
-      pi0->getDaughters();
-      if (g.size() >= 1) gam1 = &g[0];
-      if (g.size() >= 2) gam2 = &g[1];
+      // if (pi0->getDaughters().size() >= 1) gam1 = &pi0->[0];
+      // if (pi0->getDaughters().size() >= 2) gam2 = &pi0->getDaughters()[1];
     }
     if (channel == -1) continue;               // skip rare channels
 
@@ -99,13 +99,13 @@ void process_event(const podio::Frame& evt, int evt_id) {
     // -----------------------------------------------------------------
     if (!header_written) write_header();
     csv << evt_id << ',' << lam.getObjectID().index << ',' << channel << ',';
-    write_particle(csv, &lam);
-    write_particle(csv, prot);
-    write_particle(csv, pimin);
-    write_particle(csv, neut);
-    write_particle(csv, pi0);
-    write_particle(csv, gam1);
-    write_particle(csv, gam2);
+    particle_to_csv(csv, &lam);
+    particle_to_csv(csv, prot);
+    particle_to_csv(csv, pimin);
+    particle_to_csv(csv, neut);
+    particle_to_csv(csv, pi0);
+    particle_to_csv(csv, gam1);
+    particle_to_csv(csv, gam2);
     csv << '\n';
   }
 }
