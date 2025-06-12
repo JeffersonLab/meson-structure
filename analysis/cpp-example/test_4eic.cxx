@@ -24,14 +24,7 @@ void e01_edm4hep(const char *ifname, const char *ofname = nullptr)
   podio_store.setReader(&podio_reader);
 
   auto np = new TH1D("np", "Photon count",            50,       0,       50);
-  auto th = new TH1D("th", "",         50,      35,       41);
-  auto tq = new TH1D("tq", "",         50,      35,       41);
-  auto ri = new TH1D("ri", "Refractive Index - 1.0",  50, 0.00075,  0.00077);
-  auto dt = new TH1D("dt", "Cherenkov theta diff",    50,      -3,        3);
-  auto wl = new TH1D("wl", "Wave length",             50,     350,      900);
 
-  unsigned false_assignment_stat[2] = {0};
-  std::vector<double> thvector, npvector;
 
   // event loop
   for(unsigned ev=0; ev<podio_reader.getEntries(); ev++) {
