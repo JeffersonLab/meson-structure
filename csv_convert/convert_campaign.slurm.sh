@@ -11,16 +11,17 @@
 set -euo pipefail
 
 CAMPAIGN=/volatile/eic/romanov/meson-structure-2025-06
-CODE_HOME=
+CSV_CONVERT_DIR=/work/eic/users/romanov/meson-structure-work/meson-structure/csv_convert
 IMG=/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
 
 echo "[INFO]  Running convert_campaign.py in $(hostname)"
 echo "[INFO]  Campaign directory : $CAMPAIGN"
 echo "[INFO]  Container image    : $IMG"
+echo "[INFO]  CSV_CONVERT_DIR    : $CSV_CONVERT_DIR"
 echo "[INFO]  Log file           : $SLURM_OUTPUT"
 
 # Bind the whole campaign so script sees reco/ inside /work
-singularity exec -B "$CAMPAIGN":/work "$IMG" \
-   python3 /work/convert_campaign.py /work --submit
+singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
+   python3 /code/convert_campaign.py /work --submit
 
 echo "[DONE]  Conversion job finished"
