@@ -140,7 +140,7 @@ void process_event(const podio::Frame&evt, int evt_id) {
                 }
             }
         }
-        if (channel == -1) continue; // skip rare channels
+        // if (channel == -1) continue; // skip rare channels
 
         // -----------------------------------------------------------------
         // output

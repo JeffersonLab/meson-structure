@@ -22,7 +22,7 @@ find_package(nlohmann_json)
 # -----------------------------------------------------------------------------#
 #  Build executable                                                            #
 # -----------------------------------------------------------------------------#
-add_executable(cpp01_read_edm4eic test_edm4eic.cxx)
+add_executable(cpp01_read_edm4eic cpp01_read_edm4eic.cxx)
 
 target_link_libraries(cpp01_read_edm4eic
         PRIVATE
@@ -32,13 +32,13 @@ target_link_libraries(cpp01_read_edm4eic
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
         fmt::fmt)
 
-
-add_executable(csv_mcpart_lambda csv_mcpart_lambda.cxx)
-
-target_link_libraries(csv_mcpart_lambda
-        PRIVATE
-        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
-        podio::podio podio::podioRootIO podio::podioDict
-        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
-        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
-        fmt::fmt)
+#
+#add_executable(csv_mcpart_lambda csv_mcpart_lambda.cxx)
+#
+#target_link_libraries(csv_mcpart_lambda
+#        PRIVATE
+#        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+#        podio::podio podio::podioRootIO podio::podioDict
+#        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+#        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+#        fmt::fmt)

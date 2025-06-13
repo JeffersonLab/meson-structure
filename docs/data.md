@@ -20,10 +20,14 @@ xrdfs root://dtn-eic.jlab.org
 ls /volatile/eic/romanov/meson-structure-2025-06/reco
 ```
 
+Writing libraries versions (important for C++ readout compatibility):
+- podio: v01-02
+- edm4hep: v00-99-01
+- edm4eic: v8.2.0
+
 **Original MCEG files** on ifarm:  
 `/work/eic/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/`  
 *(last update of October 2024)*
-
 
 
 ## File names: 
@@ -49,6 +53,8 @@ Where:
   - `*.afterburner.hist.root` - Afterburner before-after histograms 
   - `*.edm4hep.root` - DD4Hep (Genat4) output
   - `*.edm4eic.root` - **EICRecon reconstructed files**
+  - `*.mcdis.csv` - MC DIS CSV table
+  - `*.mcpart_lambda.csv` - MCParticles based CSV table full lambda decay values
 
 > 5000evt indicate each file has 5k events
 

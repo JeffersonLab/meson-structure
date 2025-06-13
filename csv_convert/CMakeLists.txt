@@ -22,15 +22,15 @@ find_package(nlohmann_json)
 # -----------------------------------------------------------------------------#
 #  Build executable                                                            #
 # -----------------------------------------------------------------------------#
-add_executable(test_edm4eic test_edm4eic.cxx)
+add_executable(csv_mcdis csv_mcdis.cxx)
 
-#target_link_libraries(test_edm4eic
-#        PRIVATE
-#        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
-#        podio::podio podio::podioRootIO podio::podioDict
-#        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
-#        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
-#        fmt::fmt)
+target_link_libraries(csv_mcdis
+        PRIVATE
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)
 
 
 add_executable(csv_mcpart_lambda csv_mcpart_lambda.cxx)
