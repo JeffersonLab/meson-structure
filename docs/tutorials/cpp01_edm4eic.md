@@ -60,7 +60,7 @@ If you want to build the tutorials outside of eic-shell, the dependencies are:
 ## Running as a ROOT macro
 
 ```bash
-root -x -l -b -q 'cpp01_read_edm4eic.cxx("events.edm4eic.root",100)'
+root -x -l -b -q 'cpp_01_read_edm4eic.cxx("events.edm4eic.root",100)'
 ```
 
 To make such scripts on your own the important parts are: 
