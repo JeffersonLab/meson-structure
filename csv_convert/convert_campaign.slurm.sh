@@ -18,10 +18,10 @@ echo "[INFO]  Running convert_campaign.py in $(hostname)"
 echo "[INFO]  Campaign directory : $CAMPAIGN"
 echo "[INFO]  Container image    : $IMG"
 echo "[INFO]  CSV_CONVERT_DIR    : $CSV_CONVERT_DIR"
-echo "[INFO]  Log file           : $SLURM_OUTPUT"
+
 
 # Bind the whole campaign so script sees reco/ inside /work
 singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
-   python3 /code/convert_campaign.py /work --submit
+   bash -c 'cd /code && python3 convert_campaign.py /work'
 
 echo "[DONE]  Conversion job finished"
