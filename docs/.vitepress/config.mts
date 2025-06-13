@@ -49,9 +49,11 @@ export default withMermaid({
                 link: '/data',
                 items: [
                     { text: 'Data Access', link: '/data' },
+                    { text: 'CSV Data', link: '/data-csv' },
                     { text: 'MC Variables', link: '/mc-variables' },
                     { text: 'EDM4EIC Tree', link: '/edm4eic-tree' },
                     { text: 'EDM4EIC Diagram', link: '/edm4eic-diagram' },
+
                     { text: 'Analysis', link: '/analysis' },
 
                 ]
@@ -61,10 +63,10 @@ export default withMermaid({
                 link: '/tutorials',
                 items: [
                     { text: 'Overview', link: '/tutorials' },
-                    { text: 'py-edm4eic-01 Uproot', link: '/tutorials/01_using_uproot' },
-                    { text: 'py-edm4eic-02 Metadata', link: '/tutorials/02_metadata' },
-                    { text: 'py-edm4eic-03 References', link: '/tutorials/03_references' },
-                    { text: 'cpp1 EDM4EIC', link: '/tutorials/cpp01_edm4eic' },
+                    { text: '01 Python CSV', link: '/tutorials/py-csv' },
+                    { text: '02 Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
+                    { text: '03 C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
+
                 ]
             },
             {
