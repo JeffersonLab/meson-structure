@@ -61,9 +61,9 @@ export default withMermaid({
                 link: '/tutorials',
                 items: [
                     { text: 'Overview', link: '/tutorials' },
-                    { text: 'py1 Uproot', link: '/tutorials/01_using_uproot' },
-                    { text: 'py2 Metadata', link: '/tutorials/02_metadata' },
-                    { text: 'py3 References', link: '/tutorials/03_references' },
+                    { text: 'py-edm4eic-01 Uproot', link: '/tutorials/01_using_uproot' },
+                    { text: 'py-edm4eic-02 Metadata', link: '/tutorials/02_metadata' },
+                    { text: 'py-edm4eic-03 References', link: '/tutorials/03_references' },
                     { text: 'cpp1 EDM4EIC', link: '/tutorials/cpp01_edm4eic' },
                 ]
             },

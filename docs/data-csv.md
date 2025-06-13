@@ -1,4 +1,6 @@
-# CSV Tables
+# CSV Data
+
+
 
 The CSV (Comma-Separated Values) format is exceptionally convenient for data processing. 
 It is simple, yet processed efficiently, supported by many analysis and introspection tools, 
@@ -98,7 +100,9 @@ erDiagram
     }
 ```
 
-## The Key Challenge: Multiple Files = Broken Relationships
+## Combine Multiple Files
+
+The Key Challenge: Multiple Files = Broken Relationships
 
 When we have multiple CSV files from different runs or datasets, each file starts its event numbering from 0:
 
@@ -110,7 +114,7 @@ File 3: evt = [0, 1, 2, 3, 4, ...]  ← ID Collision!
 
 **Problem**: Event 0 from File 1 is completely different from Event 0 from File 2, but they have the same ID!
 
-## Solution: Global Unique Event IDs
+**Solution**: Global Unique Event IDs
 
 We need to create globally unique event IDs across all files:
 
@@ -118,9 +122,8 @@ We need to create globally unique event IDs across all files:
 import pandas as pd
 import glob
 
-def concat_csvs_with_unique_events(pattern):
+def concat_csvs_with_unique_events(files):
     """Load and concatenate CSV files with globally unique event IDs"""
-    files = sorted(glob.glob(pattern))
     dfs = []
     offset = 0
     
@@ -133,8 +136,8 @@ def concat_csvs_with_unique_events(pattern):
     return pd.concat(dfs, ignore_index=True)
 
 # Load both tables with unique event IDs
-lambda_df = concat_csvs_with_unique_events("mcpart_lambda*.csv")
-dis_df = concat_csvs_with_unique_events("dis_parameters*.csv")
+lambda_df = concat_csvs_with_unique_events(sorted(glob.glob("mcpart_lambda*.csv")))
+dis_df = concat_csvs_with_unique_events(sorted(glob.glob("dis_parameters*.csv")))
 ```
 
 **Result**: Now we have globally unique event IDs:
