@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-CAMPAIGN=/volatile/eic/romanov/meson-structure-2025-06
+CAMPAIGN=/volatile/eic/romanov/meson-structure-2025-06/reco
 CSV_CONVERT_DIR=/work/eic/users/romanov/meson-structure-work/meson-structure/csv_convert
 IMG=/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
 
