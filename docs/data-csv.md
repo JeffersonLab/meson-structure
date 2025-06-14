@@ -4,7 +4,8 @@ We provide the relevant part `*.EDM4EIC.root` data converted to the CSV format
 
 - The CVS files are located in the same place as `*.edm4eic.root` files
 - File names correspond to each other. E.g. `k_lambda_5x41_5000evt_001.*`
-- Access to the CSV files is the same. See [DATA ACCESS](data) page
+- We also provide .csv.zip - zipped versions. Pandas can work with such files out of the box
+- Access to the CSV and .csv.zip files is the same. See [DATA ACCESS](data) page
 - CSV table names are embedded in extension before `.csv` , 
   e.g. `*.mcdis.csv`, `*.mcpart_lambda.csv`
 - Column names are listed in the first line of the file (standard for CSV)
@@ -18,6 +19,8 @@ k_lambda_5x41_5000evt_001.edm4eic.root
 # Related CSV-s
 k_lambda_5x41_5000evt_001.mcdis.csv
 k_lambda_5x41_5000evt_001.mcpart_lambda.csv
+
+# Zi
 ```
 
 All scripts that make EDM4HEP to CSV conversion are located at 
@@ -60,7 +63,7 @@ and understanding this relationship helps us organize and analyze data more effe
 With python and pandas it is easy to organize them joined tables like 
 `MCvsReconstructed events`
 
-### mcdis
+### mc_dis
 
 - Files: `*.mc_dis.csv`
 - Conversion script: [csv_convert/csv_mc_dis.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_mc_dis.cxx)
