@@ -170,14 +170,14 @@ void process_event(const podio::Frame& event, int event_number) {
 
 // ---------------------------------------------------------------------------
 // ROOT-macro entry point.
-// Call it from the prompt:  root -x -l -b -q 'csv_mcdis.cxx("file.root", "output.csv", 100)'
+// Call it from the prompt:  root -x -l -b -q 'csv_mc_dis.cxx("file.root", "output.csv", 100)'
 // ---------------------------------------------------------------------------
-void csv_mcdis(const char* infile, const char* outfile = "dis_parameters.csv", int events = -1) {
+void csv_mc_dis(const char* infile, const char* outfile = "dis_parameters.csv", int events = -1) {
 
-    fmt::print("'csv_mcdis' entry point is used\n");
-    fmt::print(" infile: {}\n", infile);
-    fmt::print(" outfile: {}\n", outfile);
-    fmt::print(" events: {}\n", events);
+    fmt::print("'csv_mc_dis' entry point is used. Arguments:\n");
+    fmt::print("  infile:  {}\n", infile);
+    fmt::print("  outfile: {}\n", outfile);
+    fmt::print("  events:  {} {}\n", events, (events == -1 ? "(process all)" : ""));
 
     csv_file.open(outfile);
     if (!csv_file) {

@@ -22,9 +22,12 @@ find_package(nlohmann_json)
 # -----------------------------------------------------------------------------#
 #  Build executable                                                            #
 # -----------------------------------------------------------------------------#
-add_executable(csv_mcdis csv_mcdis.cxx)
 
-target_link_libraries(csv_mcdis
+
+
+add_executable(csv_mcpart_lambda csv_mcpart_lambda.cxx)
+
+target_link_libraries(csv_mcpart_lambda
         PRIVATE
         ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
         podio::podio podio::podioRootIO podio::podioDict
@@ -33,9 +36,19 @@ target_link_libraries(csv_mcdis
         fmt::fmt)
 
 
-add_executable(csv_mcpart_lambda csv_mcpart_lambda.cxx)
+add_executable(csv_mc_dis csv_mc_dis.cxx)
 
-target_link_libraries(csv_mcpart_lambda
+target_link_libraries(csv_mc_dis
+        PRIVATE
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)
+
+add_executable(csv_reco_dis csv_reco_dis.cxx)
+
+target_link_libraries(csv_reco_dis
         PRIVATE
         ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
         podio::podio podio::podioRootIO podio::podioDict

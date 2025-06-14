@@ -20,7 +20,8 @@ k_lambda_5x41_5000evt_001.mcdis.csv
 k_lambda_5x41_5000evt_001.mcpart_lambda.csv
 ```
 
-
+All scripts that make EDM4HEP to CSV conversion are located at 
+[csv_convert](https://github.com/JeffersonLab/meson-structure/tree/main/csv_convert) dir.
 
 ## Table definitions
  
@@ -59,10 +60,10 @@ and understanding this relationship helps us organize and analyze data more effe
 With python and pandas it is easy to organize them joined tables like 
 `MCvsReconstructed events`
 
-## mcdis
+### mcdis
 
-
-Files: `*.mcdis.csv`
+- Files: `*.mc_dis.csv`
+- Conversion script: [csv_convert/csv_mc_dis.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_mc_dis.cxx)
 
 True event level values that come from the event generator.
 `evt` - evnet id in file, the rest of the names correspond to table: 
@@ -93,35 +94,80 @@ y_d
 yplus
 ```
 
-## mcpart_lambda
+### reco_dis
 
-Files: `*.mcpart_lambda.csv`
+- Files: `*.reco_dis.csv`
+- Conversion script: [csv_convert/csv_reco_dis.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_reco_dis.cxx)
 
-Full chane lambda decays by using `MCParticles` EDM4EIC table. 
+Reconstructed (and true MC) event kinematic parameters. 
+EICRecon provides several algorithms calculating the DIS kinematics. 
+We save them all to CSV. E.g. `jb_q2` correspond to Q2 obtained by Jacquet-Blondel method
+and `electron_q2` corresponds to scattered electron method. 
+
+Prefixes - EDM4EIC Collection name: 
+
+1. `da`       - "InclusiveKinematicsDA"
+2. `esigma`   - "InclusiveKinematicsESigma"
+3. `electron` - "InclusiveKinematicsElectron"
+4. `jb`       - "InclusiveKinematicsJB"
+5. `ml`       - "InclusiveKinematicsML"
+6. `sigma`    - "InclusiveKinematicsSigma"
+7. `mc`       - True MC values same as in `mc_dis` table
+
+For each method variables are saved like: 
+
+1. `{}_x`
+2. `{}_q2`
+3. `{}_y`
+4. `{}_nu`
+5. `{}_w`
+
+`evt` is the first column = event number. 
+
+So the total column names are:
+
+```
+evt,
+da_x,da_q2,da_y,da_nu,da_w,
+esigma_x,esigma_q2,esigma_y,esigma_nu,esigma_w,
+electron_x,electron_q2,electron_y,electron_nu,electron_w,
+jb_x,jb_q2,jb_y,jb_nu,jb_w,
+ml_x,ml_q2,ml_y,ml_nu,ml_w,
+sigma_x,sigma_q2,sigma_y,sigma_nu,sigma_w,
+mc_x,mc_q2,mc_y,mc_nu,mc_w
+```
+
+### mcpart_lambda
+
+- Files: `*.mcpart_lambda.csv`
+- Conversion script: [csv_convert/csv_mcpart_lambda.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_mcpart_lambda.cxx)
+
+Full MC particles information for a lambda decays chain by using `MCParticles` EDM4EIC table. 
 MCParticles has relations like daughters and parents. Those relations are 
-flattened for lambda decays. The column represent possible lambda decays are grouped by particles: 
+flattened by lambda decay. 
+The columns represent possible lambda decays are grouped by particles: 
 
 Prefixes (each has the same parameters after)
 
 1. `lam` - Λ 
-1. `prot` - p (if pπ- decay or nulls)
-1. `pimin` - π- (if pπ- decay or nulls)
-1. `neut` - Neutron (if n π0 decay)
-1. `pizero` - pi0 - (if n π0 decay)
-1. `gamone` - γ one from π0 decay (if pi0 decays)
-1. `gamtwo` - γ two from π0 decay (if pi0 decays)
+2. `prot` - p (if pπ- decay or nulls)
+3. `pimin` - π- (if pπ- decay or nulls)
+4. `neut` - Neutron (if n π0 decay)
+5. `pizero` - pi0 - (if n π0 decay)
+6. `gamone` - γ one from π0 decay (if pi0 decays)
+7. `gamtwo` - γ two from π0 decay (if pi0 decays)
 
 For each particle prefix, the next columns are saved: 
 
-01. `{0}_id`     -   id - particle index in MCParticles table
-02. `{0}_pdg`    -   pdg - particle PDG
-03. `{0}_gen`    -   gen - Generator Status (1 stable... probably)
-04. `{0}_sim`    -   sim - Simulation Status (by Geant4)
-05. `{0}_px`     -   px - Momentum
-06. `{0}_py`     -   py
-07. `{0}_pz`     -   pz
-08. `{0}_vx`     -   vx - Origin vertex information
-09. `{0}_vy`     -   vy
+1.  `{0}_id`     -   id - particle index in MCParticles table
+2.  `{0}_pdg`    -   pdg - particle PDG
+3.  `{0}_gen`    -   gen - Generator Status (1 stable... probably)
+4.  `{0}_sim`    -   sim - Simulation Status (by Geant4)
+5.  `{0}_px`     -   px - Momentum
+6.  `{0}_py`     -   py
+7.  `{0}_pz`     -   pz
+8.  `{0}_vx`     -   vx - Origin vertex information
+9.  `{0}_vy`     -   vy
 10. `{0}_vz`     -   vz
 11. `{0}_epx`    -   epx - End Point (decay, or out of detector)
 12. `{0}_epy`    -   epy

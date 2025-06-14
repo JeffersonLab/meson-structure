@@ -94,8 +94,8 @@ std::string make_particle_header(const std::string&prefix) {
 //------------------------------------------------------------------------------
 // event processing
 //------------------------------------------------------------------------------
-void process_event(const podio::Frame&evt, int evt_id) {
-    const auto&parts = evt.get<MCParticleCollection>("MCParticles");
+void process_event(const podio::Frame&event, int evt_id) {
+    const auto&parts = event.get<MCParticleCollection>("MCParticles");
 
     for (const auto&lam: parts) {
         if (lam.getPDG() != 3122) continue; // not Λ⁰
@@ -146,7 +146,7 @@ void process_event(const podio::Frame&evt, int evt_id) {
         // output
         // -----------------------------------------------------------------
         if (!header_written) {
-            csv << "evt,"
+            csv << "event,"
                     << make_particle_header("lam") << ','
                     << make_particle_header("prot") << ','
                     << make_particle_header("pimin") << ','
@@ -242,10 +242,10 @@ int main(int argc, char* argv[]) {
 // ---------------------------------------------------------------------------
 void csv_mcpart_lambda(const char* infile, const char* outfile, int events = -1)
 {
-    fmt::print("'csv_mcpart_lambda' entry point is used\n");
-    fmt::print("   infile:  {}\n", infile);
-    fmt::print("   outfile: {}\n", outfile);
-    fmt::print("   events:  {}\n", events);
+    fmt::print("'csv_mcpart_lambda' entry point is used. Arguments:\n");
+    fmt::print("  infile:  {}\n", infile);
+    fmt::print("  outfile: {}\n", outfile);
+    fmt::print("  events:  {} {}\n", events, (events == -1 ? "(process all)" : ""));
 
     csv.open(outfile);
     if (!csv) {
