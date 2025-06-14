@@ -67,7 +67,7 @@ With python and pandas it is easy to organize them joined tables like
 
 True event level values that come from the event generator.
 `evt` - evnet id in file, the rest of the names correspond to table: 
-[mc-variables](http://localhost:5173/meson-structure/mc-variables.html)
+[mc-variables](mc-variables)
 
 Columns: 
 
