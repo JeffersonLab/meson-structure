@@ -26,8 +26,8 @@ if len(sys.argv) < 2:
 
 indir = Path(sys.argv[1])
 macros = [
-    "csv_mc_dis.cxx"
-    "csv_reco_dis.cxx"
+    "csv_mc_dis.cxx",
+    "csv_reco_dis.cxx",
     "csv_mcpart_lambda.cxx",
 ]
 
