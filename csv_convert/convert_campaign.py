@@ -29,6 +29,7 @@ macros = [
     "csv_mc_dis.cxx",
     "csv_reco_dis.cxx",
     "csv_mcpart_lambda.cxx",
+    "csv_reco_ff_lambda.cxx",
 ]
 
 
