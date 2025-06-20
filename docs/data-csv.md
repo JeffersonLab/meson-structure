@@ -197,6 +197,17 @@ Notes:
   in this case `lam_nd` - Number of daughters will be 0 and the rest of columns will be null 
 
 
+## reco_ff_lambda
+
+Reconstructed lambdas from `L->n+pi0->gg` decays using ZDC
+
+All fields are based on collection  
+ReconstructedParticleCollection - "ReconstructedFarForwardZDCLambdas"
+
+```
+evt,idx,pdg,charge,energy,mass,px,py,pz,ref_x,ref_y,ref_z,pid_goodness,type,n_clusters,n_tracks,n_particles,n_particle_ids,cov_xx,cov_xy,cov_xz,cov_yy,cov_yz,cov_zz,cov_xt,cov_yt,cov_zt,cov_tt
+```
+
 ## Combine Multiple Files
 
 When we have multiple CSV files from different runs or datasets, 
