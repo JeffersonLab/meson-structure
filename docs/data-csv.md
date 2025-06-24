@@ -102,7 +102,7 @@ yplus
 - Files: `*.reco_dis.csv`
 - Conversion script: [csv_convert/csv_reco_dis.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_reco_dis.cxx)
 
-Reconstructed (and true MC) event kinematic parameters. 
+Reconstructed (and true MC) event kinematic parameters including the reconstructed scattered electron information. 
 EICRecon provides several algorithms calculating the DIS kinematics. 
 We save them all to CSV. E.g. `jb_q2` correspond to Q2 obtained by Jacquet-Blondel method
 and `electron_q2` corresponds to scattered electron method. 
@@ -116,14 +116,35 @@ Prefixes - EDM4EIC Collection name:
 5. `ml`       - "InclusiveKinematicsML"
 6. `sigma`    - "InclusiveKinematicsSigma"
 7. `mc`       - True MC values same as in `mc_dis` table
+8. `elec`     - Reconstructed scattered electron particle
 
-For each method variables are saved like: 
+For each kinematic method (da, esigma, electron, jb, ml, sigma), variables are saved like: 
 
 1. `{}_x`
 2. `{}_q2`
 3. `{}_y`
 4. `{}_nu`
 5. `{}_w`
+
+For the reconstructed scattered electron (from the Electron method), the following columns are saved:
+
+1.  `elec_id`              - id - particle index in ReconstructedParticles collection
+2.  `elec_pdg`             - pdg - particle PDG code (should be 11 for electron)
+3.  `elec_charge`          - charge - electric charge
+4.  `elec_energy`          - energy - total energy [GeV]
+5.  `elec_mass`            - mass - invariant mass [GeV/c²]
+6.  `elec_px`              - px - momentum x-component [GeV/c]
+7.  `elec_py`              - py - momentum y-component [GeV/c]
+8.  `elec_pz`              - pz - momentum z-component [GeV/c]
+9.  `elec_ref_x`           - ref_x - reference point x-coordinate
+10. `elec_ref_y`           - ref_y - reference point y-coordinate
+11. `elec_ref_z`           - ref_z - reference point z-coordinate
+12. `elec_pid_goodness`    - pid_goodness - particle ID quality metric
+13. `elec_type`            - type - reconstruction type flag
+14. `elec_n_clusters`      - n_clusters - number of associated clusters
+15. `elec_n_tracks`        - n_tracks - number of associated tracks
+16. `elec_n_particles`     - n_particles - number of daughter particles
+17. `elec_n_particle_ids`  - n_particle_ids - number of particle ID objects
 
 `evt` is the first column = event number. 
 
@@ -137,8 +158,16 @@ electron_x,electron_q2,electron_y,electron_nu,electron_w,
 jb_x,jb_q2,jb_y,jb_nu,jb_w,
 ml_x,ml_q2,ml_y,ml_nu,ml_w,
 sigma_x,sigma_q2,sigma_y,sigma_nu,sigma_w,
-mc_x,mc_q2,mc_y,mc_nu,mc_w
+mc_x,mc_q2,mc_y,mc_nu,mc_w,
+elec_id,elec_pdg,elec_charge,elec_energy,elec_mass,elec_px,elec_py,elec_pz,elec_ref_x,elec_ref_y,elec_ref_z,elec_pid_goodness,elec_type,elec_n_clusters,elec_n_tracks,elec_n_particles,elec_n_particle_ids
 ```
+
+Notes:
+
+- The electron particle information is only available when the Electron method successfully 
+  reconstructs the scattered electron
+- If the electron is not reconstructed, the `elec_*` columns will contain null values
+
 
 ### mcpart_lambda
 
@@ -197,7 +226,7 @@ Notes:
   in this case `lam_nd` - Number of daughters will be 0 and the rest of columns will be null 
 
 
-## reco_ff_lambda
+### reco_ff_lambdas
 
 - Files: `*.reco_ff_lambdas_ngamgam.csv`
 - Conversion script: [csv_convert/csv_reco_ff_lambda.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_reco_ff_lambda.cxx)
@@ -255,11 +284,10 @@ gam2_id,gam2_pdg,gam2_charge,gam2_energy,gam2_mass,gam2_px,gam2_py,gam2_pz,gam2_
 
 Notes:
 
-- Only Lambda decays with exactly 1 neutron and 2 gammas are included (Λ → n + π⁰ → n + γ + γ channel)
-- Other decay channels (e.g., Λ → p + π⁻) are filtered out
+- ZDC reconstructed lambdas look only Lambda decays (Λ → n + π⁰ → n + γ + γ channel)
 - If a particle is not reconstructed or missing, its columns will contain null values
-- The covariance matrix elements represent the uncertainty in the reconstructed particle parameters
 - The `n_particles` field for the Lambda indicates the number of reconstructed daughter particles
+
 ## Combine Multiple Files
 
 When we have multiple CSV files from different runs or datasets, 
