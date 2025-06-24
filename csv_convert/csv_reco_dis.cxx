@@ -10,6 +10,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include "podio/ROOTReader.h"
 #include <edm4hep/MCParticleCollection.h>
 #include <edm4eic/InclusiveKinematicsCollection.h>
+#include <edm4eic/ReconstructedParticleCollection.h>
 
 #include <fmt/core.h>
 #include <fmt/ostream.h>
@@ -30,6 +31,39 @@ int events_limit = -1; // -n  <N>
 long total_evt_seen = 0;
 std::ofstream csv;
 bool header_written = false;
+
+/**
+ * @brief Formats electron particle data into a comma-separated string.
+ * @param p A pointer to the ReconstructedParticle. If nullptr, returns empty fields.
+ * @return A std::string containing the formatted particle data.
+ */
+inline std::string electron_to_csv(const edm4eic::ReconstructedParticle* p) {
+    if (!p) {
+        return ",,,,,,,,,,,,,,,,"; // 16 commas for 17 empty fields
+    }
+    const auto mom = p->getMomentum();
+    const auto ref = p->getReferencePoint();
+
+    return fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
+        p->getObjectID().index,           // 01 id
+        p->getPDG(),                     // 02 pdg
+        p->getCharge(),                  // 03 charge
+        p->getEnergy(),                  // 04 energy
+        p->getMass(),                    // 05 mass
+        mom.x,                           // 06 px
+        mom.y,                           // 07 py
+        mom.z,                           // 08 pz
+        ref.x,                           // 09 ref_x
+        ref.y,                           // 10 ref_y
+        ref.z,                           // 11 ref_z
+        p->getGoodnessOfPID(),           // 12 pid_goodness
+        p->getType(),                    // 13 type
+        p->getClusters().size(),         // 14 n_clusters
+        p->getTracks().size(),           // 15 n_tracks
+        p->getParticles().size(),        // 16 n_particles
+        p->getParticleIDs().size()       // 17 n_particle_ids
+    );
+}
 
 //------------------------------------------------------------------------------
 // event processing
@@ -76,6 +110,26 @@ void process_event(const podio::Frame& event, int evt_id) {
         csv << "," << "mc_y";
         csv << "," << "mc_nu";
         csv << "," << "mc_w";
+
+        // Add electron particle columns
+        csv << "," << "elec_id";
+        csv << "," << "elec_pdg";
+        csv << "," << "elec_charge";
+        csv << "," << "elec_energy";
+        csv << "," << "elec_mass";
+        csv << "," << "elec_px";
+        csv << "," << "elec_py";
+        csv << "," << "elec_pz";
+        csv << "," << "elec_ref_x";
+        csv << "," << "elec_ref_y";
+        csv << "," << "elec_ref_z";
+        csv << "," << "elec_pid_goodness";
+        csv << "," << "elec_type";
+        csv << "," << "elec_n_clusters";
+        csv << "," << "elec_n_tracks";
+        csv << "," << "elec_n_particles";
+        csv << "," << "elec_n_particle_ids";
+
         csv  << '\n';
         header_written = true;
     }
@@ -101,6 +155,13 @@ void process_event(const podio::Frame& event, int evt_id) {
     csv << "," << event.getParameter<std::string>("dis_y_d").value_or("");
     csv << "," << event.getParameter<std::string>("dis_nu").value_or("");
     csv << "," << event.getParameter<std::string>("dis_w").value_or("");
+
+    // Add electron particle information
+    const edm4eic::ReconstructedParticle* electron = nullptr;
+    if (kinElectron.size() == 1 && kinElectron.at(0).getScat().isAvailable()) {
+        electron = &(kinElectron.at(0).getScat());
+    }
+    csv << "," << electron_to_csv(electron);
 
     csv  << '\n';
 }
@@ -134,7 +195,7 @@ void process_file(const std::string&fname) {
 //------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
     std::vector<std::string> infiles;
-    std::string out_name = "mcpart_lambdas.csv";
+    std::string out_name = "reco_dis.csv";
 
     for (int i = 1; i < argc; ++i) {
         std::string a = argv[i];
