@@ -199,15 +199,67 @@ Notes:
 
 ## reco_ff_lambda
 
-Reconstructed lambdas from `L->n+pi0->gg` decays using ZDC
+- Files: `*.reco_ff_lambdas_ngamgam.csv`
+- Conversion script: [csv_convert/csv_reco_ff_lambda.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_reco_ff_lambda.cxx)
 
-All fields are based on collection  
-ReconstructedParticleCollection - "ReconstructedFarForwardZDCLambdas"
+Reconstructed Lambda particles and their decay products from the far-forward Zero Degree Calorimeter (ZDC), specifically for the decay channel Λ → n + π⁰ → n + γ + γ. This table uses the `ReconstructedFarForwardZDCLambdas` collection from EDM4EIC and flattens the decay hierarchy similar to `mcpart_lambda`.
 
+The columns are grouped by particles in the decay chain:
+
+Prefixes (each has the same parameters after):
+
+1. `lam` - Λ (Lambda baryon)
+2. `neut` - Neutron from Λ decay
+3. `gam1` - First γ from π⁰ decay
+4. `gam2` - Second γ from π⁰ decay
+
+For each particle prefix, the following columns are saved:
+
+1.  `{0}_id`              - id - particle index in ReconstructedParticles collection
+2.  `{0}_pdg`             - pdg - particle PDG code
+3.  `{0}_charge`          - charge - electric charge
+4.  `{0}_energy`          - energy - total energy [GeV]
+5.  `{0}_mass`            - mass - invariant mass [GeV/c²]
+6.  `{0}_px`              - px - momentum x-component [GeV/c]
+7.  `{0}_py`              - py - momentum y-component [GeV/c]
+8.  `{0}_pz`              - pz - momentum z-component [GeV/c]
+9.  `{0}_ref_x`           - ref_x - reference point x-coordinate
+10. `{0}_ref_y`           - ref_y - reference point y-coordinate
+11. `{0}_ref_z`           - ref_z - reference point z-coordinate
+12. `{0}_pid_goodness`    - pid_goodness - particle ID quality metric
+13. `{0}_type`            - type - reconstruction type flag
+14. `{0}_n_clusters`      - n_clusters - number of associated clusters
+15. `{0}_n_tracks`        - n_tracks - number of associated tracks
+16. `{0}_n_particles`     - n_particles - number of daughter particles
+17. `{0}_n_particle_ids`  - n_particle_ids - number of particle ID objects
+18. `{0}_cov_xx`          - cov_xx - covariance matrix element
+19. `{0}_cov_xy`          - cov_xy - covariance matrix element
+20. `{0}_cov_xz`          - cov_xz - covariance matrix element
+21. `{0}_cov_yy`          - cov_yy - covariance matrix element
+22. `{0}_cov_yz`          - cov_yz - covariance matrix element
+23. `{0}_cov_zz`          - cov_zz - covariance matrix element
+24. `{0}_cov_xt`          - cov_xt - covariance matrix element
+25. `{0}_cov_yt`          - cov_yt - covariance matrix element
+26. `{0}_cov_zt`          - cov_zt - covariance matrix element
+27. `{0}_cov_tt`          - cov_tt - covariance matrix element
+
+The complete column list is:
+
+```yaml
+event,
+lam_id,lam_pdg,lam_charge,lam_energy,lam_mass,lam_px,lam_py,lam_pz,lam_ref_x,lam_ref_y,lam_ref_z,lam_pid_goodness,lam_type,lam_n_clusters,lam_n_tracks,lam_n_particles,lam_n_particle_ids,lam_cov_xx,lam_cov_xy,lam_cov_xz,lam_cov_yy,lam_cov_yz,lam_cov_zz,lam_cov_xt,lam_cov_yt,lam_cov_zt,lam_cov_tt,
+neut_id,neut_pdg,neut_charge,neut_energy,neut_mass,neut_px,neut_py,neut_pz,neut_ref_x,neut_ref_y,neut_ref_z,neut_pid_goodness,neut_type,neut_n_clusters,neut_n_tracks,neut_n_particles,neut_n_particle_ids,neut_cov_xx,neut_cov_xy,neut_cov_xz,neut_cov_yy,neut_cov_yz,neut_cov_zz,neut_cov_xt,neut_cov_yt,neut_cov_zt,neut_cov_tt,
+gam1_id,gam1_pdg,gam1_charge,gam1_energy,gam1_mass,gam1_px,gam1_py,gam1_pz,gam1_ref_x,gam1_ref_y,gam1_ref_z,gam1_pid_goodness,gam1_type,gam1_n_clusters,gam1_n_tracks,gam1_n_particles,gam1_n_particle_ids,gam1_cov_xx,gam1_cov_xy,gam1_cov_xz,gam1_cov_yy,gam1_cov_yz,gam1_cov_zz,gam1_cov_xt,gam1_cov_yt,gam1_cov_zt,gam1_cov_tt,
+gam2_id,gam2_pdg,gam2_charge,gam2_energy,gam2_mass,gam2_px,gam2_py,gam2_pz,gam2_ref_x,gam2_ref_y,gam2_ref_z,gam2_pid_goodness,gam2_type,gam2_n_clusters,gam2_n_tracks,gam2_n_particles,gam2_n_particle_ids,gam2_cov_xx,gam2_cov_xy,gam2_cov_xz,gam2_cov_yy,gam2_cov_yz,gam2_cov_zz,gam2_cov_xt,gam2_cov_yt,gam2_cov_zt,gam2_cov_tt
 ```
-evt,idx,pdg,charge,energy,mass,px,py,pz,ref_x,ref_y,ref_z,pid_goodness,type,n_clusters,n_tracks,n_particles,n_particle_ids,cov_xx,cov_xy,cov_xz,cov_yy,cov_yz,cov_zz,cov_xt,cov_yt,cov_zt,cov_tt
-```
 
+Notes:
+
+- Only Lambda decays with exactly 1 neutron and 2 gammas are included (Λ → n + π⁰ → n + γ + γ channel)
+- Other decay channels (e.g., Λ → p + π⁻) are filtered out
+- If a particle is not reconstructed or missing, its columns will contain null values
+- The covariance matrix elements represent the uncertainty in the reconstructed particle parameters
+- The `n_particles` field for the Lambda indicates the number of reconstructed daughter particles
 ## Combine Multiple Files
 
 When we have multiple CSV files from different runs or datasets, 
