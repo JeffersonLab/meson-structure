@@ -34,34 +34,37 @@ bool header_written = false;
 
 /**
  * @brief Formats electron particle data into a comma-separated string.
- * @param p A pointer to the ReconstructedParticle. If nullptr, returns empty fields.
+ * @param scat The scattered electron from InclusiveKinematics
+ * @param valid Whether the electron data is valid
  * @return A std::string containing the formatted particle data.
  */
-inline std::string electron_to_csv(const edm4eic::ReconstructedParticle* p) {
-    if (!p) {
+inline std::string electron_to_csv(const edm4eic::InclusiveKinematics& ik, bool valid) {
+    if (!valid || !ik.getScat().isAvailable()) {
         return ",,,,,,,,,,,,,,,,"; // 16 commas for 17 empty fields
     }
-    const auto mom = p->getMomentum();
-    const auto ref = p->getReferencePoint();
+
+    const auto p = ik.getScat();
+    const auto mom = p.getMomentum();
+    const auto ref = p.getReferencePoint();
 
     return fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
-        p->getObjectID().index,           // 01 id
-        p->getPDG(),                     // 02 pdg
-        p->getCharge(),                  // 03 charge
-        p->getEnergy(),                  // 04 energy
-        p->getMass(),                    // 05 mass
+        p.getObjectID().index,           // 01 id
+        p.getPDG(),                     // 02 pdg
+        p.getCharge(),                  // 03 charge
+        p.getEnergy(),                  // 04 energy
+        p.getMass(),                    // 05 mass
         mom.x,                           // 06 px
         mom.y,                           // 07 py
         mom.z,                           // 08 pz
         ref.x,                           // 09 ref_x
         ref.y,                           // 10 ref_y
         ref.z,                           // 11 ref_z
-        p->getGoodnessOfPID(),           // 12 pid_goodness
-        p->getType(),                    // 13 type
-        p->getClusters().size(),         // 14 n_clusters
-        p->getTracks().size(),           // 15 n_tracks
-        p->getParticles().size(),        // 16 n_particles
-        p->getParticleIDs().size()       // 17 n_particle_ids
+        p.getGoodnessOfPID(),           // 12 pid_goodness
+        p.getType(),                    // 13 type
+        p.getClusters().size(),         // 14 n_clusters
+        p.getTracks().size(),           // 15 n_tracks
+        p.getParticles().size(),        // 16 n_particles
+        p.getParticleIDs().size()       // 17 n_particle_ids
     );
 }
 
@@ -157,11 +160,12 @@ void process_event(const podio::Frame& event, int evt_id) {
     csv << "," << event.getParameter<std::string>("dis_w").value_or("");
 
     // Add electron particle information
-    const edm4eic::ReconstructedParticle* electron = nullptr;
-    if (kinElectron.size() == 1 && kinElectron.at(0).getScat().isAvailable()) {
-        electron = &(kinElectron.at(0).getScat());
+    if (kinElectron.size() == 1) {
+        csv << "," << electron_to_csv(kinElectron.at(0), true);
+    } else {
+        // Create a dummy InclusiveKinematics to pass, but with false flag
+        csv << ",,,,,,,,,,,,,,,,";  // 17 empty fields
     }
-    csv << "," << electron_to_csv(electron);
 
     csv  << '\n';
 }
