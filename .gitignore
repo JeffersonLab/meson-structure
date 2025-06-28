@@ -192,8 +192,12 @@ analysis/edm4eic-true-decays/18x275/
 
 analysis/edm4eic-true-decays/5x41/
 
+analysis/zdc-lambda/plots/
+
 uv.lock
 
 data/
+
+plots/
 
 analysis/avnish_scripts/plots
