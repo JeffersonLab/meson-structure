@@ -193,3 +193,7 @@ analysis/edm4eic-true-decays/18x275/
 analysis/edm4eic-true-decays/5x41/
 
 uv.lock
+
+data/
+
+analysis/avnish_scripts/plots
