@@ -16,13 +16,17 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <fmt/ostream.h>
 
 #include <TFile.h>
+#include <TLorentzVector.h>
 
 #include <fstream>
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <cmath>
+#include <csignal>
 
 using namespace edm4hep;
+using namespace edm4eic;
 
 //------------------------------------------------------------------------------
 // globals & helpers
@@ -31,6 +35,139 @@ int events_limit = -1; // -n  <N>
 long total_evt_seen = 0;
 std::ofstream csv;
 bool header_written = false;
+
+// Particle masses in GeV
+constexpr double PROTON_MASS = 0.938272;
+constexpr double LAMBDA_MASS = 1.115683;
+
+//------------------------------------------------------------------------------
+// Helper structures
+//------------------------------------------------------------------------------
+struct ParticleData {
+    bool valid = false;
+    double px = 0.0;
+    double py = 0.0;
+    double pz = 0.0;
+    double energy = 0.0;
+    double t_value = 0.0;
+};
+
+//------------------------------------------------------------------------------
+// Helper functions
+//------------------------------------------------------------------------------
+
+/**
+ * @brief Calculate Mandelstam t from two four-vectors
+ * @param p1 First four-vector (incident)
+ * @param p2 Second four-vector (outgoing)
+ * @return t = (p1 - p2)^2
+ */
+inline double calculate_t(const TLorentzVector& p1, const TLorentzVector& p2) {
+    TLorentzVector q = p1 - p2;
+    return q.M2();
+}
+
+/**
+ * @brief Create TLorentzVector from particle momentum and mass
+ * @param px X-component of momentum
+ * @param py Y-component of momentum
+ * @param pz Z-component of momentum
+ * @param mass Particle mass in GeV
+ * @return TLorentzVector
+ */
+TLorentzVector create_lorentz_vector(double px, double py, double pz, double mass) {
+    double energy = std::sqrt(px*px + py*py + pz*pz + mass*mass);
+    TLorentzVector vec;
+    vec.SetPxPyPzE(px, py, pz, energy);
+    return vec;
+}
+
+/**
+ * @brief Find beam proton and MC Lambda in particle collection and return ParticleData
+ * @param mcParticles MC particle collection
+ * @return pair of <beam_proton_data, mc_lambda_data>
+ */
+std::pair<ParticleData, ParticleData> find_mc_particles(const MCParticleCollection& mcParticles) {
+    ParticleData beam_proton_data;
+    ParticleData mc_lambda_data;
+    TLorentzVector beam_proton_vec;
+    bool found_beam_proton = false;
+
+    // First pass: find beam proton
+    for (const auto& p : mcParticles) {
+        if (!found_beam_proton && p.getPDG() == 2212) {  // proton
+            const auto mom = p.getMomentum();
+            beam_proton_data.valid = true;
+            beam_proton_data.px = mom.x;
+            beam_proton_data.py = mom.y;
+            beam_proton_data.pz = mom.z;
+            beam_proton_vec = create_lorentz_vector(mom.x, mom.y, mom.z, PROTON_MASS);
+            beam_proton_data.energy = beam_proton_vec.E();
+            found_beam_proton = true;
+            break;
+        }
+    }
+
+    // Second pass: find Lambda and calculate t if beam proton was found
+    if (found_beam_proton) {
+        for (const auto& p : mcParticles) {
+            if (p.getPDG() == 3122) {  // Lambda
+                const auto mom = p.getMomentum();
+                mc_lambda_data.valid = true;
+                mc_lambda_data.px = mom.x;
+                mc_lambda_data.py = mom.y;
+                mc_lambda_data.pz = mom.z;
+
+                TLorentzVector lam_vec = create_lorentz_vector(mom.x, mom.y, mom.z, LAMBDA_MASS);
+                mc_lambda_data.energy = lam_vec.E();
+                mc_lambda_data.t_value = calculate_t(beam_proton_vec, lam_vec);
+                break;
+            }
+        }
+    }
+
+    return {beam_proton_data, mc_lambda_data};
+}
+
+/**
+ * @brief Process reconstructed Lambda and calculate t
+ * @param ff_lambdas Collection of reconstructed Lambdas
+ * @param beam_proton_data Beam proton data with momentum
+ * @return ParticleData with momentum and t value
+ */
+ParticleData process_ff_lambda(const ReconstructedParticleCollection& ff_lambdas,
+                               const ParticleData& beam_proton_data) {
+    ParticleData data;
+
+    // Only process if we have a valid beam proton
+    if (!beam_proton_data.valid) {
+        return data;
+    }
+
+    // Create beam proton TLorentzVector
+    TLorentzVector beam_proton_vec = create_lorentz_vector(
+        beam_proton_data.px,
+        beam_proton_data.py,
+        beam_proton_data.pz,
+        PROTON_MASS
+    );
+
+    // Process first Lambda in collection
+    for (const auto& lam : ff_lambdas) {
+        data.valid = true;
+        const auto mom = lam.getMomentum();
+        data.px = mom.x;
+        data.py = mom.y;
+        data.pz = mom.z;
+        data.energy = lam.getEnergy();
+
+        TLorentzVector lam_vec = create_lorentz_vector(mom.x, mom.y, mom.z, LAMBDA_MASS);
+        data.t_value = calculate_t(beam_proton_vec, lam_vec);
+        break; // Only process first Lambda
+    }
+
+    return data;
+}
 
 /**
  * @brief Formats electron particle data into a comma-separated string.
@@ -96,7 +233,27 @@ void process_event(const podio::Frame& event, int evt_id) {
         { "sigma"   , &kinSigma    },
     };
 
-    // Write csv header?
+    /*---------------------------------------------------------------------------
+      Get MC particles and find beam proton and Lambda - now returns ParticleData
+    ---------------------------------------------------------------------------*/
+    const auto& mcParticles = event.get<MCParticleCollection>("MCParticles");
+    auto [beam_proton_data, mc_lambda_data] = find_mc_particles(mcParticles);
+
+    // Skip event if no beam proton found
+    if (!beam_proton_data.valid) {
+        fmt::print("Warning: No beam proton found in event {}, skipping...\n", evt_id);
+        return;
+    }
+
+    /*---------------------------------------------------------------------------
+      Process reconstructed far-forward Lambda
+    ---------------------------------------------------------------------------*/
+    const auto& ffLambdas = event.get<ReconstructedParticleCollection>("ReconstructedFarForwardZDCLambdas");
+    ParticleData ff_lambda_data = process_ff_lambda(ffLambdas, beam_proton_data);
+
+    /*---------------------------------------------------------------------------
+      Write CSV header
+    ---------------------------------------------------------------------------*/
     if (!header_written) {
         csv << "evt";
         for (const auto& [name, coll] : kinDict) {
@@ -113,6 +270,19 @@ void process_event(const podio::Frame& event, int evt_id) {
         csv << "," << "mc_y";
         csv << "," << "mc_nu";
         csv << "," << "mc_w";
+
+        // Add t-value columns
+        csv << "," << "mc_true_t";
+        csv << "," << "mc_lam_t";
+        csv << "," << "ff_lam_t";
+
+        // Add Lambda momentum columns
+        csv << "," << "mc_lam_px";
+        csv << "," << "mc_lam_py";
+        csv << "," << "mc_lam_pz";
+        csv << "," << "ff_lam_px";
+        csv << "," << "ff_lam_py";
+        csv << "," << "ff_lam_pz";
 
         // Add electron particle columns
         csv << "," << "elec_id";
@@ -137,6 +307,9 @@ void process_event(const podio::Frame& event, int evt_id) {
         header_written = true;
     }
 
+    /*---------------------------------------------------------------------------
+      Write data
+    ---------------------------------------------------------------------------*/
     csv << evt_id;
     for (const auto& [name, coll] : kinDict)
     {
@@ -158,6 +331,19 @@ void process_event(const podio::Frame& event, int evt_id) {
     csv << "," << event.getParameter<std::string>("dis_y_d").value_or("");
     csv << "," << event.getParameter<std::string>("dis_nu").value_or("");
     csv << "," << event.getParameter<std::string>("dis_w").value_or("");
+
+    // Add t values
+    csv << "," << event.getParameter<std::string>("dis_tspectator").value_or("");  // mc_true_t
+    csv << "," << (mc_lambda_data.valid ? fmt::format("{}", mc_lambda_data.t_value) : "");
+    csv << "," << (ff_lambda_data.valid ? fmt::format("{}", ff_lambda_data.t_value) : "");
+
+    // Add Lambda momenta
+    csv << "," << (mc_lambda_data.valid ? fmt::format("{}", mc_lambda_data.px) : "");
+    csv << "," << (mc_lambda_data.valid ? fmt::format("{}", mc_lambda_data.py) : "");
+    csv << "," << (mc_lambda_data.valid ? fmt::format("{}", mc_lambda_data.pz) : "");
+    csv << "," << (ff_lambda_data.valid ? fmt::format("{}", ff_lambda_data.px) : "");
+    csv << "," << (ff_lambda_data.valid ? fmt::format("{}", ff_lambda_data.py) : "");
+    csv << "," << (ff_lambda_data.valid ? fmt::format("{}", ff_lambda_data.pz) : "");
 
     // Add electron particle information
     if (kinElectron.size() == 1) {

@@ -50,7 +50,7 @@ add_executable(csv_reco_dis csv_reco_dis.cxx)
 
 target_link_libraries(csv_reco_dis
         PRIVATE
-        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad ROOT::Physics
         podio::podio podio::podioRootIO podio::podioDict
         EDM4HEP::edm4hep EDM4HEP::edm4hepDict
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
