@@ -180,11 +180,9 @@ tools/plots/
 
 tutorials/01_plots/
 
-analysis/edm4eic-metadata/10x100/
-
-analysis/edm4eic-metadata/18x275/
-
-analysis/edm4eic-metadata/5x41/
+analysis/edm4eic-metadata*/10x100/
+analysis/edm4eic-metadata*/18x275/
+analysis/edm4eic-metadata*/5x41/
 
 analysis/edm4eic-true-decays/10x100/
 

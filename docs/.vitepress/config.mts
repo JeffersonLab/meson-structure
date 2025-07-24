@@ -41,21 +41,25 @@ export default withMermaid({
                 collapsed: false, // Ensure this is not collapsed
                 items: [
                     { text: 'Landing', link: '/' },
-                    { text: 'Campaign 2025-03', link: '/campaign' },
                 ]
             },
             {
-                text: 'Data & Analysis',
+                text: 'Data',
                 link: '/data',
                 items: [
                     { text: 'Data Access', link: '/data' },
                     { text: 'CSV Data', link: '/data-csv' },
+                    { text: 'Campaign log', link: '/campaign' },
+                ]
+            },
+            {
+                text: 'Analysis',
+                link: '/analysis',
+                items: [
+                    { text: 'Analysis', link: '/analysis' },
                     { text: 'MC Variables', link: '/mc-variables' },
                     { text: 'EDM4EIC Tree', link: '/edm4eic-tree' },
                     { text: 'EDM4EIC Diagram', link: '/edm4eic-diagram' },
-
-                    { text: 'Analysis', link: '/analysis' },
-
                 ]
             },
             {
@@ -63,9 +67,9 @@ export default withMermaid({
                 link: '/tutorials',
                 items: [
                     { text: 'Overview', link: '/tutorials' },
-                    { text: '01 Python CSV', link: '/tutorials/py-csv' },
-                    { text: '02 Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
-                    { text: '03 C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
+                    { text: 'Python CSV', link: '/tutorials/py-csv' },
+                    { text: 'Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
+                    { text: 'C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
 
                 ]
             },

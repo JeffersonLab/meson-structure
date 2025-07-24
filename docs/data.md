@@ -15,8 +15,6 @@ On JLab ifarm:
 
 CSV-s are available via link (ask for the link)
 
-(!!!) As of 2025-06-14 XRootD is not working anymore. We'll try to fix it (!!!)
-
 On XRootD (open for universities and public)
 
 ```bash

@@ -1,5 +1,8 @@
 # Publications
 
+Please follow [Wiki publication page](https://wiki.jlab.org/cuawiki/index.php/Meson_Structure_Functions#Publications_and_other_documents) for the full publications list
+
+
 ::: details Revealing the structure of light pseudoscalar mesons at the Electron–Ion Collider (EIC)<br/>Journal of Physics G: Nuclear and Particle Physics May 2021
 
 [Find out more](https://iopscience.iop.org/journal/0954-3899).
