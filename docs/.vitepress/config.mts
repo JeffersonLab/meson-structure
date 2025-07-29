@@ -70,6 +70,7 @@ export default withMermaid({
                     { text: 'Python CSV', link: '/tutorials/py-csv' },
                     { text: 'Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
                     { text: 'C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
+                    { text: 'IFarm jobs', link: '/tutorials/ifarm' },
 
                 ]
             },
