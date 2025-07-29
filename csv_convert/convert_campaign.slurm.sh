@@ -2,7 +2,7 @@
 #SBATCH --account=eic
 #SBATCH --partition=production
 #SBATCH --job-name=convertCSV
-#SBATCH --time=02:00:00          # adjust as needed
+#SBATCH --time=2-02:00:00          # format days-hours:minutes:seconds
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=2G
 #SBATCH --output=/volatile/eic/romanov/meson-structure-2025-06/convert_csv.%j.log

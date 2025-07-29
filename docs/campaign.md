@@ -5,6 +5,123 @@ This page documents the 2025-03 meson structure simulation campaign.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
+## Campaign 2025-07
+
+### Overview
+
+This campaign introduces the the new energy range 10x130 and increases the statistics to
+10 million events for each energy range. 
+
+1. 5x41 GeV
+2. 10x100 GeV
+2. 10x130 GeV
+3. 18x275 GeV
+
+Each configuration has multiple files (indexed 001-200) with 5000 events per file.
+
+```yaml
+timestamp: '2025-06-04T12:05:06.867483'
+input_file: /volatile/eic/romanov/meson-structure-2025-06/eg-hepmc/*.hepmc
+container_image: /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
+```
+
+
+ A two-step plan for file processing. To better isolate any potential issues as there too many changes (new software, updated generator, new energy level, etc.).
+
+For all processing, the latest stable EIC container: 25.07-stable.
+
+1. Reprocess the existing Monte Carlo files with the new 25.07-stable container. I.e. usual generator data with the latest reconstruction.
+
+2. Process new 10 million event files, with new energy
+
+
+### Processing Commands
+
+The exact commands used in this campaign:
+
+Old data using 25.07-stable
+
+```bash
+mkdir /volatile/eic/romanov/meson-structure-2025-07
+mkdir /volatile/eic/romanov/meson-structure-2025-07/reco
+mkdir /volatile/eic/romanov/meson-structure-2025-07/reco-oldmc
+mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/
+
+
+# Using previous converted hepmc files
+cp -r /volatile/eic/romanov/meson-structure-2025-06/eg-hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-oldmc
+
+# Using new Avnish generated files
+mkdir /volatile/eic/romanov/meson-structure-2025-07/kaon_lambda_mc_2025-07
+mv /volatile/eic/romanov/meson-structure-2025-07/kaon_lambda_mc_2025-07 /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07
+
+# split 5x41
+python root_hepmc_converter.py \
+      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_5.0on41.0_x0.0001-1.0000_q1.0-500.0.root \
+      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_5x41_5000evt \
+      --events-per-file 5000
+
+# split 10x100
+python root_hepmc_converter.py \
+      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_10.0on100.0_x0.0001-1.0000_q1.0-500.0.root \
+      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x100_5000evt \
+      --events-per-file 5000
+
+# split 10x130
+python root_hepmc_converter.py \
+      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_10.0on130.0_x0.0001-1.0000_q1.0-500.0.root \
+      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x130_5000evt \
+      --events-per-file 5000
+
+# split 18x275
+python root_hepmc_converter.py \
+      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_18.0on275.0_x0.0001-1.0000_q1.0-500.0.root \
+      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_18x275_5000evt \
+      --events-per-file 5000
+
+
+# Priority reconstruction of each 100 files for each energy range
+
+mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-5x41
+mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x100
+mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x130
+mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-18x275
+
+mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_5x41_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-5x41
+mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x100_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x100
+mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x130_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x130
+mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_18x275_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-18x275
+
+# Jobs for priority
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-07 \
+       -o /volatile/eic/romanov/meson-structure-2025-07/reco \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-*/*.hepmc
+
+
+
+k_lambda_crossing_0_5.0on41.0_x0.0001-1.0000_q1.0-500.0.root
+
+# Creating jobs (using latest eic_xl container)
+cd /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-07 \
+       -o /volatile/eic/romanov/meson-structure-2025-07/reco \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/*.hepmc
+
+
+# Submit jobs
+cd /volatile/eic/romanov/meson-structure-2025-07/reco/
+submit_all_slurm_jobs.sh
+```
+
+---
+
+
 ## Campaign 2025-05
 
 ### Overview
