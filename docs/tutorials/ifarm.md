@@ -46,9 +46,11 @@ But there is a separate `#SBATCH --error=` can be added to split output and erro
 
 
 There are several approaches how to run eic_shell under the slurm on ifarm. 
-For Meson-Structure campaigns we create 2 scripts: one for batch submission and another one for what to do in the container. 
 
-`eic_shell` is a slim wrapper around singularity (or now apptainer) containers. 
+For Meson-Structure campaigns we create 2 scripts: one for batch submission and another one for what to do in the container (listed below). It is also possible to run just one script with slurm command. 
+
+
+`eic_shell` is a slim wrapper around singularity (or now apptainer) containers. Instead of eic_shell direct singularity command could be used. 
 
 ```bash
 singularity exec -B /host/dir:/container/dir {image} script_to_run.sh
@@ -70,6 +72,22 @@ Where:
    /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable
    ```
 - `script_to_run.sh` your script to run in the eic shell
+
+Here is an example (it is wordy but it illustrates real ifarm paths and images)
+
+```bash
+singularity exec \
+-B /volatile/eic/romanov/meson-structure-2025-07:/volatile/eic/romanov/meson-structure-2025-07 \
+/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable \
+/volatile/eic/romanov/meson-structure-2025-07/reco/k_lambda_18x275_5000evt_073.container.sh
+```
+
+Instead of `script_to_run.sh` one can put commands directly, but it might be tricky in terms of quotes, special symbols, etc. Here is an example from [csv_convert/convert_campaign.slurm.sh](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/convert_campaign.slurm.sh): 
+
+```bash
+singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
+   bash -c 'cd /code && python3 convert_campaign.py /work && cd /work && for f in *.csv; do zip "${f}.zip" "$f"; done'
+```
 
 For simulation campaign [full-sim-pipeline/create_jobs.py](https://github.com/JeffersonLab/meson-structure/blob/main/full-sim-pipeline/create_jobs.py) create such jobs for each hepmc file. 
 
