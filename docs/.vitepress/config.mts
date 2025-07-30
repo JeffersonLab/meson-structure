@@ -78,7 +78,7 @@ export default withMermaid({
                 text: 'Results',
                 items: [
                     { text: 'Publications', link: '/publications' },
-                    { text: 'Generator plots', link: '/plots' },
+                    { text: 'Generator plots', link: '/eg-plots' },
                     { text: 'Decay plots', link: '/plots_decays' },
                 ]
             }
