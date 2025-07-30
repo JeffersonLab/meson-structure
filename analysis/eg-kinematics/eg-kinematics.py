@@ -21,6 +21,7 @@ Usage example:
 
 import argparse
 import os
+import json
 import uproot
 import awkward as ak
 import numpy as np
@@ -182,6 +183,76 @@ def fill_histograms(hists, chunk):
             hists[(particle, "eta")].fill(eta=eta)
 
 
+def serialize_histograms_to_json(hists, outdir="plots"):
+    """
+    Serialize histograms to JSON format suitable for Apache ECharts.
+    Each histogram is saved as a separate JSON file with bin centers, counts, and metadata.
+    """
+    json_dir = os.path.join(outdir, "json")
+    os.makedirs(json_dir, exist_ok=True)
+    
+    histogram_metadata = {}
+    
+    for (particle, var), hist_obj in hists.items():
+        # Get the axis
+        axis = hist_obj.axes[0]
+        
+        # Get bin edges and centers
+        bin_edges = axis.edges
+        bin_centers = axis.centers
+        
+        # Get histogram values (counts)
+        counts = hist_obj.values()
+        
+        # Create data structure for ECharts
+        chart_data = {
+            "metadata": {
+                "particle": particle,
+                "variable": var,
+                "particle_full_name": particle_full_names[particle],
+                "x_label": axis.label,
+                "y_label": "Counts",
+                "title": f"{particle_full_names[particle]} - {var.replace('_', ' ')}"
+            },
+            "data": {
+                "bin_edges": bin_edges.tolist(),
+                "bin_centers": bin_centers.tolist(),
+                "counts": counts.tolist(),
+                "entries": int(hist_obj.sum()),
+                "mean": float(hist_obj.mean()),
+                "std": float(hist_obj.std())
+            },
+            "echarts_series": {
+                "type": "bar",
+                "data": [[float(center), int(count)] for center, count in zip(bin_centers, counts)],
+                "barWidth": float(bin_centers[1] - bin_centers[0]) if len(bin_centers) > 1 else 1.0
+            }
+        }
+        
+        # Save individual histogram JSON
+        filename = f"{particle}_{var}.json"
+        filepath = os.path.join(json_dir, filename)
+        with open(filepath, 'w') as f:
+            json.dump(chart_data, f, indent=2)
+        
+        print(f"Saved JSON: {filename}")
+        
+        # Add to metadata collection
+        histogram_metadata[f"{particle}_{var}"] = {
+            "file": filename,
+            "particle": particle,
+            "variable": var,
+            "title": chart_data["metadata"]["title"]
+        }
+    
+    # Save metadata file listing all histograms
+    metadata_filepath = os.path.join(json_dir, "histogram_metadata.json")
+    with open(metadata_filepath, 'w') as f:
+        json.dump(histogram_metadata, f, indent=2)
+    
+    print(f"Saved histogram metadata: histogram_metadata.json")
+
+
 def plot_histograms(hists, outdir="plots"):
     """
     Create matplotlib plots for each histogram and save them.
@@ -280,7 +351,12 @@ def main():
     # Generate plots
     print(f"Creating plots in directory: {args.outdir}")
     plot_histograms(hists, outdir=args.outdir)
-    print("Done!")
+    
+    # Serialize histograms to JSON
+    print(f"\nSerializing histograms to JSON...")
+    serialize_histograms_to_json(hists, outdir=args.outdir)
+    
+    print("\nDone!")
 
 
 if __name__ == "__main__":
