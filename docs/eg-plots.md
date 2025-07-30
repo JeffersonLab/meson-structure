@@ -7,23 +7,16 @@ Generated with the Sullivan process for K+Λ production.
 
 ## Incident Proton
 
-The incident proton beam with nominal energy of 100 GeV.
+The incident proton beam particles
 
-### Momentum Components
-
-| px | py |
-|:--:|:--:|
-| ![px](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_px.png) | ![py](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_py.png) |
-
-| pT | pz | p |
+| px | py | pz |
 |:--:|:--:|:--:|
-| ![pT](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_pt.png) | ![pz](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_pz.png) | ![p](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_p.png) |
+| ![px](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_px.png) | ![py](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_py.png) | ![pz](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_pz.png) |
 
-### Angular Distribution
+| pT | p | angular |
+|:--:|:--:|:--:|
+| ![pT](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_pt.png) | ![p](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_p.png) | ![angle](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_angle_z_mrad.png) |
 
-| Minimal angle with Z-axis |
-|:-------------------------:|
-| ![angle](/analysis/campaign-2025-07/eg-kinematics/10x100/inc_p_angle_z_mrad.png) |
 
 ---
 
