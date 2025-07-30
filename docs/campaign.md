@@ -7,6 +7,16 @@ This page documents the 2025-03 meson structure simulation campaign.
 
 ## Campaign 2025-07
 
+Testing MC
+
+```bash
+python3 /home/romanov/meson-structure-work/meson-structure/analysis/eg-kinematics/eg-kinematics.py \
+--input-file /w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/k_lambda_crossing_0_10.0on100.0_x0.0001-0.9000_q1.0-500.0.root \
+--outdir /home/romanov/meson-structure-work/meson-structure/docs/public/analysis/campaign-2025-07/eg-kinematics \
+--max-events 50000
+
+```
+
 ### Overview
 
 This campaign introduces the the new energy range 10x130 and increases the statistics to
@@ -235,20 +245,14 @@ cd /volatile/eic/romanov/meson-structure-2025-03/reco/
 submit_all_slurm_jobs.sh
 ```
 
+We used files in 
 
-## Accessing the Data
-
-The data can be accessed using XRootD:
-
-```bash
-# XRootD root URL
-root://dtn-eic.jlab.org
-
-# Browse available files
-xrdfs root://dtn-eic.jlab.org ls /volatile/eic/romanov/meson-structure-2025-03/reco
-
-# Example download
-xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-03/reco/k_lambda_5x41_5000evt_001.edm4eic.root ./
+```
+/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic
 ```
 
-For more details on accessing the data, see the [Data](./data) page.
+With headon collisions `k_lambda_crossing_0_*`
+
+
+
+> For details on accessing the data, see the [Data](./data) page.

@@ -3,23 +3,20 @@
 """
 analyze_kinematics.py
 
-Reads the 'Evnts' TTree from a large ROOT file. For each of the branches:
-    - "P_Inc."
-    - "e_Inc."
-    - "e_Scat."
-    - "k."
-    - "lamb_scat."
+Reads the 'Evnts' TTree from a large ROOT file for EIC analysis.
+Analyzes incident and scattered particles with appropriate kinematics.
 
-we build 1D histograms of:
-  1) pT = sqrt(px^2 + py^2)
-  2) pz
-  3) theta in milliradians
-  4) phi in milliradians
+For incident particles (inc_p, inc_e):
+  - pT, pz, p (total momentum)
+  - Minimal angle with Z-axis in mrad
 
-We store them in scikit-hep/hist objects and produce PNG plots in 'plots/' by default.
+For scattered particles (scat_e, kaon, lambda):
+  - pT, pz, p (total momentum)
+  - theta, phi in radians
+  - pseudorapidity (eta)
 
 Usage example:
-  python analyze_kinematics.py --input-file k_lambda_crossing_0_10.0on100.0.root --max-events 100000
+  python analyze_kinematics.py --input-file k_lambda_crossing_0_10.0on100.0.root --energy 10x100 --max-events 100000
 """
 
 import argparse
@@ -30,170 +27,260 @@ import numpy as np
 import matplotlib.pyplot as plt
 import hist
 from hist import Hist
+from hist.axis import Regular as RegAx
 
-branches  = ["P_Inc.", "e_Inc.", "e_Scat.", "k.",   "lamb_scat."]
-particles = ["inc_p" , "inc_e",  "scat_e",  "kaon", "lambda"]
+# Branch names in ROOT file
+branches = ["P_Inc.", "e_Inc.", "e_Scat.", "k.", "lamb_scat."]
+
+# Friendly particle names for everything else
+particles = ["inc_p", "inc_e", "scat_e", "kaon", "lambda"]
+
+# Map between branches and particle names
+particle_to_branch = {particle: branch for particle, branch in zip(particles, branches)}
+branch_to_particle = {branch: particle for particle, branch in zip(particles, branches)}
+
+# Define particle categories
+incident_particles = ["inc_p", "inc_e"]
+scattered_particles = ["scat_e", "kaon", "lambda"]
+
+# Full descriptive names for plots
+particle_full_names = {
+    "inc_p": "Incident Proton",
+    "inc_e": "Incident Electron",
+    "scat_e": "Scattered Electron",
+    "kaon": "Scattered Kaon",
+    "lambda": "Scattered Lambda"
+}
 
 
-def create_histograms():
+def parse_energy(energy_str):
+    """Parse energy string like '10x100' into (e_energy, p_energy)"""
+    parts = energy_str.split('x')
+    if len(parts) != 2:
+        raise ValueError("Energy must be in format NxM (e.g., 10x100)")
+    return float(parts[0]), float(parts[1])
+
+
+def create_histograms(e_energy, p_energy):
     """
-    Returns a dict of hist.Hist objects for each particle's:
-      - pt
-      - pz
-      - theta_mrad
-      - phi_mrad
-
-    We'll index them by (particle_name, var_name).
+    Returns a dict of hist.Hist objects customized for each particle type.
+    
+    For incident particles:
+      - pt, pz, p, angle_z_mrad
+    
+    For scattered particles:
+      - pt, pz, p, theta_rad, phi_rad, eta
     """
-    # Binning choices
-    pt_edges       = hist.axis.Regular(100, 0, 10, name="pt", label="pT (GeV/c)")
-    pz_edges       = hist.axis.Regular(200, -100, 100, name="pz", label="pz (GeV/c)")
-    p_hist         = hist.axis.Regular(200, -100, 100, name="P", label="P-total (GeV/c)")
-    theta_mrad_ax  = hist.axis.Regular(180, 0, 180, name="theta_mrad", label=r"$\theta$ (mrad)")
-    # phi from -180 to 180, in mrad
-    phi_mrad_ax    = hist.axis.Regular(360, -180, 180, name="phi_mrad", label=r"$\phi$ (mrad)")
-
-    # We have 5 particle branches
-
-
-    # We'll build a dictionary: hists[(part, "pt")] = Hist(...)
     hists = {}
-    for part in particles:
-        # 1) pT
-        h_pt = Hist(pt_edges, storage=hist.storage.Double())
-        # 2) pz
-        h_pz = Hist(pz_edges, storage=hist.storage.Double())
-        # 3) theta in mrad
-        h_th = Hist(theta_mrad_ax, storage=hist.storage.Double())
-        # 4) phi in mrad
-        h_phi = Hist(phi_mrad_ax, storage=hist.storage.Double())
-        # Total momentum
-        h_p = Hist(p_hist, storage=hist.storage.Double())
-
-        hists[(part, "pt")]         = h_pt
-        hists[(part, "pz")]         = h_pz
-        hists[(part, "theta_mrad")] = h_th
-        hists[(part, "phi_mrad")]   = h_phi
-        hists[(part, "p")]   = h_p
-
+    
+    # Incident proton histograms
+    # Expected momentum ~ p_energy
+    p_max = p_energy * 1.2
+    hists[("inc_p", "pt")] = Hist(RegAx(100, 0, 2, name="pt", label="pT [GeV/c]"))
+    hists[("inc_p", "px")] = Hist(RegAx(200, -p_energy*0.1, p_energy*0.1, name="px", label="px [GeV/c]"))
+    hists[("inc_p", "py")] = Hist(RegAx(200, -p_energy*0.1, p_energy*0.1, name="py", label="py [GeV/c]"))
+    hists[("inc_p", "pz")] = Hist(RegAx(200, p_energy-1, p_energy+1, name="pz", label="pz [GeV/c]"))
+    hists[("inc_p", "p")] = Hist(RegAx(200, p_energy-1, p_energy+1, name="p", label="P [GeV/c]"))
+    hists[("inc_p", "angle_z_mrad")] = Hist(RegAx(100, 0, 10, name="angle_z", label="Min. angle with Z [mrad]"))
+    
+    # Incident electron histograms
+    # Expected momentum ~ e_energy
+    hists[("inc_e", "pt")] = Hist(RegAx(100, 0, 1, name="pt", label="pT [GeV/c]"))
+    hists[("inc_e", "px")] = Hist(RegAx(200, -e_energy*0.1, e_energy*0.1, name="px", label="px [GeV/c]"))
+    hists[("inc_e", "py")] = Hist(RegAx(200, -e_energy*0.1, e_energy*0.1, name="py", label="py [GeV/c]"))
+    hists[("inc_e", "pz")] = Hist(RegAx(200, -e_energy*1.05, -e_energy*0.95, name="pz", label="pz [GeV/c]"))
+    hists[("inc_e", "p")] = Hist(RegAx(200, e_energy*0.9, e_energy*1.1, name="p", label="P [GeV/c]"))
+    hists[("inc_e", "angle_z_mrad")] = Hist(RegAx(100, 0, 30, name="angle_z", label="Min. angle with Z [mrad]"))
+    
+    # Scattered electron histograms
+    hists[("scat_e", "pt")] = Hist(RegAx(100, 0, p_energy, name="pt", label="pT [GeV/c]"))
+    hists[("scat_e", "pz")] = Hist(RegAx(200, -p_energy, p_energy, name="pz", label="pz [GeV/c]"))
+    hists[("scat_e", "p")] = Hist(RegAx(200, 0, p_energy, name="p", label="P [GeV/c]"))
+    hists[("scat_e", "theta")] = Hist(RegAx(180, 0, np.pi, name="theta", label=r"$\theta$ [rad]"))
+    hists[("scat_e", "phi")] = Hist(RegAx(360, -np.pi, np.pi, name="phi", label=r"$\phi$ [rad]"))
+    hists[("scat_e", "eta")] = Hist(RegAx(100, -5, 5, name="eta", label=r"$\eta$ (pseudorapidity)"))
+    
+    # Scattered kaon histograms
+    # Kaon momentum can be substantial fraction of beam energy
+    max_p = max(e_energy, p_energy) * 0.8
+    hists[("kaon", "pt")] = Hist(RegAx(100, 0, p_max*0.5, name="pt", label="pT [GeV/c]"))
+    hists[("kaon", "pz")] = Hist(RegAx(200, -p_max*0.5, p_max, name="pz", label="pz [GeV/c]"))
+    hists[("kaon", "p")] = Hist(RegAx(200, 0, p_max, name="p", label="P [GeV/c]"))
+    hists[("kaon", "theta")] = Hist(RegAx(180, 0, np.pi, name="theta", label=r"$\theta$ [rad]"))
+    hists[("kaon", "phi")] = Hist(RegAx(360, -np.pi, np.pi, name="phi", label=r"$\phi$ [rad]"))
+    hists[("kaon", "eta")] = Hist(RegAx(100, -5, 5, name="eta", label=r"$\eta$ (pseudorapidity)"))
+    
+    # Scattered lambda histograms
+    # Lambda will carry remaining momentum
+    hists[("lambda", "pt")] = Hist(RegAx(100, 0, 1, name="pt", label="pT [GeV/c]"))
+    hists[("lambda", "px")] = Hist(RegAx(200, -p_energy*0.03, p_energy*0.03, name="px", label="px [GeV/c]"))
+    hists[("lambda", "py")] = Hist(RegAx(200, -p_energy*0.03, p_energy*0.03, name="py", label="py [GeV/c]"))
+    hists[("lambda", "pz")] = Hist(RegAx(200, p_max*0.7, p_max*1.05, name="pz", label="pz [GeV/c]"))
+    hists[("lambda", "p")] = Hist(RegAx(200, p_max*0.7, p_max*1.05, name="p", label="P [GeV/c]"))
+    hists[("lambda", "angle_z_mrad")] = Hist(RegAx(100, 0, 10, name="angle_z", label="Min. angle with Z [mrad]"))
+    
     return hists
+
+
+def calculate_pseudorapidity(theta):
+    """Calculate pseudorapidity from theta"""
+    # Avoid log(0) by adding small epsilon
+    return -np.log(np.tan(theta/2) + 1e-30)
 
 
 def fill_histograms(hists, chunk):
     """
-    Extract the relevant variables from each particle branch, compute:
-      - pT = sqrt(px^2 + py^2)
-      - pz
-      - theta [mrad]
-      - phi [mrad]
-
-    Then fill the corresponding histograms in the hists dict.
+    Extract kinematics and fill appropriate histograms based on particle type.
     """
-    # List of particle branches
-    particles = ["P_Inc.", "e_Inc.", "e_Scat.", "k.", "lamb_scat."]
-
-    # For each branch, we have awkward arrays where each entry is a record:
-    # { fP: { fX, fY, fZ }, fE }
-    # We'll get px = fP.fX, py = fP.fY, pz = fP.fZ
-    for part in particles:
-        arr = chunk[part]
-        # arr has length = # events in chunk
+    for particle in particles:
+        # Get the branch name for this particle
+        branch = particle_to_branch[particle]
+        arr = chunk[branch]
+        
+        # Extract momentum components
         px = arr["fP"]["fX"]
         py = arr["fP"]["fY"]
         pz = arr["fP"]["fZ"]
 
-        # compute derived
+        # print(chunk.fields)
+        # print(particle)
+        # print(px)
+        # print(py)
+        # print(pz)
+        
+        # Calculate common quantities
         pt = np.sqrt(px**2 + py**2)
+        p_mag = np.sqrt(px**2 + py**2 + pz**2 + 1e-30)
+        
+        # Fill common histograms
+        hists[(particle, "pt")].fill(pt=pt)
+        hists[(particle, "pz")].fill(pz=pz)
+        hists[(particle, "p")].fill(p=p_mag)
 
-        # total momentum magnitude
-        p_mag = np.sqrt(px**2 + py**2 + pz**2 + 1e-30)  # avoid zero in divisions
-
-        # angle definitions
-        # polar angle: theta = arctan2(pt, pz) in [0..pi], in radians
-        theta = np.arctan2(pt, pz)
-        # or eqv. theta = np.arccos(pz / p_mag) => same result
-        # we want in milliradians => multiply by 1e3
-        theta_mrad = theta * 1e3
-
-        # azimuth: phi = arctan2(py, px), in [-pi, pi], convert to mrad
-        phi = np.arctan2(py, px)
-        phi_mrad = phi * 1e3 * (180 / np.pi) / 180  # Actually let's do consistent approach
-
-        # Actually, let's do direct: phi (rad) * 1e3 => mrad
-        # But maybe we want phi from -180..180 in degrees, then *1e3?
-        # The user specifically asked for "Phi (in milirads)", so let's do phi (rad)->(rad*mrad)
-        phi_mrad = phi * 1e3
-
-        # fill
-        hists[(part, "pt")].fill(pt=pt)
-        hists[(part, "pz")].fill(pz=pz)
-        hists[(part, "theta_mrad")].fill(theta_mrad=theta_mrad)
-        hists[(part, "phi_mrad")].fill(phi_mrad=phi_mrad)
-        hists[(part, "p")].fill(p_mag)
+       
+        if particle in incident_particles + ["lambda"]:
+            # For incident particles: minimal angle with Z-axis
+            # This is the angle from z-axis: arccos(|pz|/p)
+            cos_angle = np.abs(pz) / p_mag
+            # Clamp to valid range for arccos
+            cos_angle = np.clip(cos_angle, -1, 1)
+            min_angle_z = np.arccos(cos_angle)  # in radians
+            angle_z_mrad = min_angle_z * 1000  # convert to mrad
+            
+            hists[(particle, "angle_z_mrad")].fill(angle_z_mrad)
+            hists[(particle, "px")].fill(px=px)
+            hists[(particle, "py")].fill(py=py)
+            
+        elif particle in scattered_particles:
+            # For scattered particles: theta, phi in radians and eta
+            theta = np.arctan2(pt, pz)  # polar angle [0, pi]
+            phi = np.arctan2(py, px)    # azimuthal angle [-pi, pi]
+            eta = calculate_pseudorapidity(theta)
+            
+            hists[(particle, "theta")].fill(theta=theta)
+            hists[(particle, "phi")].fill(phi=phi)
+            hists[(particle, "eta")].fill(eta=eta)
 
 
 def plot_histograms(hists, outdir="plots"):
     """
-    For each (particle, var) in hists, produce a 1D matplotlib plot and save it.
+    Create matplotlib plots for each histogram and save them.
     """
     os.makedirs(outdir, exist_ok=True)
-
-    for key, hist_obj in hists.items():
-        part, var = key  # e.g. ("P_Inc.", "pt")
-
-        # We'll create a simple figure
-        fig, ax = plt.subplots(figsize=(6,5))
+    
+    for (particle, var), hist_obj in hists.items():
+        fig, ax = plt.subplots(figsize=(7, 5))
+        
+        # Plot the histogram
         hist_obj.plot1d(ax=ax)
-        ax.set_title(f"{part} - {var}")
-        # The Hist should have an axis label from the hist creation steps
-        # but we can do a fallback
-        if hist_obj.axes[0].label is not None:
-            ax.set_xlabel(hist_obj.axes[0].label)
-        else:
-            ax.set_xlabel(var)
+        
+        # Set title with full particle name
+        full_name = particle_full_names[particle]
+        ax.set_title(f"{full_name} - {var.replace('_', ' ')}")
+        
+        # Labels are already set from histogram creation
         ax.set_ylabel("Counts")
+        ax.grid(True, alpha=0.3)
+        
         fig.tight_layout()
-
-        # sanitize the part name for filename usage
-        part_sanitized = part.replace(".", "")  # remove dot
-        plt_filename = f"{part_sanitized}_{var}.png"
-        plt_path = os.path.join(outdir, plt_filename)
-        plt.savefig(plt_path)
+        
+        # Save with friendly particle name
+        filename = f"{particle}_{var}.png"
+        filepath = os.path.join(outdir, filename)
+        plt.savefig(filepath, dpi=100)
         plt.close(fig)
+        
+        print(f"Saved plot: {filename}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Analyze kinematics of final state particles from Evnts TTree.")
-    parser.add_argument("--input-file", "-i", required=True, help="Path to the ROOT file with the Evnts TTree.")
-    parser.add_argument("--outdir", "-o", default="plots", help="Directory to save output plots (default: plots).")
-    parser.add_argument("--max-events", "-m", type=int, default=None, help="Maximum number of events to process (default: all).")
-    parser.add_argument("--chunk-size", type=int, default=100_000, help="How many TTree entries to read per chunk (default: 100000).")
+    parser = argparse.ArgumentParser(
+        description="Analyze kinematics of EIC final state particles from Evnts TTree."
+    )
+    parser.add_argument(
+        "--input-file", "-i", 
+        required=True, 
+        help="Path to the ROOT file with the Evnts TTree."
+    )
+    parser.add_argument(
+        "--energy", "-e",
+        required=True,
+        help="Beam energies in format ExP (e.g., 10x100 for 10 GeV e- and 100 GeV p+)"
+    )
+    parser.add_argument(
+        "--outdir", "-o", 
+        default="plots", 
+        help="Directory to save output plots (default: plots)."
+    )
+    parser.add_argument(
+        "--max-events", "-m", 
+        type=int, 
+        default=None, 
+        help="Maximum number of events to process (default: all)."
+    )
+    parser.add_argument(
+        "--chunk-size", 
+        type=int, 
+        default=100_000, 
+        help="How many TTree entries to read per chunk (default: 100000)."
+    )
     args = parser.parse_args()
-
-    # create histograms
-    hists = create_histograms()
-
-    # read TTree in chunks
+    
+    # Parse energy argument
+    e_energy, p_energy = parse_energy(args.energy)
+    print(f"Beam configuration: {e_energy} GeV electron x {p_energy} GeV proton")
+    
+    # Create histograms with appropriate limits
+    hists = create_histograms(e_energy, p_energy)
+    
+    # Read and process TTree
     tree_name = "Evnts"
-
-
     events_processed = 0
+    
+    print(f"Processing file: {args.input_file}")
+    
     for data_chunk in uproot.iterate(
             f"{args.input_file}:{tree_name}",
-            expressions=branches,
+            expressions=branches,  # Use the actual branch names for ROOT access
             library="ak",
             step_size=args.chunk_size
     ):
         fill_histograms(hists, data_chunk)
-        # count how many events in this chunk
-        chunk_len = len(data_chunk[branches[0]])  # or any branch
+        
+        # Count events
+        chunk_len = len(data_chunk[branches[0]])
         events_processed += chunk_len
+        
         if args.max_events and events_processed >= args.max_events:
+            print(f"Reached maximum events limit: {args.max_events}")
             break
-
+    
     print(f"Processed {events_processed} events in total.")
-    # now produce plots
+    
+    # Generate plots
+    print(f"Creating plots in directory: {args.outdir}")
     plot_histograms(hists, outdir=args.outdir)
+    print("Done!")
 
 
 if __name__ == "__main__":
