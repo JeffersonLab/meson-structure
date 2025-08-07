@@ -5,7 +5,13 @@ This page documents the 2025-03 meson structure simulation campaign.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
-## Campaign 2025-07
+## Campaign 2025-08
+
+Original MC files located in 
+
+```
+/w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2
+```
 
 Testing MC
 
