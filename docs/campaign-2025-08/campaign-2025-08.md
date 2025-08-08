@@ -226,4 +226,4 @@ With headon collisions `k_lambda_crossing_0_*`
 
 
 
-> For details on accessing the data, see the [Data](./../data) page.
+> For details on accessing the data, see the [Data](../data) page.
