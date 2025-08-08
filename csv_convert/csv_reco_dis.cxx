@@ -286,10 +286,7 @@ void process_event(const podio::Frame& event, int evt_id) {
 
         // Add electron particle columns
         csv << "," << "elec_id";
-        csv << "," << "elec_pdg";
-        csv << "," << "elec_charge";
         csv << "," << "elec_energy";
-        csv << "," << "elec_mass";
         csv << "," << "elec_px";
         csv << "," << "elec_py";
         csv << "," << "elec_pz";

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EIC Histogram Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        #chart { width: 100%; height: 600px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        select { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
+        .stats { margin-top: 10px; padding: 10px; background: #e8f4f8; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>EIC Kinematics Histogram Viewer</h1>
+        <select id="histogramSelect">
+            <option value="">Select a histogram...</option>
+        </select>
+        <div id="stats" class="stats" style="display: none;">
+            Entries: <span id="entries"></span> | 
+            Mean: <span id="mean"></span> | 
+            Std Dev: <span id="std"></span>
+        </div>
+        <div id="chart"></div>
+    </div>
+    
+    <script>
+        const chart = echarts.init(document.getElementById('chart'));
+        const jsonPath = 'plots/';
+        
+        // List of expected histogram files
+        const histogramFiles = [
+            'inc_p_pt', 'inc_p_px', 'inc_p_py', 'inc_p_pz', 'inc_p_p', 'inc_p_angle_z_mrad',
+            'inc_e_pt', 'inc_e_px', 'inc_e_py', 'inc_e_pz', 'inc_e_p', 'inc_e_angle_z_mrad',
+            'scat_e_pt', 'scat_e_pz', 'scat_e_p', 'scat_e_theta', 'scat_e_phi', 'scat_e_eta',
+            'kaon_pt', 'kaon_pz', 'kaon_p', 'kaon_theta', 'kaon_phi', 'kaon_eta',
+            'lambda_pt', 'lambda_px', 'lambda_py', 'lambda_pz', 'lambda_p', 'lambda_angle_z_mrad'
+        ];
+        
+        // Populate dropdown
+        const select = document.getElementById('histogramSelect');
+        histogramFiles.forEach(filename => {
+            fetch(jsonPath + filename + '.json')
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error('File not found');
+                })
+                .then(data => {
+                    const option = document.createElement('option');
+                    option.value = filename + '.json';
+                    option.textContent = data.title;
+                    select.appendChild(option);
+                })
+                .catch(err => console.log(`${filename}.json not found`));
+        });
+        
+        select.addEventListener('change', (event) => {
+            if (!event.target.value) {
+                chart.clear();
+                document.getElementById('stats').style.display = 'none';
+                return;
+            }
+            
+            fetch(jsonPath + event.target.value)
+                .then(response => response.json())
+                .then(histData => {
+                    // Update statistics
+                    document.getElementById('entries').textContent = histData.stats.entries;
+                    document.getElementById('mean').textContent = histData.stats.mean.toFixed(3);
+                    document.getElementById('std').textContent = histData.stats.std.toFixed(3);
+                    document.getElementById('stats').style.display = 'block';
+                    
+                    // Create bar data from bins
+                    const barData = histData.bins.centers.map((center, i) => [center, histData.bins.counts[i]]);
+                    
+                    const option = {
+                        title: { text: histData.title, left: 'center' },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: params => {
+                                const binCenter = params.data[0];
+                                const count = params.data[1];
+                                return `${histData.x_label}<br>Center: ${binCenter.toFixed(3)}<br>Count: ${count}`;
+                            }
+                        },
+                        xAxis: { 
+                            type: 'value', 
+                            name: histData.x_label,
+                            nameLocation: 'middle',
+                            nameGap: 30
+                        },
+                        yAxis: { 
+                            type: 'value', 
+                            name: 'Counts',
+                            nameLocation: 'middle',
+                            nameGap: 50
+                        },
+                        series: [{
+                            type: 'bar',
+                            data: barData,
+                            itemStyle: { color: '#5470c6' }
+                        }],
+                        dataZoom: [{
+                            type: 'inside',
+                            start: 0,
+                            end: 100
+                        }]
+                    };
+                    chart.setOption(option);
+                });
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => chart.resize());
+    </script>
+</body>
+</html>
