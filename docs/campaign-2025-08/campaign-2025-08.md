@@ -23,6 +23,10 @@ This campaign introduces the the new energy range 10x130 and increases the stati
 2. 10x130 GeV
 3. 18x275 GeV
 
+x= 0.0001 - 1.0000
+
+q2=1 - 500
+
 ### EG Analysis
 
 Change directories in `full-sim-pipeline` as
@@ -41,64 +45,20 @@ run
 ```
 
 
-
-### Overview
-
-This campaign 
-1. Introduces the the new energy range 10x130 
-2. Increases the statistics to 10 million events for each energy range
-3. Removes incoming particles smearing
-
-1. 5x41 GeV
-2. 10x100 GeV
-2. 10x130 GeV
-3. 18x275 GeV
-
-
-
 ### Processing Commands
 
 The exact commands used in this campaign:
 
-Old data using 25.07-stable
 
 ```bash
-mkdir /volatile/eic/romanov/meson-structure-2025-07
-mkdir /volatile/eic/romanov/meson-structure-2025-07/reco
-mkdir /volatile/eic/romanov/meson-structure-2025-07/reco-oldmc
-mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/
-
-
-# Using previous converted hepmc files
-cp -r /volatile/eic/romanov/meson-structure-2025-06/eg-hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-oldmc
+mkdir /volatile/eic/romanov/meson-structure-2025-08
+mkdir /volatile/eic/romanov/meson-structure-2025-08/reco
+mkdir /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/
 
 # Using new Avnish generated files
-mkdir /volatile/eic/romanov/meson-structure-2025-07/kaon_lambda_mc_2025-07
-mv /volatile/eic/romanov/meson-structure-2025-07/kaon_lambda_mc_2025-07 /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07
+mkdir /volatile/eic/romanov/meson-structure-2025-08/eg-orig-kaon-lambda
+cp /w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2/*.root /volatile/eic/romanov/meson-structure-2025-08/eg-orig-kaon-lambda
 
-# split 5x41
-python root_hepmc_converter.py \
-      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_5.0on41.0_x0.0001-1.0000_q1.0-500.0.root \
-      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_5x41_5000evt \
-      --events-per-file 5000
-
-# split 10x100
-python root_hepmc_converter.py \
-      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_10.0on100.0_x0.0001-1.0000_q1.0-500.0.root \
-      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x100_5000evt \
-      --events-per-file 5000
-
-# split 10x130
-python root_hepmc_converter.py \
-      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_10.0on130.0_x0.0001-1.0000_q1.0-500.0.root \
-      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x130_5000evt \
-      --events-per-file 5000
-
-# split 18x275
-python root_hepmc_converter.py \
-      --input-files /volatile/eic/romanov/meson-structure-2025-07/mc_kaon_lambda_2025-07/k_lambda_crossing_0_18.0on275.0_x0.0001-1.0000_q1.0-500.0.root \
-      --output-prefix /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_18x275_5000evt \
-      --events-per-file 5000
 
 
 # Priority reconstruction of each 100 files for each energy range

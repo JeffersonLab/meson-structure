@@ -1,20 +1,33 @@
 # EIC Event Generator Kinematics
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const energy = ref('10x100')
 const path = '/analysis/campaign-2025-07/eg-kinematics'
+
+const energyLabel = computed(() => {
+  const labels = {
+    '10x100': '10×100 GeV',
+    '10x130': '10×130 GeV',
+    '18x275': '18×275 GeV',
+    '5x41': '5×41 GeV'
+  }
+  return labels[energy.value]
+})
 </script>
 
-**Select beam energy:** <select v-model="energy">
-  <option value="10x100">10×100 GeV</option>
-  <option value="10x130">10×130 GeV</option>
-  <option value="18x275">18×275 GeV</option>
-  <option value="5x41">5×41 GeV</option>
-</select>
+<div style="margin: 1em 0;">
+  <strong>Select beam energy:</strong>
+  <select v-model="energy" style="margin-left: 0.5em; padding: 0.3em;">
+    <option value="10x100">10×100 GeV</option>
+    <option value="10x130">10×130 GeV</option>
+    <option value="18x275">18×275 GeV</option>
+    <option value="5x41">5×41 GeV</option>
+  </select>
+</div>
 
-Analysis of generated events for electron-proton collisions at {{ energy.replace('x', '×') }} GeV beam energy configuration.
+Analysis of generated events for electron-proton collisions at {{ energyLabel }} beam energy configuration.
 Generated with the Sullivan process for K⁺Λ production.
 
 ---
@@ -123,7 +136,7 @@ The Λ baryon acting as the spectator in the Sullivan process, carrying most of 
 
 ## Summary
 
-This analysis shows the kinematic distributions for the Sullivan process e + p → e' + K⁺ + Λ at {{ energy.replace('x', '×') }} GeV:
+This analysis shows the kinematic distributions for the Sullivan process e + p → e' + K⁺ + Λ at {{ energyLabel }}:
 
 - **Incident particles**: Show narrow momentum distributions centered around beam energies
 - **Scattered electron**: Exhibits broad kinematic range typical of DIS
