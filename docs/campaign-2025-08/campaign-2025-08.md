@@ -2,7 +2,7 @@
 
 This page documents the 2025-08 meson structure simulation campaign.
 
-> (!) For the list of files go to [DATA PAGE](data.md) 
+> (!) For the list of files go to [DATA PAGE](../data.md) 
 
 
 ## Campaign 2025-08
