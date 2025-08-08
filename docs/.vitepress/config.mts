@@ -49,7 +49,7 @@ export default withMermaid({
                 items: [
                     { text: 'Data Access', link: '/data' },
                     { text: 'CSV Data', link: '/data-csv' },
-                    { text: 'Campaign log', link: '/campaign' },
+                    { text: 'Campaign log', link: '/campaigns' },
                 ]
             },
             {
@@ -79,6 +79,7 @@ export default withMermaid({
                 items: [
                     { text: 'Publications', link: '/publications' },
                     { text: 'Generator plots', link: '/eg-plots' },
+                    { text: 'EG comparison', link: '/campaign-2025-08/eg-comparison' },
                     { text: 'Decay plots', link: '/plots_decays' },
                 ]
             }

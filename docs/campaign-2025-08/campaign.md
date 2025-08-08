@@ -1,6 +1,6 @@
 # Simulation campaigns
 
-This page documents the 2025-03 meson structure simulation campaign.
+This page documents the 2025-08 meson structure simulation campaign.
 
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
@@ -9,18 +9,8 @@ This page documents the 2025-03 meson structure simulation campaign.
 
 Original MC files located in 
 
-```
+```bash 
 /w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2
-```
-
-Testing MC
-
-```bash
-python3 /home/romanov/meson-structure-work/meson-structure/analysis/eg-kinematics/eg-kinematics.py \
---input-file /w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/k_lambda_crossing_0_10.0on100.0_x0.0001-0.9000_q1.0-500.0.root \
---outdir /home/romanov/meson-structure-work/meson-structure/docs/public/analysis/campaign-2025-07/eg-kinematics \
---max-events 50000
-
 ```
 
 ### Overview
@@ -33,22 +23,37 @@ This campaign introduces the the new energy range 10x130 and increases the stati
 2. 10x130 GeV
 3. 18x275 GeV
 
-Each configuration has multiple files (indexed 001-200) with 5000 events per file.
+### EG Analysis
 
-```yaml
-timestamp: '2025-06-04T12:05:06.867483'
-input_file: /volatile/eic/romanov/meson-structure-2025-06/eg-hepmc/*.hepmc
-container_image: /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
+Change directories in `full-sim-pipeline` as
+
+```bash
+SCRIPT="/home/romanov/meson-structure-work/meson-structure/analysis/eg-kinematics/eg-kinematics.py"
+INPUT_DIR="/w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2"
+OUTPUT_DIR="/home/romanov/meson-structure-work/meson-structure/docs/public/analysis/campaign-2025-08/eg-kinematics"
+MAX_EVENTS=50000
+```
+
+run 
+
+```bash
+. /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline/eg_analysis.sh
 ```
 
 
- A two-step plan for file processing. To better isolate any potential issues as there too many changes (new software, updated generator, new energy level, etc.).
 
-For all processing, the latest stable EIC container: 25.07-stable.
+### Overview
 
-1. Reprocess the existing Monte Carlo files with the new 25.07-stable container. I.e. usual generator data with the latest reconstruction.
+This campaign 
+1. Introduces the the new energy range 10x130 
+2. Increases the statistics to 10 million events for each energy range
+3. Removes incoming particles smearing
 
-2. Process new 10 million event files, with new energy
+1. 5x41 GeV
+2. 10x100 GeV
+2. 10x130 GeV
+3. 18x275 GeV
+
 
 
 ### Processing Commands
