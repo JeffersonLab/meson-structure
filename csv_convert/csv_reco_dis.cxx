@@ -112,7 +112,7 @@ TLorentzVector calculate_approx_beam(const TLorentzVector& true_beam_prot) {
     }
 
     // Crossing angles from AfterburnerConfig
-    constexpr double crossing_angle_hor = -25e-3;  // -25 mrad in X
+    constexpr double crossing_angle_hor = 25e-3;   // -25 mrad in X
     constexpr double crossing_angle_ver = 100e-6;  // 100 microrad in Y
 
     // Exact formulation for a beam with crossing angles:
@@ -188,7 +188,8 @@ TLorentzVector process_ff_lambda(const ReconstructedParticleCollection& ff_lambd
 }
 
 inline std::string no_electron_to_csv() {
-    return ",,,,,,,,,,,,,"; // 13 commas for 14 empty fields
+    // Return 13 commas; combined with the preceding comma at call site -> 14 empty fields
+    return std::string(13, ',');
 }
 
 /**
@@ -381,7 +382,8 @@ void process_event(const podio::Frame& event, int evt_id) {
     csv << "," << event.getParameter<std::string>("dis_w").value_or("");
 
     // Add t values (5 columns to match headers)
-    csv << "," << event.getParameter<std::string>("dis_tspectator").value_or("");  // mc_true_t
+    std::string mc_true_t = event.getParameter<std::string>("dis_tspectator").value_or("");
+    csv << "," << mc_true_t;  // mc_true_t
     csv << "," << (mc_lambda_vec.E() > 0 ? fmt::format("{}", mc_lambda_t_tb) : "");    // mc_lam_tb_t
     csv << "," << (mc_lambda_vec.E() > 0 ? fmt::format("{}", mc_lambda_t_exp) : "");   // mc_lam_exp_t
     csv << "," << (ff_lambda_vec.E() > 0 ? fmt::format("{}", ff_lambda_t_tb) : "");    // ff_lam_tb_t
@@ -392,7 +394,7 @@ void process_event(const podio::Frame& event, int evt_id) {
     if (kinElectron.size() == 1 && kinElectron.at(0).getScat().isAvailable()) {
         csv << "," << electron_to_csv(kinElectron.at(0).getScat());
     } else {
-        csv << "," << no_electron_to_csv();  // 14 empty fields
+        csv << "," << no_electron_to_csv();  // 13 empty fields
     }
 
     // MC true scattered electron
