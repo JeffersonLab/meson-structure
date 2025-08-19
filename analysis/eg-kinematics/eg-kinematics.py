@@ -118,7 +118,7 @@ def create_histograms(e_energy, p_energy):
     hists[("lambda", "py")] = Hist(RegAx(200, -p_energy*0.03, p_energy*0.03, name="py", label="py [GeV/c]"))
     hists[("lambda", "pz")] = Hist(RegAx(200, p_max*0.7, p_max*1.05, name="pz", label="pz [GeV/c]"))
     hists[("lambda", "p")] = Hist(RegAx(200, p_max*0.7, p_max*1.05, name="p", label="P [GeV/c]"))
-    hists[("lambda", "angle_z_mrad")] = Hist(RegAx(100, 0, 10, name="angle_z", label="Min. angle with Z [mrad]"))
+    hists[("lambda", "angle_z_mrad")] = Hist(RegAx(100, 0, 30, name="angle_z", label="Min. angle with Z [mrad]"))
     
     return hists
 

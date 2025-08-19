@@ -55,11 +55,15 @@ def make_container_script(input_file, output_dir, event_count):
     afterburn_file = os.path.join(output_dir, f"{basename}.afterburner")     # abconv doesn't need ending .hepmc
     edm4hep_file   = os.path.join(output_dir, f"{basename}.edm4hep.root")
     edm4eic_file   = os.path.join(output_dir, f"{basename}.edm4eic.root")
+    afterburn_preset_flag = "--preset=ip6_ep_130x10" if "10x130" in basename else ""
 
     container_script = textwrap.dedent(f"""\
     #!/bin/bash
     set -e
     # This script is intended to run INSIDE the Singularity container.
+
+    # Ensure we sit in some writable directory
+    cd {output_dir}
     
     echo "Sourcing EIC environment..."
     # Adjust the path if needed:
@@ -72,7 +76,7 @@ def make_container_script(input_file, output_dir, event_count):
     echo "    {infile_full}"
     echo "  Resulting files:"
     echo "    {afterburn_file}.*"
-    /usr/bin/time -v abconv {infile_full} --output {afterburn_file} 2>&1
+    /usr/bin/time -v abconv {afterburn_preset_flag} {infile_full} --output {afterburn_file} 2>&1
 
     echo ">"
     echo "=NPSIM====================================================================="

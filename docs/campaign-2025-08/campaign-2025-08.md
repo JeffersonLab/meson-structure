@@ -7,7 +7,7 @@ This page documents the 2025-08 meson structure simulation campaign.
 
 ## Campaign 2025-08
 
-Original MC files located in 
+Original kaon lambda MC files located in 
 
 ```bash 
 /w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2
@@ -44,6 +44,9 @@ run
 . /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline/eg_analysis.sh
 ```
 
+### Priority queue
+
+mkdir -p /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-{5x41,10x100,10x130,18x275}
 
 ### Processing Commands
 
@@ -56,47 +59,19 @@ mkdir /volatile/eic/romanov/meson-structure-2025-08/reco
 mkdir /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/
 
 # Using new Avnish generated files
-mkdir /volatile/eic/romanov/meson-structure-2025-08/eg-orig-kaon-lambda
 cp /w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2/*.root /volatile/eic/romanov/meson-structure-2025-08/eg-orig-kaon-lambda
-
-
-
-# Priority reconstruction of each 100 files for each energy range
-
-mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-5x41
-mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x100
-mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x130
-mkdir /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-18x275
-
-mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_5x41_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-5x41
-mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x100_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x100
-mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_10x130_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-10x130
-mv /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/k_lambda_18x275_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-18x275
-
-# Jobs for priority
-python create_jobs.py \
-       -b /volatile/eic/romanov/meson-structure-2025-07 \
-       -o /volatile/eic/romanov/meson-structure-2025-07/reco \
-       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable \
-       -e 5000 \
-       /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-*/*.hepmc
-
-
-
-k_lambda_crossing_0_5.0on41.0_x0.0001-1.0000_q1.0-500.0.root
 
 # Creating jobs (using latest eic_xl container)
 cd /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline
 python create_jobs.py \
-       -b /volatile/eic/romanov/meson-structure-2025-07 \
-       -o /volatile/eic/romanov/meson-structure-2025-07/reco \
-       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
        -e 5000 \
-       /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc/*.hepmc
-
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/*.hepmc
 
 # Submit jobs
-cd /volatile/eic/romanov/meson-structure-2025-07/reco/
+cd /volatile/eic/romanov/meson-structure-2025-08/reco/
 submit_all_slurm_jobs.sh
 ```
 
