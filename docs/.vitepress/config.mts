@@ -71,7 +71,7 @@ export default withMermaid({
                     { text: 'Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
                     { text: 'C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
                     { text: 'IFarm jobs', link: '/tutorials/ifarm' },
-
+                    { text: 'JsonHistogram Guide', link: '/json-histogram-guide' },
                 ]
             },
             {
@@ -79,6 +79,8 @@ export default withMermaid({
                 items: [
                     { text: 'Publications', link: '/publications' },
                     { text: 'Generator plots', link: '/eg-plots' },
+                    { text: 'Dynamic plots', link: '/eg-dynamic-plots' },
+                    { text: 'Kinematics results', link: '/kinematics-results' },
                     { text: 'EG comparison', link: '/campaign-2025-08/eg-comparison' },
                     { text: 'Decay plots', link: '/plots_decays' },
                 ]

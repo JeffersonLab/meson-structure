@@ -1,6 +1,6 @@
 # -------------  CMakeLists.txt  -----------------
 cmake_minimum_required(VERSION 3.18)
-project(cpp_meson_structure LANGUAGES CXX)
+project(csv_convert LANGUAGES CXX)
 
 # ----- compiler settings ------------------------------------------------------
 set(CMAKE_CXX_STANDARD 20)
