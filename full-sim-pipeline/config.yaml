@@ -1,0 +1,16 @@
+# Simplified Configuration for Meson Structure Pipeline
+# Campaign 2025-08 - Priority Processing Only
+
+# Base directories
+base_dir: "/volatile/eic/romanov/meson-structure-2025-08"
+hepmc_dir: "/volatile/eic/romanov/meson-structure-2025-08/eg-hepmc"
+reco_dir: "/volatile/eic/romanov/meson-structure-2025-08/reco"
+
+# Container
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable"
+
+# Scripts location
+scripts_dir: "/home/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Test mode - set to true to test without actually submitting jobs
+test_mode: false
