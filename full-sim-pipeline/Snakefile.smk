@@ -8,19 +8,19 @@ This simplified workflow handles:
 3. Monitoring completion
 
 # Check what you have
-snakemake -s Snakefile_simple.smk list_hepmc
+snakemake -s Snakefile.smk list_hepmc
 
 # Test (dry run)
-snakemake -s Snakefile_simple.smk -n
+snakemake -s Snakefile.smk -n
 
 # Create jobs only
-snakemake -s Snakefile_simple.smk create_only -j 4
+snakemake -s Snakefile.smk create_only -j 4
 
 # Create and submit
-snakemake -s Snakefile_simple.smk -j 4
+snakemake -s Snakefile.smk -j 4
 
 # Monitor
-snakemake -s Snakefile_simple.smk monitor
+snakemake -s Snakefile.smk monitor
 
 # Check logs
 tail -f logs/create_jobs_5x41_priority.log
@@ -33,7 +33,7 @@ from pathlib import Path
 from datetime import datetime
 
 # ===== Configuration =====
-configfile: "config_simple.yaml"
+configfile: "config.yaml"
 
 # Base directories
 BASE_DIR = config.get("base_dir", "/volatile/eic/romanov/meson-structure-2025-08")
@@ -337,7 +337,7 @@ rule create_only:
     run:
         print("\n✓ Jobs created for all priority energies")
         print("\nTo submit jobs, run:")
-        print("  snakemake -s Snakefile_simple.smk submit_only")
+        print("  snakemake -s Snakefile.smk submit_only")
 
 rule submit_only:
     """Submit already created jobs"""
@@ -346,4 +346,4 @@ rule submit_only:
     run:
         print("\n✓ Jobs submitted for all priority energies")
         print("\nTo monitor progress, run:")
-        print("  snakemake -s Snakefile_simple.smk monitor")
+        print("  snakemake -s Snakefile.smk monitor")
