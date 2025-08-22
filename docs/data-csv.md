@@ -102,10 +102,13 @@ yplus
 - Files: `*.reco_dis.csv`
 - Conversion script: [csv_convert/csv_reco_dis.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_reco_dis.cxx)
 
-Reconstructed (and true MC) event kinematic parameters including the reconstructed scattered electron information. 
+Reconstructed (and true MC) event kinematic parameters including the reconstructed scattered electron information, beam particles, Lambda particles, and various t-value calculations. 
+
 EICRecon provides several algorithms calculating the DIS kinematics. 
-We save them all to CSV. E.g. `jb_q2` correspond to Q2 obtained by Jacquet-Blondel method
+We save them all to CSV. E.g. `jb_q2` corresponds to Q2 obtained by Jacquet-Blondel method
 and `electron_q2` corresponds to scattered electron method. 
+
+#### DIS Kinematics Columns
 
 Prefixes - EDM4EIC Collection name: 
 
@@ -115,40 +118,85 @@ Prefixes - EDM4EIC Collection name:
 4. `jb`       - "InclusiveKinematicsJB"
 5. `ml`       - "InclusiveKinematicsML"
 6. `sigma`    - "InclusiveKinematicsSigma"
-7. `mc`       - True MC values same as in `mc_dis` table
-8. `elec`     - Reconstructed scattered electron particle
+7. `mc`       - True MC values from event parameters
 
-For each kinematic method (da, esigma, electron, jb, ml, sigma), variables are saved like: 
+For each kinematic method (da, esigma, electron, jb, ml, sigma, mc), variables are saved like: 
 
-1. `{}_x`
-2. `{}_q2`
-3. `{}_y`
-4. `{}_nu`
-5. `{}_w`
+1. `{}_x`  - Bjorken x
+2. `{}_q2` - Q² [GeV²]
+3. `{}_y`  - Inelasticity y
+4. `{}_nu` - Energy transfer ν [GeV]
+5. `{}_w`  - Invariant mass W [GeV]
 
-For the reconstructed scattered electron (from the Electron method), the following columns are saved:
+#### T-value Columns
 
-1.  `elec_id`              - id - particle index in ReconstructedParticles collection
-2.  `elec_pdg`             - pdg - particle PDG code (should be 11 for electron)
-3.  `elec_charge`          - charge - electric charge
-4.  `elec_energy`          - energy - total energy [GeV]
-5.  `elec_mass`            - mass - invariant mass [GeV/c²]
-6.  `elec_px`              - px - momentum x-component [GeV/c]
-7.  `elec_py`              - py - momentum y-component [GeV/c]
-8.  `elec_pz`              - pz - momentum z-component [GeV/c]
-9.  `elec_ref_x`           - ref_x - reference point x-coordinate
-10. `elec_ref_y`           - ref_y - reference point y-coordinate
-11. `elec_ref_z`           - ref_z - reference point z-coordinate
-12. `elec_pid_goodness`    - pid_goodness - particle ID quality metric
-13. `elec_type`            - type - reconstruction type flag
-14. `elec_n_clusters`      - n_clusters - number of associated clusters
-15. `elec_n_tracks`        - n_tracks - number of associated tracks
-16. `elec_n_particles`     - n_particles - number of daughter particles
-17. `elec_n_particle_ids`  - n_particle_ids - number of particle ID objects
+The script calculates several t-values (momentum transfer squared) using different beam configurations:
+
+1. `mc_true_t` - True t-value from MC event parameters (dis_tspectator)
+2. `mc_lam_tb_t` - t calculated using MC Lambda and **true beam** proton
+3. `mc_lam_exp_t` - t calculated using MC Lambda and **experimental beam** proton
+4. `ff_lam_tb_t` - t calculated using far-forward reconstructed Lambda and **true beam**
+5. `ff_lam_exp_t` - t calculated using far-forward reconstructed Lambda and **experimental beam**
+
+**Important Physics Note**: 
+- **True beam** uses the actual MC beam proton momentum from the simulation
+- **Experimental beam** approximates what we would know in a real experiment:
+  - Detects the beam mode (41, 100, 130, or 275 GeV) from the true momentum
+  - Applies crossing angles: 25 mrad horizontal, 100 μrad vertical
+  - This mimics experimental conditions where we don't know the exact beam momentum
+
+#### Scattered Electron Columns
+
+For the reconstructed scattered electron (from the Electron method):
+
+1.  `elec_id`              - Particle index in ReconstructedParticles collection
+2.  `elec_energy`          - Total energy [GeV]
+3.  `elec_px`              - Momentum x-component [GeV/c]
+4.  `elec_py`              - Momentum y-component [GeV/c]
+5.  `elec_pz`              - Momentum z-component [GeV/c]
+6.  `elec_ref_x`           - Reference point x-coordinate
+7.  `elec_ref_y`           - Reference point y-coordinate
+8.  `elec_ref_z`           - Reference point z-coordinate
+9.  `elec_pid_goodness`    - Particle ID quality metric
+10. `elec_type`            - Reconstruction type flag
+11. `elec_n_clusters`      - Number of associated clusters
+12. `elec_n_tracks`        - Number of associated tracks
+13. `elec_n_particles`     - Number of daughter particles
+14. `elec_n_particle_ids`  - Number of particle ID objects
+
+#### MC Scattered Electron Momentum
+
+1. `mc_elec_px` - MC truth scattered electron px [GeV/c]
+2. `mc_elec_py` - MC truth scattered electron py [GeV/c]
+3. `mc_elec_pz` - MC truth scattered electron pz [GeV/c]
+
+#### Lambda Momentum Columns
+
+MC truth Lambda:
+1. `mc_lam_px` - MC Lambda px [GeV/c]
+2. `mc_lam_py` - MC Lambda py [GeV/c]
+3. `mc_lam_pz` - MC Lambda pz [GeV/c]
+
+Far-forward reconstructed Lambda:
+1. `ff_lam_px` - Far-forward Lambda px [GeV/c]
+2. `ff_lam_py` - Far-forward Lambda py [GeV/c]
+3. `ff_lam_pz` - Far-forward Lambda pz [GeV/c]
+
+#### Beam Particle Momentum Columns
+
+MC beam proton:
+1. `mc_beam_prot_px` - Beam proton px [GeV/c]
+2. `mc_beam_prot_py` - Beam proton py [GeV/c]
+3. `mc_beam_prot_pz` - Beam proton pz [GeV/c]
+
+MC beam electron:
+1. `mc_beam_elec_px` - Beam electron px [GeV/c]
+2. `mc_beam_elec_py` - Beam electron py [GeV/c]
+3. `mc_beam_elec_pz` - Beam electron pz [GeV/c]
 
 `evt` is the first column = event number. 
 
-So the total column names are:
+So the complete column list is:
 
 ```
 evt,
@@ -159,14 +207,21 @@ jb_x,jb_q2,jb_y,jb_nu,jb_w,
 ml_x,ml_q2,ml_y,ml_nu,ml_w,
 sigma_x,sigma_q2,sigma_y,sigma_nu,sigma_w,
 mc_x,mc_q2,mc_y,mc_nu,mc_w,
-elec_id,elec_pdg,elec_charge,elec_energy,elec_mass,elec_px,elec_py,elec_pz,elec_ref_x,elec_ref_y,elec_ref_z,elec_pid_goodness,elec_type,elec_n_clusters,elec_n_tracks,elec_n_particles,elec_n_particle_ids
+mc_true_t,mc_lam_tb_t,mc_lam_exp_t,ff_lam_tb_t,ff_lam_exp_t,
+elec_id,elec_energy,elec_px,elec_py,elec_pz,elec_ref_x,elec_ref_y,elec_ref_z,elec_pid_goodness,elec_type,elec_n_clusters,elec_n_tracks,elec_n_particles,elec_n_particle_ids,
+mc_elec_px,mc_elec_py,mc_elec_pz,
+mc_lam_px,mc_lam_py,mc_lam_pz,
+ff_lam_px,ff_lam_py,ff_lam_pz,
+mc_beam_prot_px,mc_beam_prot_py,mc_beam_prot_pz,
+mc_beam_elec_px,mc_beam_elec_py,mc_beam_elec_pz
 ```
 
 Notes:
 
-- The electron particle information is only available when the Electron method successfully 
-  reconstructs the scattered electron
-- If the electron is not reconstructed, the `elec_*` columns will contain null values
+- The electron particle information is only available when the Electron method successfully reconstructs the scattered electron
+- If particles are not found/reconstructed, their columns will contain null values
+- T-values are calculated as t = (p1 - p2)² using 4-vectors
+- The experimental beam approximation is crucial for understanding systematic uncertainties in real experiments
 
 
 ### mcpart_lambda
