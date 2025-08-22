@@ -44,11 +44,57 @@ run
 . /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline/eg_analysis.sh
 ```
 
+### Sortout mc files
+
+```bash
+mkdir /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/{5x41,10x100,10x130,18x275}-priority
+mkdir /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/{5x41,10x100,10x130,18x275}-rest
+
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_5x41_5000evt_{001..100}.hepmc   /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/5x41-priority
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_10x100_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x100-priority
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_10x130_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x130-priority
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_18x275_5000evt_{001..100}.hepmc /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/18x275-priority
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_5x41*   /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/5x41-rest
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_10x100* /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x100-rest &&\
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_10x130* /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x130-rest &&\
+mv /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/k_lambda_18x275* /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/18x275-rest
+```
+
 ### Priority queue
 
-mkdir -p /volatile/eic/romanov/meson-structure-2025-07/eg-hepmc-priority-{5x41,10x100,10x130,18x275}
+```bash
+mkdir -p /volatile/eic/romanov/meson-structure-2025-08/reco/{5x41,10x100,10x130,18x275}-priority
 
-### Processing Commands
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/5x41-priority \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/5x41-priority/*.hepmc
+
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/10x100-priority \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x100-priority/*.hepmc
+
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/10x130-priority \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x130-priority/*.hepmc
+
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/18x275-priority \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/18x275-priority/*.hepmc
+
+```
+
 
 The exact commands used in this campaign:
 

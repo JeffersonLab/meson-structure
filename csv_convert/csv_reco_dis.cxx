@@ -174,7 +174,7 @@ std::tuple<TLorentzVector, TLorentzVector, TLorentzVector, TLorentzVector> find_
  * @param ff_lambdas Collection of reconstructed Lambdas
  * @return TLorentzVector of first Lambda (or empty if none found)
  */
-TLorentzVector process_ff_lambda(const ReconstructedParticleCollection& ff_lambdas) {
+TLorentzVector process_ff_lambda(const edm4eic::ReconstructedParticleCollection& ff_lambdas) {
     TLorentzVector lam_vec;
 
     // Process first Lambda in collection
@@ -275,7 +275,7 @@ void process_event(const podio::Frame& event, int evt_id) {
     /*---------------------------------------------------------------------------
       Process reconstructed far-forward Lambda
     ---------------------------------------------------------------------------*/
-    const auto& ffLambdas = event.get<ReconstructedParticleCollection>("ReconstructedFarForwardZDCLambdas");
+    const auto& ffLambdas = event.get<edm4eic::ReconstructedParticleCollection>("ReconstructedFarForwardZDCLambdas");
     TLorentzVector ff_lambda_vec = process_ff_lambda(ffLambdas);
 
     double ff_lambda_t_tb = 0.0;   // FF Lambda with true beam

@@ -2,7 +2,7 @@
 uproot>=5.6.4
 boost-histogram>=1.6.1
 hist[plot]>=2.9.0
-matplotlib>=3.10.5
+matplotlib>=3.8.0
 json_fix
 scipy
 numpy

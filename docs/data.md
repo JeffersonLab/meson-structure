@@ -5,31 +5,36 @@
 The meson structure data is available from the following locations:
 
 **LATEST PROCESSED FILES**  
-*(last update of Jone 2025)*
+*(last update of August 2025)*
 
 On JLab ifarm:  
 
-```
-/volatile/eic/romanov/meson-structure-2025-06/reco
-```
+```bash
+/volatile/eic/romanov/meson-structure-2025-08/reco
 
-CSV-s are available via link (ask for the link)
+# priority queues (first 100 files from each energy range):
+/volatile/eic/romanov/meson-structure-2025-08/reco/5x41-priority
+/volatile/eic/romanov/meson-structure-2025-08/reco/10x100-priority
+/volatile/eic/romanov/meson-structure-2025-08/reco/10x130-priority
+/volatile/eic/romanov/meson-structure-2025-08/reco/18x275-priority
+
+```
 
 On XRootD (open for universities and public)
 
 ```bash
 xrdfs root://dtn-eic.jlab.org
-ls /volatile/eic/romanov/meson-structure-2025-06/reco
+ls /volatile/eic/romanov/meson-structure-2025-08/reco
 ```
 
 Writing libraries versions (important for C++ readout compatibility):
 - podio: v01-02
 - edm4hep: v00-99-01
-- edm4eic: v8.2.0
+- edm4eic: v8.0.1
 
-**Original MCEG files** on ifarm:  
-`/work/eic/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/`  
-*(last update of October 2024)*
+**Original MCEG files** on ifarm:
+`/volatile/eic/romanov/meson-structure-2025-08/eg-orig-kaon-lambda`  
+*(last update of August 2025)*
 
 
 ## File names: 
@@ -72,13 +77,13 @@ root://dtn-eic.jlab.org
 
 ```bash
 xrdfs root://dtn-eic.jlab.org
-ls /volatile/eic/romanov/meson-structure-2025-06/reco
+ls /volatile/eic/romanov/meson-structure-2025-08/reco
 ```
 
 **To download** files: 
 
 ```bash
-xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-06/reco/k_lambda_5x41_5000evt_200.edm4eic.root ./
+xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-08/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root ./
 ```
 
 **To use directly in scripts**:
@@ -87,5 +92,5 @@ xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-06/reco
 # Both uproot and pyroot can work with links directly 
 # if XRootD is installed in the system
 import uproot
-file = uproot.open("root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-06/reco/k_lambda_5x41_5000evt_200.edm4eic.root")
+file = uproot.open("root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-08/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root")
 ```
