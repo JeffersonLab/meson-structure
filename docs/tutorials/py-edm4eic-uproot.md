@@ -8,14 +8,15 @@ Corresponding python examples:
 - [tutorials/py_edm4eic_02_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_02_plot_mcparticles.py)
 - [tutorials/py_edm4eic_03_references.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_03_references.py)
 - [tutorials/py_edm4eic_04_metadata.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_04_metadata.py)
+- [tutorials/py_edm4eic_05_sim_tracker_hits.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_05_sim_tracker_hits.py)
 
 
 ::: info
 We use [uproot] to process reconstruction files saved in CERN ROOT format `.root`.
 While python is a slow language if compared to C++, uproot can achieve comparable 
 performance in event processing. It is based on [awkward-arrays][awkward] arrays which core
-is written in C and utilizes vectorized data processing the same way as numpy. What is even more
-important, uproot can be easily installed via `pip install`, runs on all operating systems, 
+is written in C and uses vectorized data processing the same way as numpy. 
+**uproot** can be easily installed via `pip install`, runs on all operating systems, 
 very compatible with main python data science and AI tools. 
 :::
 
@@ -46,18 +47,15 @@ Code:
 - [tutorials/py_edm4eic_01_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_01_uproot.py)
 - [tutorials/py_edm4eic_02_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_02_plot_mcparticles.py)
 
-Here is the description of 1st tutorial:
 
-1. Reading particle data from ROOT files
-2. Processing data in manageable chunks
-3. Creating histograms directly with the `hist` library
-4. Creating visualizations with minimal code
+- [tutorials/py_edm4eic_05_sim_tracker_hits.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_05_sim_tracker_hits.py)
+
 
 
 ### Reading root file
 
 `uproot` provides several ways to open and read data from files.
-Uproot tutorials starts with `array` or `arrays` method which reads all required data at once. 
+Uproot tutorials start with `array` or `arrays` method which reads all required data at once. 
 But it could easily take too much time and memory on e.g. a laptop if files are large. 
 
 The most efficient way to develop analysis scripts and process large number of files/events is
