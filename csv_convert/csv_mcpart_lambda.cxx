@@ -97,8 +97,12 @@ std::string make_particle_header(const std::string&prefix) {
 void process_event(const podio::Frame&event, int evt_id) {
     const auto& particles = event.get<MCParticleCollection>("MCParticles");
 
+    // The first lambda in event should be generated spectator lambda
+    bool is_first_lambda = true;
+
     for (const auto& lam: particles) {
         if (lam.getPDG() != 3122) continue; // not Λ⁰
+
 
 
         // -----------------------------------------------------------------
@@ -142,7 +146,7 @@ void process_event(const podio::Frame&event, int evt_id) {
         // output
         // -----------------------------------------------------------------
         if (!header_written) {
-            csv << "event,"
+            csv << "event,lam_is_first,"
                     << make_particle_header("lam") << ','
                     << make_particle_header("prot") << ','
                     << make_particle_header("pimin") << ','
@@ -154,7 +158,7 @@ void process_event(const podio::Frame&event, int evt_id) {
         }
 
         // Call the new string-returning function to build the output line
-        csv << evt_id << ','
+        csv << evt_id << ',' << static_cast<int>(is_first_lambda) << ','
                 << particle_to_csv(lam) << ','
                 << particle_to_csv(prot) << ','
                 << particle_to_csv(pimin) << ','
@@ -162,6 +166,8 @@ void process_event(const podio::Frame&event, int evt_id) {
                 << particle_to_csv(pi0) << ','
                 << particle_to_csv(gam1) << ','
                 << particle_to_csv(gam2) << '\n';
+
+        is_first_lambda = false;
     }
 }
 
