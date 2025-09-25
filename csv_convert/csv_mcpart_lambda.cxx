@@ -36,21 +36,21 @@ struct Vec3 {
 
 /**
  * @brief Formats a single particle's data into a comma-separated string.
- * @param p A pointer to the MCParticle. If nullptr, returns empty fields.
+ * @param prt A pointer to the MCParticle. If nullptr, returns empty fields.
  * @return A std::string containing the formatted particle data.
  */
-inline std::string particle_to_csv(const MCParticle* p) {
-    if (!p) {
+inline std::string particle_to_csv(const std::optional<MCParticle>& prt) {
+    if (!prt) {
         return ",,,,,,,,,,,,,,"; // 14 commas for 15 empty fields
     }
-    const auto mom = p->getMomentum();
-    const auto vtx = p->getVertex();
-    const auto ep = p->getEndpoint();
+    const auto mom = prt->getMomentum();
+    const auto vtx = prt->getVertex();
+    const auto ep = prt->getEndpoint();
     return fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
-                                         p->getObjectID().index, // 01  id
-                                         p->getPDG(), // 02  pdg
-                                         p->getGeneratorStatus(), // 03  gen
-                                         p->getSimulatorStatus(), // 04  sim
+                                         prt->getObjectID().index, // 01  id
+                                         prt->getPDG(), // 02  pdg
+                                         prt->getGeneratorStatus(), // 03  gen
+                                         prt->getSimulatorStatus(), // 04  sim
                                          mom.x, // 05  px
                                          mom.y, // 06  py
                                          mom.z, // 07  pz
@@ -60,8 +60,8 @@ inline std::string particle_to_csv(const MCParticle* p) {
                                          ep.x, // 11  epx
                                          ep.y, // 12  epy
                                          ep.z, // 13  epz
-                                         p->getTime(), // 14  time
-                                         p->getDaughters().size() // 15  nd
+                                         prt->getTime(), // 14  time
+                                         prt->getDaughters().size() // 15  nd
     );
 }
 
@@ -95,52 +95,48 @@ std::string make_particle_header(const std::string&prefix) {
 // event processing
 //------------------------------------------------------------------------------
 void process_event(const podio::Frame&event, int evt_id) {
-    const auto&parts = event.get<MCParticleCollection>("MCParticles");
+    const auto& particles = event.get<MCParticleCollection>("MCParticles");
 
-    for (const auto&lam: parts) {
+    for (const auto& lam: particles) {
         if (lam.getPDG() != 3122) continue; // not Λ⁰
 
-        const auto&dtrs = lam.getDaughters();
-        // if (dtrs.size() < 2) continue; // malformed
 
         // -----------------------------------------------------------------
         // classify decay channel & pick final-state pointers
         // -----------------------------------------------------------------
-        const MCParticle *prot = nullptr, *pimin = nullptr, *neut = nullptr,
-                *pi0 = nullptr, *gam1 = nullptr, *gam2 = nullptr;
+        std::optional<MCParticle> prot, pimin, neut, pi0, gam1, gam2;
 
-        for (const auto&d: dtrs) {
-            switch (d.getPDG()) {
-                case 2212: prot = &d;
-                    break; // p
-                case -211: pimin = &d;
-                    break; // π-
-                case 2112: neut = &d;
-                    break; // n
-                case 111: pi0 = &d;
-                    break; // π0
+        for (const auto& daughter: lam.getDaughters()) {
+            switch (daughter.getPDG()) {
+                case 2212: prot = daughter;     // p
+                    break;
+                case -211: pimin = daughter;    // π-
+                    break;
+                case 2112: neut = daughter;     // n
+                    break;
+                case 111: pi0 = daughter;       // π0
+                    break;
             }
         }
 
-        int channel = -1;
-        if (prot && pimin) {
-            channel = 1; // Charged channel: Λ⁰ → p + π⁻
-        }
-        else if (neut && pi0) {
-            channel = 2; // Neutral channel: Λ⁰ → n + π⁰
+        // For neutron+pi0 we need to capture pi0 decay products if exists
+        if (neut && pi0) {
+            // For Geant4 you don't know how pi0 was decayed.
+            // I.e. it doesn't go against physics but it can not save particle if it goes nowhere
+            if (pi0->getDaughters().size() > 0) {
+                gam1 = pi0->getDaughters().at(0);
+            }
 
-            // Use iterators to get stable addresses for daughter particles
-            const auto&pi0_dtrs = pi0->getDaughters();
-            auto it = pi0_dtrs.begin();
-            if (it != pi0_dtrs.end()) {
-                gam1 = &(*it); // First photon
-                ++it;
-                if (it != pi0_dtrs.end()) {
-                    gam2 = &(*it); // Second photon
-                }
+            if (pi0->getDaughters().size() > 1) {
+                gam2 = pi0->getDaughters().at(1);
             }
         }
-        // if (channel == -1) continue; // skip rare channels
+
+        // Sanity check!
+        if (neut && prot) {
+            fmt::print("(!!!) WARNING: I see neut && prot at evt_id={}\n", evt_id);
+        }
+
 
         // -----------------------------------------------------------------
         // output
@@ -159,7 +155,7 @@ void process_event(const podio::Frame&event, int evt_id) {
 
         // Call the new string-returning function to build the output line
         csv << evt_id << ','
-                << particle_to_csv(&lam) << ','
+                << particle_to_csv(lam) << ','
                 << particle_to_csv(prot) << ','
                 << particle_to_csv(pimin) << ','
                 << particle_to_csv(neut) << ','
