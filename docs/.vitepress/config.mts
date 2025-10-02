@@ -53,6 +53,14 @@ export default withMermaid({
                 ]
             },
             {
+                text: 'Campaign 2025-08',
+                items: [
+                    { text: 'Acceptance', link: '/campaign-2025-08/campaign-2025-08' },
+                    { text: 'EG comparison', link: '/campaign-2025-08/eg-comparison' },
+                    { text: 'Acceptance', link: '/campaign-2025-08/acceptance' },
+                ]
+            },
+            {
                 text: 'Analysis',
                 link: '/analysis',
                 items: [
@@ -75,7 +83,7 @@ export default withMermaid({
                 ]
             },
             {
-                text: 'Results',
+                text: 'Other',
                 items: [
                     { text: 'Publications', link: '/publications' },
                     { text: 'Generator plots', link: '/eg-plots' },

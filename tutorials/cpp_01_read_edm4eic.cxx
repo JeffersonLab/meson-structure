@@ -129,7 +129,7 @@ void process_event(const podio::Frame& event, int event_number) {
     try {
         auto& mcParticles = event.get<edm4hep::MCParticleCollection>("MCParticles");
 
-        if (event_number < 5) {  // Debug output for first few events
+        if (event_number == 8) {  // Debug output for first few events
             fmt::print("\n--- Event {} ---\n", event_number);
             fmt::print("Number of MCParticles: {}\n", mcParticles.size());
 

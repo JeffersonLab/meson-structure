@@ -1,0 +1,36 @@
+{
+  "All events": {
+    "total_events": 501639,
+    "decayed_to_proton_percent": 13.6,
+    "decayed_to_neutron_percent": 7.8,
+    "not_decayed_percent": 78.6,
+    "both_proton_and_neutron_percent": 0.1,
+    "total_percent": 100.0
+  },
+  "Only primary": {
+    "total_events": 500000,
+    "decayed_to_proton_percent": 13.5,
+    "decayed_to_neutron_percent": 7.7,
+    "not_decayed_percent": 78.7,
+    "both_proton_and_neutron_percent": 0.0,
+    "total_percent": 100.0
+  },
+  "Only secondary": {
+    "total_events": 1639,
+    "decayed_to_proton_percent": 46.9,
+    "decayed_to_neutron_percent": 27.1,
+    "not_decayed_percent": 19.0,
+    "both_proton_and_neutron_percent": 7.0,
+    "total_percent": 100.0
+  },
+  "Primary vs Secondary Lambda Analysis": {
+    "total_events": 500000,
+    "events_with_secondary": 1589,
+    "secondary_events_percent": 0.3,
+    "total_secondary_lambda_particles": 1639,
+    "average_secondary_lambdas_per_event": 1.03
+  },
+  "Undecayed Primary Lambdas": {
+    "undecayed_primary_lambdas_percent": 78.5
+  }
+}
