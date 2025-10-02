@@ -14,12 +14,12 @@
         <option value="5x41">5×41</option>
         <option value="10x100">10×100</option>
         <option value="10x130">10×130</option>
-        <option value="18x75">18×75</option>
+        <option value="18x275">18×275</option>
         <option value="5x41_vs_10x100">5×41 vs 10×100</option>
-        <option value="5x41_vs_18x75">5×41 vs 18×75</option>
+        <option value="5x41_vs_18x275">5×41 vs 18×275</option>
         <option value="10x100_vs_10x130">10×100 vs 10×130</option>
-        <option value="10x100_vs_18x75">10×100 vs 18×75</option>
-        <option value="10x130_vs_18x75">10×130 vs 18×75</option>
+        <option value="10x100_vs_18x275">10×100 vs 18×275</option>
+        <option value="10x130_vs_18x275">10×130 vs 18×275</option>
       </select>
     </div>
 
@@ -35,6 +35,7 @@
           :alt="img.alt"
           @error="handleImageError"
           class="plot-image"
+          data-zoomable
         />
       </div>
     </div>
@@ -141,8 +142,8 @@ onMounted(() => {
 
 <style scoped>
 .acceptance-plot {
-  margin: 3rem 0;
-  padding: 1.5rem;
+  margin: 2rem 0;
+  padding: 0.75rem;
   background-color: var(--vp-c-bg-soft);
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
@@ -155,14 +156,14 @@ onMounted(() => {
 }
 
 .description {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   color: var(--vp-c-text-2);
   font-size: 14px;
 }
 
 .plot-controls {
-  margin-bottom: 1.5rem;
-  padding: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
   background-color: var(--vp-c-bg);
   border-radius: 4px;
   border: 1px solid var(--vp-c-divider);
@@ -201,7 +202,7 @@ onMounted(() => {
 .images-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .image-wrapper {
@@ -222,6 +223,7 @@ onMounted(() => {
   border-radius: 4px;
   border: 1px solid var(--vp-c-divider);
   background-color: var(--vp-c-bg);
+  cursor: zoom-in;
 }
 
 .no-data {
@@ -247,7 +249,7 @@ onMounted(() => {
 /* Responsive design */
 @media (max-width: 768px) {
   .acceptance-plot {
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
   .plot-controls {
@@ -256,19 +258,6 @@ onMounted(() => {
 
   .image-label {
     font-size: 14px;
-  }
-}
-
-/* For comparison view, show images side by side on larger screens */
-@media (min-width: 1200px) {
-  .images-container {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .image-wrapper {
-    flex: 1;
-    min-width: 45%;
   }
 }
 </style>

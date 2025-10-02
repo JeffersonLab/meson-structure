@@ -7,12 +7,12 @@
         <option value="5x41">5×41</option>
         <option value="10x100">10×100</option>
         <option value="10x130">10×130</option>
-        <option value="18x75">18×75</option>
+        <option value="18x275">18×275</option>
         <option value="5x41_vs_10x100">5×41 vs 10×100</option>
-        <option value="5x41_vs_18x75">5×41 vs 18×75</option>
+        <option value="5x41_vs_18x275">5×41 vs 18×275</option>
         <option value="10x100_vs_10x130">10×100 vs 10×130</option>
-        <option value="10x100_vs_18x75">10×100 vs 18×75</option>
-        <option value="10x130_vs_18x75">10×130 vs 18×75</option>
+        <option value="10x100_vs_18x275">10×100 vs 18×275</option>
+        <option value="10x130_vs_18x275">10×130 vs 18×275</option>
       </select>
     </div>
 
@@ -27,8 +27,8 @@
 <script setup lang="ts">
 import { ref, provide } from 'vue'
 
-// Global energy mode
-const globalEnergyMode = ref('')
+// Global energy mode with default
+const globalEnergyMode = ref('5x41_vs_18x275')
 
 // Provide to child components
 provide('globalEnergyMode', globalEnergyMode)
@@ -44,12 +44,12 @@ function getModeDescription(mode: string): string {
     '5x41': '5×41 GeV',
     '10x100': '10×100 GeV',
     '10x130': '10×130 GeV',
-    '18x75': '18×75 GeV',
+    '18x275': '18×275 GeV',
     '5x41_vs_10x100': '5×41 vs 10×100 GeV',
-    '5x41_vs_18x75': '5×41 vs 18×75 GeV',
+    '5x41_vs_18x275': '5×41 vs 18×275 GeV',
     '10x100_vs_10x130': '10×100 vs 10×130 GeV',
-    '10x100_vs_18x75': '10×100 vs 18×75 GeV',
-    '10x130_vs_18x75': '10×130 vs 18×75 GeV'
+    '10x100_vs_18x275': '10×100 vs 18×275 GeV',
+    '10x130_vs_18x275': '10×130 vs 18×275 GeV'
   }
   return descriptions[mode] || mode
 }
