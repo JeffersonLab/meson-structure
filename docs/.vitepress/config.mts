@@ -54,10 +54,11 @@ export default withMermaid({
             },
             {
                 text: 'Campaign 2025-08',
+                link: '/campaign-2025-08/campaign-2025-08',
                 items: [
-                    { text: 'Acceptance', link: '/campaign-2025-08/campaign-2025-08' },
                     { text: 'EG comparison', link: '/campaign-2025-08/eg-comparison' },
                     { text: 'Acceptance', link: '/campaign-2025-08/acceptance' },
+                    { text: 'Acceptance FF', link: '/campaign-2025-08/acceptance_ff' },
                 ]
             },
             {
@@ -74,22 +75,17 @@ export default withMermaid({
                 text: 'Tutorials',
                 link: '/tutorials',
                 items: [
-                    { text: 'Overview', link: '/tutorials' },
                     { text: 'Python CSV', link: '/tutorials/py-csv' },
                     { text: 'Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
                     { text: 'C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
-                    { text: 'IFarm jobs', link: '/tutorials/ifarm' },
-                    { text: 'JsonHistogram Guide', link: '/json-histogram-guide' },
+                    { text: 'IFarm jobs', link: '/tutorials/ifarm' }
                 ]
             },
             {
                 text: 'Other',
                 items: [
                     { text: 'Publications', link: '/publications' },
-                    { text: 'Generator plots', link: '/eg-plots' },
                     { text: 'Dynamic plots', link: '/eg-dynamic-plots' },
-                    { text: 'Kinematics results', link: '/kinematics-results' },
-                    { text: 'EG comparison', link: '/campaign-2025-08/eg-comparison' },
                     { text: 'Decay plots', link: '/plots_decays' },
                 ]
             }
