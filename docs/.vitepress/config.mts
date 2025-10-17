@@ -87,6 +87,7 @@ export default withMermaid({
                     { text: 'Publications', link: '/publications' },
                     { text: 'Dynamic plots', link: '/eg-dynamic-plots' },
                     { text: 'Decay plots', link: '/plots_decays' },
+                    { text: 'Manage website', link: '/manage-website' },
                 ]
             }
         ],

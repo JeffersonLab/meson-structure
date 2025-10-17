@@ -2,8 +2,8 @@ import DefaultTheme from "vitepress/theme";
 import Layout from "./Layout.vue";
 import HistogramViewer from "./components/HistogramViewer.vue";
 import JsonHistogram from "./components/JsonHistogram.vue";
-import AcceptanceViewer from "./components/AcceptanceViewer.vue";
-import AcceptancePlot from "./components/AcceptancePlot.vue";
+import BeamEnergyCompareViewer from "./components/BeamEnergyCompareViewer.vue";
+import BeamEnergyComparePlot from "./components/BeamEnergyComparePlot.vue";
 
 export default {
   extends: DefaultTheme,
@@ -11,7 +11,7 @@ export default {
   enhanceApp({ app }) {
     app.component('HistogramViewer', HistogramViewer);
     app.component('JsonHistogram', JsonHistogram);
-    app.component('AcceptanceViewer', AcceptanceViewer);
-    app.component('AcceptancePlot', AcceptancePlot);
+    app.component('BeamEnergyCompareViewer', BeamEnergyCompareViewer);
+    app.component('BeamEnergyComparePlot', BeamEnergyComparePlot);
   }
 };
