@@ -102,5 +102,5 @@ Start development server (run command in docs/ directory):
 npm run dev
 ```
 
-Open your browser to the URL shown (typically http://localhost:5173)
+Open your browser to the URL shown (typically localhost:5173)
 The development server will automatically reload when you make changes to markdown files.
