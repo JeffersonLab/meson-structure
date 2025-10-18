@@ -103,23 +103,48 @@ void process_event(const podio::Frame&event, int evt_id) {
     for (const auto& lam: particles) {
         if (lam.getPDG() != 3122) continue; // not Λ⁰
 
-
+        int decay_type = 4; // 0 - not decayed, 1 - p-piminus, 2 - n-pizero, 3 - shower/recharge, 4 - other (what?)
 
         // -----------------------------------------------------------------
         // classify decay channel & pick final-state pointers
         // -----------------------------------------------------------------
         std::optional<MCParticle> prot, pimin, neut, pi0, gam1, gam2;
 
-        for (const auto& daughter: lam.getDaughters()) {
-            switch (daughter.getPDG()) {
-                case 2212: prot = daughter;     // p
+        auto daughters = lam.getDaughters();
+
+        if (daughters.size() == 0) {
+            decay_type = 0;     // didn't decayed. Maybe went out of the volume
+        } else if (daughters.size() == 2) {
+            if (daughters.at(0).getPDG() == 2212 && daughters.at(1).getPDG() == -211) {
+                decay_type = 1; // p-piminus
+                prot = daughters.at(0);
+                pimin = daughters.at(1);
+            }
+
+            if (daughters.at(1).getPDG() == 2212 && daughters.at(0).getPDG() == -211) {
+                decay_type = 1; // p-piminus
+                prot = daughters.at(1);
+                pimin = daughters.at(0);
+            }
+
+            if (daughters.at(0).getPDG() == 2112 && daughters.at(1).getPDG() == 111) {
+                decay_type = 2; // n-pizero
+                neut = daughters.at(0);
+                pi0 = daughters.at(1);
+            }
+
+            if (daughters.at(1).getPDG() == 2112 && daughters.at(0).getPDG() == 111) {
+                decay_type = 2; // n-pizero
+                neut = daughters.at(1);
+                pi0 = daughters.at(0);
+            }
+        } else {
+            // ... so ... it is complicated...
+            for (const auto& daughter: daughters) {
+                if (daughter.getPDG() == 3122) {
+                    decay_type = 3;     // It is recharging lambda - shower
                     break;
-                case -211: pimin = daughter;    // π-
-                    break;
-                case 2112: neut = daughter;     // n
-                    break;
-                case 111: pi0 = daughter;       // π0
-                    break;
+                }
             }
         }
 
@@ -141,12 +166,11 @@ void process_event(const podio::Frame&event, int evt_id) {
             fmt::print("(!!!) WARNING: I see neut && prot at evt_id={}\n", evt_id);
         }
 
-
         // -----------------------------------------------------------------
         // output
         // -----------------------------------------------------------------
         if (!header_written) {
-            csv << "event,lam_is_first,"
+            csv << "event,lam_is_first,lam_decay,"
                     << make_particle_header("lam") << ','
                     << make_particle_header("prot") << ','
                     << make_particle_header("pimin") << ','
@@ -158,7 +182,9 @@ void process_event(const podio::Frame&event, int evt_id) {
         }
 
         // Call the new string-returning function to build the output line
-        csv << evt_id << ',' << static_cast<int>(is_first_lambda) << ','
+        csv     << evt_id << ','
+                << static_cast<int>(is_first_lambda) << ','
+                << decay_type << ','
                 << particle_to_csv(lam) << ','
                 << particle_to_csv(prot) << ','
                 << particle_to_csv(pimin) << ','
