@@ -1,31 +1,57 @@
-# Simulation campaigns
+# Campaign 2025-08
 
 This page documents the 2025-08 meson structure simulation campaign.
 
 > (!) For the list of files go to [DATA PAGE](../data.md) 
 
 
-## Campaign 2025-08
-
-Original kaon lambda MC files located in 
-
-```bash 
-/w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2
-```
-
 ### Overview
 
-This campaign introduces the the new energy range 10x130 and increases the statistics to
-10 million events for each energy range. 
+This campaign:
+
+1. Introduces the the new energy range 10x130 and 
+2. Increases the statistics to 10 million events for each energy range. 
+3. NO beam smearing in generator, also removed t cut
+4. Split processing in priority queue (the first 100 files in each event) and the rest queue
+5. New DIS calculations for t and beam
+
+Energy ranges:
 
 1. 5x41 GeV
 2. 10x100 GeV
 2. 10x130 GeV
 3. 18x275 GeV
 
-x= 0.0001 - 1.0000
+DIS parameters:
 
-q2=1 - 500
+- `x= 0.0001 - 1.0000`
+- `q2=1 - 500`
+
+### Files locations
+
+```bash
+# Root directory
+/volatile/eic/romanov/meson-structure-2025-08/
+
+# Event generator root files
+/volatile/eic/romanov/meson-structure-2025-08/eg-orig-kaon-lambda
+
+# Event generator files in HepMC (split to 5000k events)
+/volatile/eic/romanov/meson-structure-2025-08/eg-hepmc
+
+# Reconstructed files location: 
+/volatile/eic/romanov/meson-structure-2025-08/reco
+```
+
+Original kaon lambda MC filese in `eg-orig-kaon-lambda` are copied from:
+
+```bash 
+# kaon lambda
+/w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2
+
+# pion neutron
+/w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/pion_neutron_v2
+```
 
 ### EG Analysis
 
@@ -94,6 +120,55 @@ python create_jobs.py \
        /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/18x275-priority/*.hepmc
 
 ```
+Introspect the completition: 
+
+```bash
+full-sim-pipeline> python collect_job_stats.py /volatile/eic/romanov/meson-structure-2025-08/reco/10x100-rest/
+full-sim-pipeline> python collect_job_stats.py /volatile/eic/romanov/meson-structure-2025-08/reco/10x130-rest/
+full-sim-pipeline> python collect_job_stats.py /volatile/eic/romanov/meson-structure-2025-08/reco/5x41-rest/
+full-sim-pipeline> python collect_job_stats.py /volatile/eic/romanov/meson-structure-2025-08/reco/18x275-rest/
+```
+
+# Main queue
+
+```bash
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/18x275-rest \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/18x275-rest/*.hepmc
+
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/10x130-rest \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x130-rest/*.hepmc
+
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/10x100-rest \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/10x100-rest/*.hepmc
+
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-08 \
+       -o /volatile/eic/romanov/meson-structure-2025-08/reco/5x41-rest \
+       --container /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc/5x41-rest/*.hepmc
+```
+
+### Convert CSV
+```bash
+cd /home/romanov/meson-structure-work/meson-structure/csv_convert
+sbatch convert_campaign.5x41.slurm.sh 
+sbatch convert_campaign.10x100.slurm.sh
+sbatch convert_campaign.10x130.slurm.sh
+sbatch convert_campaign.18x275.slurm.sh
+```
 
 
 The exact commands used in this campaign:
@@ -123,125 +198,4 @@ submit_all_slurm_jobs.sh
 
 ---
 
-
-## Campaign 2025-05
-
-### Overview
-
-The Campaign 2025-05 run to make data current with EIC EPIC software updates. 
-
-The campaign includes simulations with three beam energy configurations:
-
-1. 5x41 GeV
-2. 10x100 GeV
-3. 18x275 GeV
-
-Each configuration has multiple files (indexed 001-200) with 5000 events per file.
-
-```yaml
-timestamp: '2025-06-04T12:05:06.867483'
-input_file: /volatile/eic/romanov/meson-structure-2025-06/eg-hepmc/*.hepmc
-container_image: /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
-```
-
-### Data Location
-
-The campaign data is stored in the following locations (on JLab farm):
-
-- HEPMC files:   
-  `/volatile/eic/romanov/meson-structure-2025-03/eg-hepmc`
-- reco info: 
-  `/volatile/eic/romanov/meson-structure-2025-06/reco`
-
-
-
-### Processing Commands
-
-The exact commands used in this campaign:
-
-```bash
-mkdir /volatile/eic/romanov/meson-structure-2025-06
-mkdir /volatile/eic/romanov/meson-structure-2025-06/reco
-
-# Using previous converted hepmc files
-cp -r /volatile/eic/romanov/meson-structure-2025-03/eg-hepmc /volatile/eic/romanov/meson-structure-2025-06
-
-# Creating jobs (using latest eic_xl container)
-cd /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline
-python create_jobs.py \
-       -b /volatile/eic/romanov/meson-structure-2025-06 \
-       -o /volatile/eic/romanov/meson-structure-2025-06/reco \
-       -e 5000 \
-       /volatile/eic/romanov/meson-structure-2025-06/eg-hepmc/*.hepmc
-
-# Submit jobs
-cd /volatile/eic/romanov/meson-structure-2025-06/reco/
-submit_all_slurm_jobs.sh
-```
-
-
-
-## Campaign 2025-03
-
-
-### Overview
-
-The Campaign 2025-03 is focused on testing the new ZDC lambda reconstruction 
-algorithm using the latest ePIC software. 
-This campaign reuses meson-structure-2025-02, 
-reusing some of the existing `hepmc` files while implementing improved reconstruction techniques.
-
-### Processing Details
-
-The campaign uses a processing pipeline that converts Monte Carlo event generator files 
-to a format suitable for full detector simulation and reconstruction:
-
-1. MCEG files are converted to HEPMC format (splitting large files into manageable chunks)
-2. The HEPMC files are processed through the latest ePIC reconstruction software
-3. Output files include both EDM4EIC format and histogram files
-
-### Data Location
-
-The campaign data is stored in the following locations:
-
-- HEPMC files:   
-  `/volatile/eic/romanov/meson-structure-2025-03/eg-hepmc`
-  
-   Note: These are linked from the previous campaign:
-   
-   `/volatile/eic/romanov/meson-structure-2025-02/eg-hepmc`
-- Reconstruction output:  
-  `/volatile/eic/romanov/meson-structure-2025-03/reco`
-
-### Processing Commands
-
-The exact commands used in this campaign:
-
-```bash
-# Original MCEG files location
-# Note: Using the same hepmc files as the previous campaign
-cd /volatile/eic/romanov/meson-structure-2025-03
-ln -s /volatile/eic/romanov/meson-structure-2025-02/eg-hepmc eg-hepmc
-
-cd /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline
-
-# Generate job scripts (using latest eic_xl container)
-python create_jobs.py \
-       -b /volatile/eic/romanov/meson-structure-2025-03 \
-       -o /volatile/eic/romanov/meson-structure-2025-03/reco \
-       -e 5000 \
-       /volatile/eic/romanov/meson-structure-2025-03/eg-hepmc/*.hepmc
-
-# Submit jobs
-cd /volatile/eic/romanov/meson-structure-2025-03/reco/
-submit_all_slurm_jobs.sh
-```
-
-We used files in 
-
-```
-/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic
-```
-
-With headon collisions `k_lambda_crossing_0_*`
 

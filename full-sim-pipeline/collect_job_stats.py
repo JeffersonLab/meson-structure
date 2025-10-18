@@ -21,11 +21,8 @@ import glob
 import matplotlib.pyplot as plt
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Collect last processed event numbers from Slurm logs."
-    )
-    parser.add_argument("log_dir",
-        help="Directory containing *.slurm.log files.")
+    parser = argparse.ArgumentParser(description="Collect last processed event numbers from Slurm logs.")
+    parser.add_argument("log_dir", help="Directory containing *.slurm.log files.")
     return parser.parse_args()
 
 def main():

@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --account=eic
 #SBATCH --partition=production
-#SBATCH --job-name=convertCSV
+#SBATCH --job-name=MSCSV5x41
 #SBATCH --time=1-00:00:00          # format days-hours:minutes:seconds
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=2G
-#SBATCH --output=/volatile/eic/romanov/meson-structure-2025-08/convert_csv.%j.log
-#SBATCH --error=/volatile/eic/romanov/meson-structure-2025-08/convert_csv.%j.err
+#SBATCH --output=/volatile/eic/romanov/meson-structure-2025-08/convert_csv_5x41.%j.log
+#SBATCH --error=/volatile/eic/romanov/meson-structure-2025-08/convert_csv_5x41.%j.err
 
 set -euo pipefail
 

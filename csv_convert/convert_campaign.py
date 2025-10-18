@@ -47,6 +47,9 @@ for idx, f in enumerate(root_files, start=1):
     for macro in macros:
         macro_base_name = macro.replace("csv_", "").replace(".cxx", "")
         out_file = f.with_name(f.name.replace(".edm4eic.root",  f".{macro_base_name}.csv"))
+        if out_file.exists():
+            print(f"[SKIP] {out_file.name} already exists, skipping")
+            continue
 
         print(f"|{macro}|  {f.name} → {out_file.name}")
         cmd = [
