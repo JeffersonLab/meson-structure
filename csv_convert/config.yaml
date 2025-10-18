@@ -1,0 +1,16 @@
+# =======================
+# Directory Configuration
+# =======================
+
+campaign_dir: "/volatile/eic/romanov/meson-structure-2025-08"
+  
+# Conversion scripts location
+csv_convert_dir: "/work/eic/users/romanov/meson-structure-work/meson-structure/csv_convert"
+  
+# Output directories
+log_dir: "/volatile/eic/romanov/meson-structure-2025-08/logs/csv_convert"
+temp_dir: "/volatile/eic/romanov/meson-structure-2025-08/temp"
+  
+# Analysis results
+plots_dir: "/volatile/eic/romanov/meson-structure-2025-08/plots"
+results_dir: "/volatile/eic/romanov/meson-structure-2025-08/results"
