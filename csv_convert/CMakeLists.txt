@@ -67,7 +67,7 @@ target_link_libraries(csv_reco_ff_lambda
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
         fmt::fmt)
 
-add_executable(csv_acceptance csv_acceptance.cxx)
+add_executable(csv_acceptance csv_edm4hep_acceptance.cxx)
 
 target_link_libraries(csv_acceptance
         PRIVATE
