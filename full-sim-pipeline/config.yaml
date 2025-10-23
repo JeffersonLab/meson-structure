@@ -2,15 +2,36 @@
 # Campaign 2025-08 - Priority Processing Only
 
 # Base directories
-base_dir: "/volatile/eic/romanov/meson-structure-2025-08"
-hepmc_dir: "/volatile/eic/romanov/meson-structure-2025-08/eg-hepmc"
-reco_dir: "/volatile/eic/romanov/meson-structure-2025-08/reco"
+base_dir: "/volatile/eic/romanov/meson-structure-2025-10"
+hepmc_dir: "/volatile/eic/romanov/meson-structure-2025-10/eg-hepmc"
+reco_dir: "/volatile/eic/romanov/meson-structure-2025-10/reco"
+
+# These are ADDITIONAL directories besides base_dir that will be bound inside the container
+bind_dirs: []
 
 # Container
-container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable"
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.10-stable"
+
 
 # Scripts location
 scripts_dir: "/home/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
 
 # Test mode - set to true to test without actually submitting jobs
-test_mode: false
+dry_run: true
+
+# Energies to process
+energies: 
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Number of events per job
+event_count: 5000
+
+# DD4Hep jobs
+dd4hep_source: "{base_dir}/afterburner/{energy}-priority"
+dd4hep_source_pattern: "*.afterburner.hepmc" 
+dd4hep_output: "{base_dir}/dd4hep/{energy}-priority"
+dd4hep_jobs: "{base_dir}/dd4hep/{energy}-priority/jobs"
+dd4hep_logs: "{base_dir}/dd4hep/{energy}-priority/logs"
