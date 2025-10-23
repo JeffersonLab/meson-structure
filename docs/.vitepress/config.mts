@@ -69,6 +69,7 @@ export default withMermaid({
                     { text: 'MC Variables', link: '/mc-variables' },
                     { text: 'EDM4EIC Tree', link: '/edm4eic-tree' },
                     { text: 'EDM4EIC Diagram', link: '/edm4eic-diagram' },
+                    { text: 'EDM4HEP Tree', link: '/edm4hep-tree' },
                 ]
             },
             {
