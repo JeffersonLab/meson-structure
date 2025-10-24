@@ -2,6 +2,7 @@
 
 This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruction
 
+```
 📁 k_lambda_18x275_5000evt_100.edm4hep.root
 ┣━━ 🌴 events (5000)
 ┃   ┣━━ 🌿 B0ECalHits vector<edm4hep::SimCalorimeterHitData>
@@ -674,3 +675,4 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
     ┣━━ 🍁 GPIntValues std::vector<std::vector<int32_t>>
     ┣━━ 🍁 GPStringKeys std::vector<std::string>
     ┗━━ 🍁 GPStringValues std::vector<std::vector<std::string>>
+```
