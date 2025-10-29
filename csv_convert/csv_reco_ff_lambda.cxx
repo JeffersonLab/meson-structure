@@ -130,6 +130,7 @@ void process_event(const podio::Frame& event, int evt_id) {
         const ReconstructedParticle* neut = nullptr;
         const ReconstructedParticle* gam1 = nullptr;
         const ReconstructedParticle* gam2 = nullptr;
+        
 
         int n_neutrons = 0;
         int n_gammas = 0;
