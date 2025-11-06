@@ -5,14 +5,14 @@
 #SBATCH --time=1-00:00:00          # format days-hours:minutes:seconds
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=2G
-#SBATCH --output=/volatile/eic/romanov/meson-structure-2025-08/convert_csv_18x275.%j.log
-#SBATCH --error=/volatile/eic/romanov/meson-structure-2025-08/convert_csv_18x275.%j.err
+#SBATCH --output=/volatile/eic/romanov/meson-structure-2025-10/convert_csv_18x275.%j.log
+#SBATCH --error=/volatile/eic/romanov/meson-structure-2025-10/convert_csv_18x275.%j.err
 
 set -euo pipefail
 
-CAMPAIGN=/volatile/eic/romanov/meson-structure-2025-08/reco/18x275-priority
+CAMPAIGN=/volatile/eic/romanov/meson-structure-2025-10/reco/18x275-priority
 CSV_CONVERT_DIR=/work/eic/users/romanov/meson-structure-work/meson-structure/csv_convert
-IMG=/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08-stable
+IMG=/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.10-stable
 
 echo "[INFO]  Running convert_campaign.py in $(hostname)"
 echo "[INFO]  Campaign directory : $CAMPAIGN"

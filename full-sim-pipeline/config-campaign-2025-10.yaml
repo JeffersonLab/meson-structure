@@ -1,0 +1,48 @@
+# Simplified Configuration for Meson Structure Pipeline
+# Campaign 2025-08 - Priority Processing Only
+
+# Base directories
+base_dir: "/volatile/eic/romanov/meson-structure-2025-10"
+priority: "-priority"     # "_priority" or "" for normal processing
+hepmc_dir: "/volatile/eic/romanov/meson-structure-2025-10/eg-hepmc"
+reco_dir: "/volatile/eic/romanov/meson-structure-2025-10/reco"
+
+# These are directories besides base_dir that will be bound inside the container
+bind_dirs: [
+  "${base_dir}"
+]
+
+# Container
+#container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.10-stable"
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+
+
+# Scripts location
+scripts_dir: "/home/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Test mode - set to true to test without actually submitting jobs
+dry_run: true
+
+# Energies to process
+energies: 
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Number of events per job
+event_count: 5000
+
+# Afterburner jobs
+afterburner_source: "${base_dir}/eg-hepmc/${energy}${priority}"
+afterburner_output: "${base_dir}/afterburner/${energy}${priority}"
+
+
+# DD4Hep jobs
+dd4hep_output: "${base_dir}/dd4hep/${energy}${priority}"
+
+# DD4Hep jobs
+eicrecon_output: "${base_dir}/reco/${energy}${priority}"
+
+# Where to put CSV output
+csv_output: "${base_dir}/csv/${energy}${priority}"

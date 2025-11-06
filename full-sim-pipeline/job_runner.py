@@ -93,10 +93,11 @@ import argparse
 import os
 import textwrap
 import datetime
-import yaml
 from pathlib import Path
 from typing import List, Dict, Callable, Optional
-
+from glob import glob
+from omegaconf import OmegaConf
+import yaml
 
 class JobRunner:
     """Flexible job runner for HPC workflows with container support."""
@@ -140,11 +141,13 @@ class JobRunner:
         self.output_file_name_func = output_file_name_func
         
         # Templates - MUST be set by user
-        self.container_job_template = None
+        self.container_script_template = None
         self.slurm_script_template = self.get_default_slurm_template()
         
         # Job generation function - can be replaced
-        self.generate_container_script = self.default_generate_container_script
+        self.container_script_generate_func = self.default_container_script_generator
+
+        self.container_script_params_updater: Callable = None
         
         # Initialize storage for generated scripts
         self.generated_scripts = {
@@ -181,7 +184,7 @@ class JobRunner:
         """)
 
 
-    def default_generate_container_script(self, input_file: str) -> Dict[str, str]:
+    def default_container_script_generator(self, input_file: str) -> Dict[str, str]:
         """Generate the container execution script content."""
         basename = os.path.splitext(os.path.basename(input_file))[0]
 
@@ -193,8 +196,12 @@ class JobRunner:
             'events': self.config['events'],
             **self.config  # Include all config variables
         }
+
+        # If user provided a params updater, apply it
+        if self.container_script_params_updater:
+            params = self.container_script_params_updater(params)
         
-        content = self.container_job_template.format(**params)
+        content = self.container_script_template.format(**params)
         
         return {
             'basename': basename,
@@ -211,7 +218,7 @@ class JobRunner:
 
     def write_container_script(self, input_file: str) -> str:
         """Write container execution script for a single input file."""
-        script_data = self.generate_container_script(input_file)
+        script_data = self.container_script_generate_func(input_file)
         basename = script_data['basename']
         
         script_path = os.path.join(self.config['jobs_dir'], f"{basename}.container.sh")
@@ -357,7 +364,7 @@ class JobRunner:
     
     def run(self):
         """Main execution method."""
-        if self.container_job_template is None:
+        if self.container_script_template is None:
             raise ValueError("container_job_template must be set before running")
         
         # Create directory structure
@@ -399,13 +406,9 @@ class JobRunner:
         print("\nContainer:")
         print(f"  Image:      {self.config['container']}")
 
-        print(f"\nBind Directories:")
+        print(f"\nBind Additional Directories:")
         for binddir in self.config['bind_dirs']:
             print(f"               {binddir}")
-        
-        print("\nInput Files:")
-        for i, file in enumerate(self.config['input_files'], 1):
-            print(f"  [{i:3d}] {file}")
         
         print("="*80 + "\n")
 
@@ -429,3 +432,48 @@ class JobRunner:
         print("\nTo run all jobs locally:")
         print(f"  cd {self.config['jobs_dir']} && ./run_all_local.sh")
         print("="*80)
+
+
+def load_config():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(script_dir, 'config.yaml')
+    
+    config = OmegaConf.load(config_path)
+    return config
+
+
+def load_config_for_energy(energy):
+    """Expand configuration paths for a specific energy."""
+    config = load_config()
+    return OmegaConf.merge(config, {"energy": energy})
+
+
+def find_input_files(source_dir, glob_pattern='*.hepmc'):
+    """Find all 'glob_pattern' files in source directory."""
+
+    search_path = os.path.join(source_dir, glob_pattern)
+    files = glob(search_path)
+    files.sort()
+
+    if not files:
+        print(f"\n  WARN! No 'glob_pattern' files found in '{source_dir}'")
+        return None
+    
+    print(f"Found {len(files)} input files")
+
+    return files
+
+
+def exension_replacer(from_ext, to_ext):
+    """Create a function to replace file extensions."""
+
+    def replacer(input_file, output_dir):
+        basename = os.path.basename(input_file)
+
+        if not basename.endswith(from_ext):
+            raise ValueError(f"Expected file with extension '{from_ext}', got: '{basename}'")
+        
+        output_name = basename.replace(from_ext, to_ext)
+        return os.path.join(output_dir, output_name)
+    
+    return replacer

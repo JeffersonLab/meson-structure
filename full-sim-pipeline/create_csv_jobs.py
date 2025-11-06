@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+"""
+csv_convert_pipeline.py
+Generate and submit CSV conversion jobs using JobRunner.
+Processes .edm4eic.root files with ROOT macros to create CSV outputs.
+"""
+
+import os
+from typing import Dict
+import textwrap
+from job_runner import JobRunner, find_input_files, load_config, load_config_for_energy
+
+this_dir = os.path.dirname(os.path.abspath(__file__))
+csv_convert_dir_default = os.path.join(os.path.dirname(this_dir), 'csv_convert')
+
+def create_container_script_template():
+    """Create container job template for CSV conversion."""
+    return textwrap.dedent("""\
+    #!/bin/bash
+    set -euo pipefail
+    
+    echo ">"
+    echo "= CSV CONVERSION ============================================================"
+    echo "============================================================================="
+    echo "  Processing: {input_file}"
+    echo "  Macros directory: {csv_convert_dir}"
+    echo ""
+    
+    cd {csv_convert_dir}
+    
+    # Run csv_mc_dis.cxx
+    [ ! -f "{csv_mc_dis}" ] && echo "[RUN] csv_mc_dis.cxx" && root -x -l -b -q 'csv_mc_dis.cxx("{input_file}","{csv_mc_dis}")' || echo "[SKIP] mc_dis.csv exists"
+    
+    # Run csv_reco_dis.cxx
+    [ ! -f "{csv_reco_dis}" ] && echo "[RUN] csv_reco_dis.cxx" && root -x -l -b -q 'csv_reco_dis.cxx("{input_file}","{csv_reco_dis}")' || echo "[SKIP] reco_dis.csv exists"
+    
+    # Run csv_mcpart_lambda.cxx
+    [ ! -f "{csv_mcpart_lambda}" ] && echo "[RUN] csv_mcpart_lambda.cxx" && root -x -l -b -q 'csv_mcpart_lambda.cxx("{input_file}","{csv_mcpart_lambda}")' || echo "[SKIP] mcpart_lambda.csv exists"
+    
+    # Run csv_reco_ff_lambda.cxx
+    [ ! -f "{csv_reco_ff_lambda}" ] && echo "[RUN] csv_reco_ff_lambda.cxx" && root -x -l -b -q 'csv_reco_ff_lambda.cxx("{input_file}","{csv_reco_ff_lambda}")' || echo "[SKIP] reco_ff_lambda.csv exists"
+    
+    echo ""
+    echo "============================================================================="
+    echo "Job completed!"
+    echo "Output CSVs created in: {input_dir}"
+    echo "============================================================================="
+    """)
+
+
+def custom_params_updater(params: Dict) -> Dict:
+    """Add custom parameters for CSV conversion."""
+    config = load_config()
+    
+    input_file = params['input_file']
+    input_dir = os.path.dirname(input_file)
+    output_dir = params['output_dir']
+    csv_basename = os.path.basename(input_file).replace('.edm4eic.root', '')
+    
+    params['csv_convert_dir'] = config.get('csv_convert_dir', csv_convert_dir_default)
+    params['input_dir'] = input_dir
+    params['csv_mc_dis'] = os.path.join(output_dir, f"{csv_basename}.mc_dis.csv")
+    params['csv_reco_dis'] = os.path.join(output_dir, f"{csv_basename}.reco_dis.csv")
+    params['csv_mcpart_lambda'] = os.path.join(output_dir, f"{csv_basename}.mcpart_lambda.csv")
+    params['csv_reco_ff_lambda'] = os.path.join(output_dir, f"{csv_basename}.reco_ff_lambda.csv")
+    
+    return params
+
+
+def output_name_func(input_file, output_dir):
+    """Output files are created in the same directory as input."""
+    return os.path.dirname(input_file)
+
+
+def process_energy(config, energy):
+    """Process all files for a specific energy."""
+    
+    source_dir = config.eicrecon_output
+    output_dir = config.csv_output
+    csv_convert_dir = config.get('csv_convert_dir', csv_convert_dir_default)
+    
+    print("\n" + "="*80)
+    print(f"PROCESSING ENERGY: {energy} GeV")
+    print(f"Source: {source_dir}")
+    print(f"CSV Macros: {csv_convert_dir}")
+    
+    # Find input files
+    input_files = find_input_files(source_dir, '*.edm4eic.root')
+    if input_files is None:
+        print(f"Skipping energy {energy} GeV due to no input files.")
+        return
+    
+    # Build bind_dirs - include csv_convert_dir
+    bind_dirs = config.bind_dirs.copy() if 'bind_dirs' in config else []
+
+    # Ensure csv_convert_dir is in bind_dirs
+    if csv_convert_dir not in bind_dirs:
+        bind_dirs.append(csv_convert_dir)
+    
+    # Create JobRunner instance
+    runner = JobRunner(
+        input_files=input_files,
+        output_file_name_func=output_name_func,
+        output_dir=output_dir,
+        bind_dirs=bind_dirs,
+        events=config.event_count,
+        container=config.container,
+    )
+    
+    # Set the container job template
+    runner.container_script_template = create_container_script_template()
+    
+    # Add custom parameters updater
+    runner.container_script_params_updater = custom_params_updater
+    
+    # Run the job generator
+    runner.run()
+    
+    print("="*80)
+    print(f"✓ Completed processing for {energy} GeV\n\n")
+
+
+def main():
+    """Main entry point."""
+    
+    config = load_config()
+    energies = config.get('energies', [])
+    
+    print("="*80)
+    print("CSV CONVERSION PIPELINE")
+    print("="*80)
+    print(f"Energies to process: {energies}")
+    print("")
+    
+    # Process each energy
+    for energy in energies:
+        config = load_config_for_energy(energy)
+        process_energy(config, energy)
+    
+    print("\n" + "="*80)
+    print("ALL ENERGIES PROCESSED SUCCESSFULLY")
+    print("="*80)
+
+
+if __name__ == "__main__":
+    main()
