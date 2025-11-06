@@ -23,8 +23,6 @@ find_package(nlohmann_json)
 #  Build executable                                                            #
 # -----------------------------------------------------------------------------#
 
-
-
 add_executable(csv_mcpart_lambda csv_mcpart_lambda.cxx)
 
 target_link_libraries(csv_mcpart_lambda
