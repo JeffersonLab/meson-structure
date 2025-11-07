@@ -60,10 +60,18 @@ Here you find guides on data access, tutorials on data processing, analysis log,
 
 ### Latest Updates
 
+- **October 2025**:
+  - New Campaign 2025-10
+  - Acceptance plots
+- **August 2025**:
+  - New Campaign 2025-10
+  - Comparison EG plots
+  - New beam energy data 10x130
 - **June 2025**:
-  - New Campaign 2025-06
+  - Campaign 2025-06
   - Campaign plots automation 2025-06
+  - CSV files available
 - **March 2025**: 
-  - New Campaign 2025-03 data available with ZDC lambda reconstruction
+  - Campaign 2025-03 data available with ZDC lambda reconstruction
   - XRootD data access and tutorials. This website is up and running 
 - **February 2025**: The first 2025-02 simulation and reconstruction campaign using ePIC software stack. 
