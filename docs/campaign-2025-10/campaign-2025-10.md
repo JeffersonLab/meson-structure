@@ -92,4 +92,10 @@ cd /volatile/eic/romanov/meson-structure-2025-10/csv/10x100-priority/jobs && ./s
 cd /volatile/eic/romanov/meson-structure-2025-10/csv/10x130-priority/jobs && ./submit_all_slurm_jobs.sh &&\
 cd /volatile/eic/romanov/meson-structure-2025-10/csv/18x275-priority/jobs && ./submit_all_slurm_jobs.sh
 
+# For some reason CSVs happen to be in reco folder
+mv /volatile/eic/romanov/meson-structure-2025-10/reco/5x41-priority/*.csv   /volatile/eic/romanov/meson-structure-2025-10/csv/5x41-priority/ &&\
+mv /volatile/eic/romanov/meson-structure-2025-10/reco/10x100-priority/*.csv /volatile/eic/romanov/meson-structure-2025-10/csv/10x100-priority/ &&\
+mv /volatile/eic/romanov/meson-structure-2025-10/reco/10x130-priority/*.csv /volatile/eic/romanov/meson-structure-2025-10/csv/10x130-priority/ &&\
+mv /volatile/eic/romanov/meson-structure-2025-10/reco/18x275-priority/*.csv /volatile/eic/romanov/meson-structure-2025-10/csv/18x275-priority/
+
 ```

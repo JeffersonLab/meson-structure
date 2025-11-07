@@ -2,8 +2,8 @@
 
 We provide the relevant part `*.EDM4EIC.root` data converted to the CSV format 
 
-- The CVS files are located in the same place as `*.edm4eic.root` files
-- File names correspond to each other. E.g. `k_lambda_5x41_5000evt_001.*`
+- The CVS files are located in `csv` folder in the campaign directory. See [DATA ACCESS](data)
+- File names start the same as source `edm4eic.root` file and correspond to each other. E.g. `k_lambda_5x41_5000evt_001.*`
 - We also provide .csv.zip - zipped versions. Pandas can work with such files out of the box
 - Access to the CSV and .csv.zip files is the same. See [DATA ACCESS](data) page
 - CSV table names are embedded in extension before `.csv` , 

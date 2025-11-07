@@ -13,39 +13,47 @@ from job_runner import JobRunner, find_input_files, load_config, load_config_for
 this_dir = os.path.dirname(os.path.abspath(__file__))
 csv_convert_dir_default = os.path.join(os.path.dirname(this_dir), 'csv_convert')
 
+
 def create_container_script_template():
-    """Create container job template for CSV conversion."""
+    """Create container job template for CSV conversion (simple & readable)."""
     return textwrap.dedent("""\
     #!/bin/bash
     set -euo pipefail
-    
-    echo ">"
+
     echo "= CSV CONVERSION ============================================================"
-    echo "============================================================================="
-    echo "  Processing: {input_file}"
-    echo "  Macros directory: {csv_convert_dir}"
-    echo ""
-    
-    cd {csv_convert_dir}
-    
-    # Run csv_mc_dis.cxx
-    [ ! -f "{csv_mc_dis}" ] && echo "[RUN] csv_mc_dis.cxx" && root -x -l -b -q 'csv_mc_dis.cxx("{input_file}","{csv_mc_dis}")' || echo "[SKIP] mc_dis.csv exists"
-    
-    # Run csv_reco_dis.cxx
-    [ ! -f "{csv_reco_dis}" ] && echo "[RUN] csv_reco_dis.cxx" && root -x -l -b -q 'csv_reco_dis.cxx("{input_file}","{csv_reco_dis}")' || echo "[SKIP] reco_dis.csv exists"
-    
-    # Run csv_mcpart_lambda.cxx
-    [ ! -f "{csv_mcpart_lambda}" ] && echo "[RUN] csv_mcpart_lambda.cxx" && root -x -l -b -q 'csv_mcpart_lambda.cxx("{input_file}","{csv_mcpart_lambda}")' || echo "[SKIP] mcpart_lambda.csv exists"
-    
-    # Run csv_reco_ff_lambda.cxx
-    [ ! -f "{csv_reco_ff_lambda}" ] && echo "[RUN] csv_reco_ff_lambda.cxx" && root -x -l -b -q 'csv_reco_ff_lambda.cxx("{input_file}","{csv_reco_ff_lambda}")' || echo "[SKIP] reco_ff_lambda.csv exists"
-    
-    echo ""
-    echo "============================================================================="
-    echo "Job completed!"
-    echo "Output CSVs created in: {input_dir}"
-    echo "============================================================================="
+    echo "  Input: {input_file}"
+    echo "  Macros dir: {csv_convert_dir}"
+    echo "==========================================================================="
+
+    cd "{csv_convert_dir}"
+
+    convert() {{
+      local label="$1" macro="$2" out="$3"
+
+      if [ ! -f "$out" ]; then
+        echo "[RUN] $label via $macro"
+        root -x -l -b -q "$macro(\\"{input_file}\\",\\"$out\\")"
+      else
+        echo "[SKIP] $label CSV exists"
+      fi
+
+      if [ -f "$out" ] && [ ! -f "$out.zip" ]; then
+        echo "[ZIP] $out -> $out.zip"
+        python3 -m zipfile -c "$out.zip" "$out"
+      else
+        echo "[SKIP] $label zip exists or CSV missing"
+      fi
+    }}
+
+    convert "mc_dis"         "csv_mc_dis.cxx"         "{csv_mc_dis}"
+    convert "reco_dis"       "csv_reco_dis.cxx"       "{csv_reco_dis}"
+    convert "mcpart_lambda"  "csv_mcpart_lambda.cxx"  "{csv_mcpart_lambda}"
+    convert "reco_ff_lambda" "csv_reco_ff_lambda.cxx" "{csv_reco_ff_lambda}"
+
+    echo "==========================================================================="
+    echo "Done. Outputs in: {input_dir}"
     """)
+
 
 
 def custom_params_updater(params: Dict) -> Dict:

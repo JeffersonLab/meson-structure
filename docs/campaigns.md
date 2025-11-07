@@ -1,8 +1,16 @@
 # Simulation campaigns
 
-This page documents the 2025-08 meson structure simulation campaign.
+This page documents the meson structure simulation campaigns.
 
 > (!) For the list of files go to [DATA PAGE](data.md) 
+
+
+## Campaign 2025-10
+
+Overview: 
+- Uses 2025-10 image that should be feature freeze before preTDR
+- On technical side: better script jobs automation
+
 
 
 ## Campaign 2025-08
