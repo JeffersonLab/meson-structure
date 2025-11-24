@@ -201,3 +201,6 @@ plots/
 analysis/avnish_scripts/plots/
 analysis/avnish_scripts/*.png
 analysis/avnish_scripts/*.csv
+
+analysis/gary_scripts/plots/
+analysis/gary_scripts/*.png
