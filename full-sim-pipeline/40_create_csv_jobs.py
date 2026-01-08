@@ -134,11 +134,8 @@ def main():
     config = load_config()
     energies = config.get('energies', [])
     
-    print("="*80)
-    print("CSV CONVERSION PIPELINE")
-    print("="*80)
-    print(f"Energies to process: {energies}")
-    print("")
+    print(f"{'='*80}\n CSV CONVERSION PIPELINE\n{'='*80}")
+    print(f"Energies to process: {energies}\n")
     
     # Process each energy
     for energy in energies:
