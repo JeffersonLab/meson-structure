@@ -41,3 +41,14 @@ target_link_libraries(cpp_02_ff_lambda
         EDM4HEP::edm4hep EDM4HEP::edm4hepDict
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
         fmt::fmt)
+
+
+add_executable(cpp_03_hits_edm4eic cpp_03_hits_edm4eic.cxx)
+
+target_link_libraries(cpp_03_hits_edm4eic
+        PRIVATE
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)
