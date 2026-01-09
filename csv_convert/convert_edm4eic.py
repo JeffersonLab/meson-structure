@@ -5,10 +5,10 @@ from pathlib import Path
 
 
 help_txt = """
-convert_lambda.py  –  run csv_mcpart_lambda.cxx on every *.edm4eic.root file
+convert_edm4eic.py - run csv_mcpart_lambda.cxx on every *.edm4eic.root file
 
 Usage:
-    python3 convert_lambda.py [directory] [macro]
+    python3 convert_edm4eic.py [directory] [macro]
 
 Arguments (all optional)
     directory : where to search for ROOT files
