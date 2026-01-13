@@ -30,6 +30,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <map>
 #include <expected>
 #include <format>
+#include <print>
 using namespace edm4hep;
 
 //------------------------------------------------------------------------------
@@ -38,10 +39,10 @@ using namespace edm4hep;
 int events_limit = -1; // -n  <N>
 long total_evt_processed = 0;
 std::ofstream csv;
-std::ofstream csv_prot_hits;
-std::ofstream csv_pimin_hits;
+std::ofstream csv_trk_hits;
+std::ofstream csv_cal_hits;
 bool header_written = false;
-bool hits_header_written = false;
+bool trk_hits_header_written = false;
 
 
 
@@ -50,8 +51,24 @@ struct HitRecord {
     uint64_t evt;
     uint64_t hit_index;
     uint64_t prt_index;
-    double prt_energy;
     int32_t prt_pdg;
+    int32_t prt_status;
+    double prt_energy;
+    float prt_charge;
+    double prt_mom_x;
+    double prt_mom_y;
+    double prt_mom_z;
+    float prt_vtx_time;
+    float prt_vtx_pos_x;
+    float prt_vtx_pos_y;
+    float prt_vtx_pos_z;
+    float prt_end_time;
+    float prt_end_pos_x;
+    float prt_end_pos_y;
+    float prt_end_pos_z;
+    uint64_t trk_hit_cell_id;
+    uint64_t trk_hit_system_id;
+    std::string trk_hit_system_name;
     float trk_hit_pos_x;
     float trk_hit_pos_y;
     float trk_hit_pos_z;
@@ -60,24 +77,33 @@ struct HitRecord {
     float trk_hit_pos_err_yy;
     float trk_hit_pos_err_zz;
     float trk_hit_time_err;
-    uint64_t trk_hit_cell_id;
-    std::string trk_hit_system_name;
     float trk_hit_edep;
     float trk_hit_edep_err;
-    int32_t prt_status;
-    float prt_vtx_pos_y;
-    float prt_vtx_time;
-    float prt_vtx_pos_x;
-    float prt_vtx_pos_z;
-    float prt_end_time;
-    float prt_end_pos_x;
-    float prt_end_pos_y;
-    float prt_end_pos_z;
-    double prt_mom_x;
-    double prt_mom_y;
-    double prt_mom_z;
-    float prt_charge;
-    uint64_t trk_hit_system_id;
+
+    static std::string make_csv_header() {
+        return "evt,hit_index,prt_index,"
+               "prt_pdg,prt_status,prt_energy,prt_charge,"
+               "prt_mom_x,prt_mom_y,prt_mom_z,"
+               "prt_vtx_time,prt_vtx_pos_x,prt_vtx_pos_y,prt_vtx_pos_z,"
+               "prt_end_time,prt_end_pos_x,prt_end_pos_y,prt_end_pos_z,"
+               "trk_hit_cell_id,trk_hit_system_id,trk_hit_system_name,"
+               "trk_hit_pos_x,trk_hit_pos_y,trk_hit_pos_z,trk_hit_time,"
+               "trk_hit_pos_err_xx,trk_hit_pos_err_yy,trk_hit_pos_err_zz,trk_hit_time_err,"
+               "trk_hit_edep,trk_hit_edep_err";
+    }
+
+    std::string get_csv_line() const {
+        return fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
+            evt, hit_index, prt_index,
+            prt_pdg, prt_status, prt_energy, prt_charge,
+            prt_mom_x, prt_mom_y, prt_mom_z,
+            prt_vtx_time, prt_vtx_pos_x, prt_vtx_pos_y, prt_vtx_pos_z,
+            prt_end_time, prt_end_pos_x, prt_end_pos_y, prt_end_pos_z,
+            trk_hit_cell_id, trk_hit_system_id, trk_hit_system_name,
+            trk_hit_pos_x, trk_hit_pos_y, trk_hit_pos_z, trk_hit_time,
+            trk_hit_pos_err_xx, trk_hit_pos_err_yy, trk_hit_pos_err_zz, trk_hit_time_err,
+            trk_hit_edep, trk_hit_edep_err);
+    }
 };
 
 // Name of collections for track associations, which associate:
@@ -96,27 +122,25 @@ const std::vector<std::string> track_associations = {
     "SiBarrelVertexRawHitAssociations",
     "SiEndcapTrackerRawHitAssociations",
     "TOFBarrelRawHitAssociations",
-    "TOFEndcapRawHitAssociations",
-    "TaggerTrackerRawHitAssociations",
-    "DRICHRawHitsAssociations"
+    "TOFEndcapRawHitAssociations"//,
+    //"TaggerTrackerRawHitAssociations" //, "DRICHRawHitsAssociations"
 };
 
 const std::map<std::string, std::string> tracker_names_by_assoc = {
-    {"B0TrackerRawHitAssociations", "B0TrackerHit"},
-    {"BackwardMPGDEndcapRawHitAssociations", "BackwardMPGDEndcapHit"},
-    {"ForwardMPGDEndcapRawHitAssociations", "ForwardMPGDEndcapHit"},
-    {"ForwardOffMTrackerRawHitAssociations", "ForwardOffMTrackerHit"},
-    {"ForwardRomanPotRawHitAssociations", "ForwardRomanPotHit"},
-    {"MPGDBarrelRawHitAssociations", "MPGDBarrelHit"},
-    {"OuterMPGDBarrelRawHitAssociations", "OuterMPGDBarrelHit"},
+    {"B0TrackerRawHitAssociations", "B0TrackerRecHits"},
+    {"BackwardMPGDEndcapRawHitAssociations", "BackwardMPGDEndcapRecHits"},
+    {"ForwardMPGDEndcapRawHitAssociations", "ForwardMPGDEndcapRecHits"},
+    {"ForwardOffMTrackerRawHitAssociations", "ForwardOffMTrackerRecHits"},
+    {"ForwardRomanPotRawHitAssociations", "ForwardRomanPotRecHits"},
+    {"MPGDBarrelRawHitAssociations", "MPGDBarrelRecHits"},
+    {"OuterMPGDBarrelRawHitAssociations", "OuterMPGDBarrelRecHits"},
     {"RICHEndcapNRawHitsAssociations", "RICHEndcapNRits"},
-    {"SiBarrelRawHitAssociations", "SiBarrelHit"},
-    {"SiBarrelVertexRawHitAssociations", "SiBarrelVertexHit"},
-    {"SiEndcapTrackerRawHitAssociations", "SiEndcapTrackerHit"},
-    {"TOFBarrelRawHitAssociations", "TOFBarrelHit"},
-    {"TOFEndcapRawHitAssociations", "TOFEndcapHit"},
-    {"TaggerTrackerRawHitAssociations", "TaggerTrackerHit"},
-    {"DRICHRawHitsAssociations", ""}
+    {"SiBarrelRawHitAssociations", "SiBarrelTrackerRecHits"},
+    {"SiBarrelVertexRawHitAssociations", "SiBarrelVertexRecHits"},
+    {"SiEndcapTrackerRawHitAssociations", "SiEndcapTrackerRecHits"},
+    {"TOFBarrelRawHitAssociations", "TOFBarrelRecHits"},
+    {"TOFEndcapRawHitAssociations", "TOFEndcapRecHits"},
+    // {"TaggerTrackerRawHitAssociations", "TaggerTrackerHit"} //,    {"DRICHRawHitsAssociations", ""}
 };
 
 const std::vector<std::string> cal_associations = {
@@ -306,7 +330,7 @@ std::map<uint64_t, std::string> system_names_by_ids = {
 /// Gets detector system ID and name from full cellID
 
 std::tuple<uint64_t, std::string> get_detector_info(uint64_t cell_id) {
-    uint64_t system_id = (cell_id >> 56) & 0xFF;
+    uint64_t system_id = cell_id & 0xFF;  // system_id is saved in the least significant 8 bits (ha!)
 
     auto it = system_names_by_ids.find(system_id);
     std::string system_name;
@@ -334,13 +358,16 @@ std::expected<edm4eic::TrackerHit, std::string> get_tracker_hit(const edm4eic::R
 void process_tracker_hits(const podio::Frame& event, const std::string& assoc_col_name, int evt_id) {
 
     const auto& hit_assocs = event.get<edm4eic::MCRecoTrackerHitAssociationCollection>(assoc_col_name);
-    if (assoc_col_name != "DRICHRawHitsAssociations") {
-        return;
-    }
 
     // We get corresponding tracker hits collection before hits iteration. We will need it there.
     const auto& traker_col_name = tracker_names_by_assoc.at(assoc_col_name);
     const auto& tracker_hits = event.get<edm4eic::TrackerHitCollection>(traker_col_name);
+
+    // Write header if needed
+    if (!trk_hits_header_written) {
+        csv_trk_hits << HitRecord::make_csv_header() << "\n";
+        trk_hits_header_written = true;
+    }
 
     for (const auto& hit_assoc : hit_assocs) {
 
@@ -374,7 +401,7 @@ void process_tracker_hits(const podio::Frame& event, const std::string& assoc_co
         // Find TRacker hit for this raw hit
         auto find_result = get_tracker_hit(raw_hit, tracker_hits);
         if (!find_result) {
-            // warn(find_result.error());
+            warn(find_result.error());
             continue;
         }
         auto & trk_hit = find_result.value();
@@ -407,19 +434,21 @@ void process_tracker_hits(const podio::Frame& event, const std::string& assoc_co
         record.prt_pdg = particle.getPDG();
         record.prt_status = particle.getGeneratorStatus();
         record.prt_energy = particle.getEnergy();
-        record.prt_vtx_time = particle.getTime();
-        record.prt_vtx_pos_x = particle.getTime();
-        record.prt_vtx_pos_y = particle.getTime();
-        record.prt_vtx_pos_z = particle.getTime();
-        record.prt_end_time = particle.getTime();
-        record.prt_end_pos_x = particle.getTime();
-        record.prt_end_pos_y = particle.getTime();
-        record.prt_end_pos_z = particle.getTime();
-        record.prt_mom_x = particle.getMomentum().x;
-        record.prt_mom_y = particle.getMomentum().x;
-        record.prt_mom_z = particle.getMomentum().x;
         record.prt_charge = particle.getCharge();
+        record.prt_mom_x = particle.getMomentum().x;
+        record.prt_mom_y = particle.getMomentum().y;
+        record.prt_mom_z = particle.getMomentum().z;
+        record.prt_vtx_time = particle.getTime();
+        record.prt_vtx_pos_x = particle.getVertex().x;
+        record.prt_vtx_pos_y = particle.getVertex().y;
+        record.prt_vtx_pos_z = particle.getVertex().z;
+        record.prt_end_time = particle.getTime();  // Note: EDM4hep doesn't have separate end time
+        record.prt_end_pos_x = particle.getEndpoint().x;
+        record.prt_end_pos_y = particle.getEndpoint().y;
+        record.prt_end_pos_z = particle.getEndpoint().z;
 
+        record.trk_hit_cell_id = trk_hit.getCellID();
+        std::tie(record.trk_hit_system_id, record.trk_hit_system_name) = get_detector_info(record.trk_hit_cell_id);
         record.trk_hit_pos_x = trk_hit.getPosition().x;
         record.trk_hit_pos_y = trk_hit.getPosition().y;
         record.trk_hit_pos_z = trk_hit.getPosition().z;
@@ -428,25 +457,11 @@ void process_tracker_hits(const podio::Frame& event, const std::string& assoc_co
         record.trk_hit_pos_err_yy = trk_hit.getPositionError().yy;
         record.trk_hit_pos_err_zz = trk_hit.getPositionError().zz;
         record.trk_hit_time_err = trk_hit.getTimeError();
-        record.trk_hit_cell_id = trk_hit.getCellID();
         record.trk_hit_edep = trk_hit.getEdep();
         record.trk_hit_edep_err = trk_hit.getEdepError();
 
-        std::tie(record.trk_hit_system_id, record.trk_hit_system_name) = get_detector_info(record.trk_hit_cell_id);
-
-
-
-            // // Write to detailed CSV
-            // // Format: event_id, lam_id, detector, hit_id, x, y, z, eDep, time, pathLength
-            // hits_csv << evt_id << "," << lam_id << "," << collection_name << ","
-            //          << hit.getObjectID().index << ","
-            //          << hit.getPosition().x << ","
-            //          << hit.getPosition().y << ","
-            //          << hit.getPosition().z << ","
-            //          << hit.getEDep() << ","
-            //          << hit.getTime() << ","
-            //          << hit.getPathLength() << "\n";
-
+        // Write record to CSV
+        csv_trk_hits << record.get_csv_line() << "\n";
     }
 }
 
@@ -672,40 +687,36 @@ void process_file(const std::string& file_name) {
 void cpp_03_hits_edm4eic(const char* infile, const char* outfile, int events = -1)
 {
     fmt::print("'cpp_03_hits_edm4eic' entry point is used.\n");
-    
+
     csv.open(outfile);
-    
+
     std::string out_str = outfile;
     std::string trk_hits_fname = out_str + "_trk_hits.csv";
     std::string cal_hits_fname = out_str + "_cal_hits.csv";
-    
+
     if (out_str.size() > 4 && out_str.substr(out_str.size() - 4) == ".csv") {
         std::string base = out_str.substr(0, out_str.size() - 4);
         trk_hits_fname = base + "_trk_hits.csv";
         cal_hits_fname = base + "_cal_hits.csv";
     }
-    
-    csv_prot_hits.open(trk_hits_fname);
-    csv_pimin_hits.open(cal_hits_fname);
 
-    if (!csv || !csv_prot_hits || !csv_pimin_hits) {
+    csv_trk_hits.open(trk_hits_fname);
+    csv_cal_hits.open(cal_hits_fname);
+
+    if (!csv || !csv_trk_hits || !csv_cal_hits) {
         fmt::print(stderr, "error: cannot open output files\n");
         exit(1);
     }
-
-    // Write headers for hits files
-    std::string hits_header = "event_id,lam_id,detector,hit_id,x,y,z,eDep,time,pathLength\n";
-    csv_prot_hits << hits_header;
-    csv_pimin_hits << hits_header;
 
     events_limit = events;
     process_file(infile);
 
     csv.close();
-    csv_prot_hits.close();
-    csv_pimin_hits.close();
-    
+    csv_trk_hits.close();
+    csv_cal_hits.close();
+
     fmt::print("\nWrote data for {} events to {}\n", total_evt_processed, outfile);
+    fmt::print("Tracker hits written to: {}\n", trk_hits_fname);
 }
 
 
