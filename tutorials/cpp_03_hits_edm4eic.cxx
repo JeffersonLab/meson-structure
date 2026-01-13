@@ -48,37 +48,54 @@ bool trk_hits_header_written = false;
 
 /// Struct representing a line in csv file
 struct HitRecord {
-    uint64_t evt;
-    uint64_t hit_index;
-    uint64_t prt_index;
-    int32_t prt_pdg;
-    int32_t prt_status;
-    double prt_energy;
-    float prt_charge;
-    double prt_mom_x;
-    double prt_mom_y;
-    double prt_mom_z;
-    float prt_vtx_time;
-    float prt_vtx_pos_x;
-    float prt_vtx_pos_y;
-    float prt_vtx_pos_z;
-    float prt_end_time;
-    float prt_end_pos_x;
-    float prt_end_pos_y;
-    float prt_end_pos_z;
-    uint64_t trk_hit_cell_id;
-    uint64_t trk_hit_system_id;
-    std::string trk_hit_system_name;
-    float trk_hit_pos_x;
-    float trk_hit_pos_y;
-    float trk_hit_pos_z;
-    float trk_hit_time;
-    float trk_hit_pos_err_xx;
-    float trk_hit_pos_err_yy;
-    float trk_hit_pos_err_zz;
-    float trk_hit_time_err;
-    float trk_hit_edep;
-    float trk_hit_edep_err;
+    // Event and indexing
+    uint64_t evt;                    // Event number
+    uint64_t hit_index;              // Index of MCRecoTrackerHitAssociation in collection
+    uint64_t prt_index;              // Index of MCParticle that created this hit
+
+    // Particle identification
+    int32_t prt_pdg;                 // PDG code of the particle (e.g., 11=e-, 211=pi+, 2212=proton)
+    int32_t prt_status;              // Generator status: 1=stable from generator, 0=created by Geant4
+
+    // Particle kinematics
+    double prt_energy;               // Total energy of particle [GeV]
+    float prt_charge;                // Electric charge [e]
+    double prt_mom_x;                // Momentum x-component [GeV/c]
+    double prt_mom_y;                // Momentum y-component [GeV/c]
+    double prt_mom_z;                // Momentum z-component [GeV/c]
+
+    // Particle vertex (production point)
+    float prt_vtx_time;              // Time at production vertex [ns]
+    float prt_vtx_pos_x;             // Production vertex x [mm]
+    float prt_vtx_pos_y;             // Production vertex y [mm]
+    float prt_vtx_pos_z;             // Production vertex z [mm]
+
+    // Particle endpoint (decay/absorption point)
+    float prt_end_time;              // Time at endpoint [ns] (Note: same as vtx_time in EDM4hep)
+    float prt_end_pos_x;             // Endpoint x [mm]
+    float prt_end_pos_y;             // Endpoint y [mm]
+    float prt_end_pos_z;             // Endpoint z [mm]
+
+    // Tracker hit detector info
+    uint64_t trk_hit_cell_id;        // Full cell ID encoding detector hierarchy
+    uint64_t trk_hit_system_id;      // Detector system ID (bits 0-7 of cell_id)
+    std::string trk_hit_system_name; // Human-readable detector name (e.g., "SiBarrelVertex")
+
+    // Tracker hit position and time
+    float trk_hit_pos_x;             // Reconstructed hit position x [mm]
+    float trk_hit_pos_y;             // Reconstructed hit position y [mm]
+    float trk_hit_pos_z;             // Reconstructed hit position z [mm]
+    float trk_hit_time;              // Reconstructed hit time [ns]
+
+    // Tracker hit uncertainties (covariance matrix diagonal)
+    float trk_hit_pos_err_xx;        // Position error variance in x [mm^2]
+    float trk_hit_pos_err_yy;        // Position error variance in y [mm^2]
+    float trk_hit_pos_err_zz;        // Position error variance in z [mm^2]
+    float trk_hit_time_err;          // Time uncertainty [ns]
+
+    // Tracker hit energy deposition
+    float trk_hit_edep;              // Energy deposited in sensor [GeV]
+    float trk_hit_edep_err;          // Energy deposition uncertainty [GeV]
 
     static std::string make_csv_header() {
         return "evt,hit_index,prt_index,"
@@ -682,7 +699,7 @@ void process_file(const std::string& file_name) {
 
 // ---------------------------------------------------------------------------
 // ROOT-macro entry point.
-// Call it from the prompt:  root -x -l -b -q 'csv_edm4hep_acceptance_ppim.cxx("file.root", "output.csv", 100)'
+// Call it from the prompt:  root -x -l -b -q 'cpp_03_hits_edm4eic.cxx("file.root", "output.csv", 100)'
 // ---------------------------------------------------------------------------
 void cpp_03_hits_edm4eic(const char* infile, const char* outfile, int events = -1)
 {
