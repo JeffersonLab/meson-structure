@@ -79,13 +79,15 @@ export default withMermaid({
                 ]
             },
             {
-                text: 'Tutorials',
+                text: 'Learning',
                 link: '/tutorials',
                 items: [
-                    { text: 'Python CSV', link: '/tutorials/py-csv' },
-                    { text: 'Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
-                    { text: 'C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
-                    { text: 'IFarm jobs', link: '/tutorials/ifarm' }
+                    { text: 'Resources', link: '/learning'},
+                    { text: 'Tutorials', link: '/tutorials:'},
+                    { text: '&nbsp;&nbsp;&nbsp;&nbsp;Python CSV', link: '/tutorials/py-csv' },
+                    { text: '&nbsp;&nbsp;&nbsp;&nbsp;Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
+                    { text: '&nbsp;&nbsp;&nbsp;&nbsp;C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
+                    { text: '&nbsp;&nbsp;&nbsp;&nbsp;IFarm jobs', link: '/tutorials/ifarm' }
                 ]
             },
             {
