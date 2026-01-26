@@ -1,23 +1,24 @@
 <template>
-  <div class="acceptance-viewer">
+  <div class="compare-viewer">
     <div class="global-controls">
       <label for="energy-mode-select">Display Mode:</label>
-      <select id="energy-mode-select" v-model="globalEnergyMode" @change="updateGlobalMode">
+      <select id="energy-mode-select" v-model="selectedMode" @change="updateGlobalMode">
         <option value="">-- Select display mode --</option>
-        <option value="5x41">5×41</option>
-        <option value="10x100">10×100</option>
-        <option value="10x130">10×130</option>
-        <option value="18x275">18×275</option>
-        <option value="5x41_vs_10x100">5×41 vs 10×100</option>
-        <option value="5x41_vs_18x275">5×41 vs 18×275</option>
-        <option value="10x100_vs_10x130">10×100 vs 10×130</option>
-        <option value="10x100_vs_18x275">10×100 vs 18×275</option>
-        <option value="10x130_vs_18x275">10×130 vs 18×275</option>
+        <optgroup label="Single">
+          <option v-for="key in sourceKeys" :key="key" :value="key">
+            {{ formatLabel(key) }}
+          </option>
+        </optgroup>
+        <optgroup label="Comparisons">
+          <option v-for="comp in comparisons" :key="comp.value" :value="comp.value">
+            {{ comp.label }}
+          </option>
+        </optgroup>
       </select>
     </div>
 
-    <div v-if="globalEnergyMode" class="info-message">
-      All plots below will show: <strong>{{ getModeDescription(globalEnergyMode) }}</strong>
+    <div v-if="selectedMode" class="info-message">
+      All plots below will show: <strong>{{ getModeDescription(selectedMode) }}</strong>
     </div>
 
     <slot></slot>
@@ -25,38 +26,74 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from 'vue'
+import { ref, computed, provide } from 'vue'
 
-// Global energy mode with default
-const globalEnergyMode = ref('5x41_vs_18x275')
+// Props - sources is a Record<label, basePath>
+const props = defineProps<{
+  sources: Record<string, string>
+}>()
 
-// Provide to child components
-provide('globalEnergyMode', globalEnergyMode)
+// Extract keys from sources
+const sourceKeys = computed(() => Object.keys(props.sources))
+
+// Generate all pairwise comparisons
+const comparisons = computed(() => {
+  const keys = sourceKeys.value
+  const result: { value: string; label: string }[] = []
+
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = i + 1; j < keys.length; j++) {
+      const key1 = keys[i]
+      const key2 = keys[j]
+      result.push({
+        value: `${key1}_vs_${key2}`,
+        label: `${formatLabel(key1)} vs ${formatLabel(key2)}`
+      })
+    }
+  }
+
+  return result
+})
+
+// Default to first comparison if available, otherwise first single
+const getDefaultMode = () => {
+  if (comparisons.value.length > 0) {
+    return comparisons.value[0].value
+  }
+  if (sourceKeys.value.length > 0) {
+    return sourceKeys.value[0]
+  }
+  return ''
+}
+
+const selectedMode = ref(getDefaultMode())
+
+// Provide sources and selected mode to child components
+provide('plotSources', props.sources)
+provide('globalEnergyMode', selectedMode)
 
 // Update event for child components
 function updateGlobalMode() {
-  // This will trigger reactivity in child components
+  // Reactivity handles updates automatically
 }
 
-// Get human-readable description
+// Format label for display (e.g., "5x41" -> "5×41 GeV")
+function formatLabel(key: string): string {
+  return key.replace('x', '×') + ' GeV'
+}
+
+// Get human-readable description for current mode
 function getModeDescription(mode: string): string {
-  const descriptions: Record<string, string> = {
-    '5x41': '5×41 GeV',
-    '10x100': '10×100 GeV',
-    '10x130': '10×130 GeV',
-    '18x275': '18×275 GeV',
-    '5x41_vs_10x100': '5×41 vs 10×100 GeV',
-    '5x41_vs_18x275': '5×41 vs 18×275 GeV',
-    '10x100_vs_10x130': '10×100 vs 10×130 GeV',
-    '10x100_vs_18x275': '10×100 vs 18×275 GeV',
-    '10x130_vs_18x275': '10×130 vs 18×275 GeV'
+  if (mode.includes('_vs_')) {
+    const [key1, key2] = mode.split('_vs_')
+    return `${formatLabel(key1)} vs ${formatLabel(key2)}`
   }
-  return descriptions[mode] || mode
+  return formatLabel(mode)
 }
 </script>
 
 <style scoped>
-.acceptance-viewer {
+.compare-viewer {
   margin: 2rem 0;
 }
 

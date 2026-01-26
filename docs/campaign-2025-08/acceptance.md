@@ -1,8 +1,17 @@
+<script setup>
+const sources = {
+  '5x41': '/analysis/campaign-2025-08/acceptance/5x41/',
+  '10x100': '/analysis/campaign-2025-08/acceptance/10x100/',
+  '10x130': '/analysis/campaign-2025-08/acceptance/10x130/',
+  '18x275': '/analysis/campaign-2025-08/acceptance/18x275/'
+}
+</script>
+
 # Acceptance Analysis
 
 This page shows acceptance plots for Lambda decay products across different beam energies.
 
-<BeamEnergyCompareViewer>
+<BeamEnergyCompareViewer :sources="sources">
 
 ## Primary vs Secondary Particles
 
