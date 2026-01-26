@@ -1,8 +1,8 @@
 <template>
   <div class="compare-viewer">
     <div class="global-controls">
-      <label for="energy-mode-select">Display Mode:</label>
-      <select id="energy-mode-select" v-model="selectedMode" @change="updateGlobalMode">
+      <label for="source-select">Display Mode:</label>
+      <select id="source-select" v-model="selectedMode" @change="updateGlobalMode">
         <option value="">-- Select display mode --</option>
         <optgroup label="Single">
           <option v-for="key in sourceKeys" :key="key" :value="key">
@@ -70,16 +70,16 @@ const selectedMode = ref(getDefaultMode())
 
 // Provide sources and selected mode to child components
 provide('plotSources', props.sources)
-provide('globalEnergyMode', selectedMode)
+provide('globalSelectedMode', selectedMode)
 
 // Update event for child components
 function updateGlobalMode() {
   // Reactivity handles updates automatically
 }
 
-// Format label for display (e.g., "5x41" -> "5×41 GeV")
+// Format label for display (just return the key as-is)
 function formatLabel(key: string): string {
-  return key.replace('x', '×') + ' GeV'
+  return key
 }
 
 // Get human-readable description for current mode

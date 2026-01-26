@@ -103,10 +103,10 @@ These components work together to display plots across different beam energies w
 ```md
 <script setup>
 const sources = {
-  '5x41': '/analysis/campaign-2025-08/acceptance/5x41/',
-  '10x100': '/analysis/campaign-2025-08/acceptance/10x100/',
-  '10x130': '/analysis/campaign-2025-08/acceptance/10x130/',
-  '18x275': '/analysis/campaign-2025-08/acceptance/18x275/'
+  '5×41 GeV': '/analysis/campaign-2025-08/acceptance/5x41/',
+  '10×100 GeV': '/analysis/campaign-2025-08/acceptance/10x100/',
+  '10×130 GeV': '/analysis/campaign-2025-08/acceptance/10x130/',
+  '18×275 GeV': '/analysis/campaign-2025-08/acceptance/18x275/'
 }
 </script>
 
@@ -146,9 +146,9 @@ const sources = {
 }
 ```
 
-- **Keys** (e.g., `'5x41'`) become dropdown labels (displayed as "5×41 GeV")
+- **Keys** are displayed directly as dropdown labels (use any format you want)
 - **Values** are base paths where plots are stored
-- Comparisons are auto-generated for all pairs (e.g., "5×41 vs 10×100")
+- Comparisons are auto-generated for all pairs (e.g., "label1 vs label2")
 
 **BeamEnergyComparePlot props:**
 
@@ -163,8 +163,8 @@ const sources = {
 ```md
 <script setup>
 const sources = {
-  '5x41': '/analysis/campaign-2025-10/kinematics/5x41/',
-  '18x275': '/analysis/campaign-2025-10/kinematics/18x275/'
+  '5×41 GeV': '/analysis/campaign-2025-10/kinematics/5x41/',
+  '18×275 GeV': '/analysis/campaign-2025-10/kinematics/18x275/'
 }
 </script>
 
@@ -178,12 +178,29 @@ const sources = {
 </BeamEnergyCompareViewer>
 ```
 
+**Example comparing campaign versions:**
+
+```md
+<script setup>
+const sources = {
+  'Campaign 2025-08': '/analysis/campaign-2025-08/results/',
+  'Campaign 2025-10': '/analysis/campaign-2025-10/results/'
+}
+</script>
+
+<BeamEnergyCompareViewer :sources="sources">
+
+<BeamEnergyComparePlot plot-name="summary.png" title="Summary" />
+
+</BeamEnergyCompareViewer>
+```
+
 **Generated dropdown options:**
 
-For sources with keys `['5x41', '10x100', '10x130', '18x275']`, the dropdown will show:
+For sources with keys `['5×41 GeV', '10×100 GeV', '10×130 GeV', '18×275 GeV']`, the dropdown will show:
 
 - **Single:** 5×41 GeV, 10×100 GeV, 10×130 GeV, 18×275 GeV
-- **Comparisons:** 5×41 vs 10×100, 5×41 vs 10×130, 5×41 vs 18×275, 10×100 vs 10×130, 10×100 vs 18×275, 10×130 vs 18×275
+- **Comparisons:** 5×41 GeV vs 10×100 GeV, 5×41 GeV vs 10×130 GeV, etc.
 
 
 ## Run locally

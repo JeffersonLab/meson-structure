@@ -4,13 +4,13 @@
     <p v-if="description" class="description">{{ description }}</p>
 
     <div class="plot-controls">
-      <label :for="'energy-select-' + plotId">Energy Mode:</label>
+      <label :for="'source-select-' + plotId">Select:</label>
       <select
-        :id="'energy-select-' + plotId"
+        :id="'source-select-' + plotId"
         v-model="localMode"
         @change="loadImages"
       >
-        <option value="">-- Select energy mode --</option>
+        <option value="">-- Select --</option>
         <optgroup label="Single">
           <option v-for="key in sourceKeys" :key="key" :value="key">
             {{ formatLabel(key) }}
@@ -42,7 +42,7 @@
     </div>
 
     <div v-else-if="localMode" class="no-data">
-      No plot available for selected energy mode
+      No plot available for selected option
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@ const plotId = Math.random().toString(36).substr(2, 9)
 
 // Inject sources and global mode from parent
 const plotSources = inject<Record<string, string>>('plotSources', {})
-const globalEnergyMode = inject<any>('globalEnergyMode', ref(''))
+const globalSelectedMode = inject<any>('globalSelectedMode', ref(''))
 
 // Extract keys from sources
 const sourceKeys = computed(() => Object.keys(plotSources))
@@ -100,7 +100,7 @@ interface PlotImage {
 const currentImages = ref<PlotImage[]>([])
 
 // Watch global mode changes
-watch(globalEnergyMode, (newMode) => {
+watch(globalSelectedMode, (newMode) => {
   if (newMode) {
     localMode.value = newMode
     loadImages()
@@ -112,9 +112,9 @@ watch(localMode, () => {
   loadImages()
 })
 
-// Format label for display (e.g., "5x41" -> "5×41 GeV")
+// Format label for display (just return the key as-is)
 function formatLabel(key: string): string {
-  return key.replace('x', '×') + ' GeV'
+  return key
 }
 
 // Build image path from source key
@@ -176,8 +176,8 @@ function handleImageError(event: Event) {
 
 // Initialize on mount
 onMounted(() => {
-  if (globalEnergyMode.value) {
-    localMode.value = globalEnergyMode.value
+  if (globalSelectedMode.value) {
+    localMode.value = globalSelectedMode.value
     loadImages()
   }
 })
