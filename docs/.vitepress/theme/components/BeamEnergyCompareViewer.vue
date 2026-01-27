@@ -2,7 +2,7 @@
   <div class="compare-viewer">
     <div class="global-controls">
       <label for="source-select">Display Mode:</label>
-      <select id="source-select" v-model="selectedMode" @change="updateGlobalMode">
+      <select id="source-select" v-model="selectedMode" @change="onModeChange">
         <option value="">-- Select display mode --</option>
         <optgroup label="Single">
           <option v-for="key in sourceKeys" :key="key" :value="key">
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, provide, watch, onMounted } from 'vue'
+import { ref, computed, provide, onMounted } from 'vue'
 
 // Props - sources is a Record<label, basePath>
 const props = defineProps<{
@@ -86,15 +86,8 @@ function updateUrlParam(mode: string) {
   window.history.replaceState({}, '', url.toString())
 }
 
-// Default to first comparison if available, otherwise first single
-const getDefaultMode = () => {
-  // First, check URL for mode parameter
-  const urlMode = getModeFromUrl()
-  if (urlMode && isValidMode(urlMode)) {
-    return urlMode
-  }
-
-  // Fall back to first comparison or first single
+// Get default mode (first comparison or first single)
+function getDefaultMode(): string {
   if (comparisons.value.length > 0) {
     return comparisons.value[0].value
   }
@@ -104,20 +97,16 @@ const getDefaultMode = () => {
   return ''
 }
 
+// Initialize with default mode (will be updated on mount if URL has mode)
 const selectedMode = ref(getDefaultMode())
 
 // Provide sources and selected mode to child components
 provide('plotSources', props.sources)
 provide('globalSelectedMode', selectedMode)
 
-// Watch for mode changes and update URL
-watch(selectedMode, (newMode) => {
-  updateUrlParam(newMode)
-})
-
-// Update event for child components
-function updateGlobalMode() {
-  // Reactivity handles updates automatically
+// Handle mode change from dropdown
+function onModeChange() {
+  updateUrlParam(selectedMode.value)
 }
 
 // Format label for display (just return the key as-is)
@@ -134,11 +123,14 @@ function getModeDescription(mode: string): string {
   return formatLabel(mode)
 }
 
-// On mount, sync URL if needed
+// On mount (client-side only), check URL and sync
 onMounted(() => {
-  // Update URL with current mode if not already set
   const urlMode = getModeFromUrl()
-  if (!urlMode && selectedMode.value) {
+  if (urlMode && isValidMode(urlMode)) {
+    // URL has a valid mode, use it
+    selectedMode.value = urlMode
+  } else {
+    // No URL mode, set it to current selection
     updateUrlParam(selectedMode.value)
   }
 })
