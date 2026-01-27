@@ -97,6 +97,7 @@ These components work together to display plots across different beam energies w
 - Automatically generates dropdown options for single energies and all pairwise comparisons
 - Global selector controls all plots on the page
 - Each plot also has an individual selector for flexible viewing
+- **URL sharing:** Selected mode is synced to the URL query parameter (`?mode=...`), allowing you to share links to specific views
 
 **Basic Usage:**
 
@@ -201,6 +202,20 @@ For sources with keys `['5×41 GeV', '10×100 GeV', '10×130 GeV', '18×275 GeV'
 
 - **Single:** 5×41 GeV, 10×100 GeV, 10×130 GeV, 18×275 GeV
 - **Comparisons:** 5×41 GeV vs 10×100 GeV, 5×41 GeV vs 10×130 GeV, etc.
+
+**Sharing links with specific modes:**
+
+The selected mode is automatically synced to the URL via the `?mode=` query parameter. This allows you to share direct links to specific views:
+
+```
+# Single energy view
+https://yoursite.com/campaign-2025-08/acceptance?mode=5×41 GeV
+
+# Comparison view
+https://yoursite.com/campaign-2025-08/acceptance?mode=5×41 GeV_vs_10×100 GeV
+```
+
+When someone opens a shared link, the page will automatically display the specified mode.
 
 
 ## Run locally
