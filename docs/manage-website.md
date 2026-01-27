@@ -88,7 +88,7 @@ According to the above (and also EIC guidelines)
 Custom Vue components are available to create interactive analysis pages with energy comparison features.
 Components are located in `docs/.vitepress/theme/components/`.
 
-### BeamEnergyCompareViewer & BeamEnergyComparePlot
+### PlotCompareViewer & VerticalComparePlot
 
 These components work together to display plots across different beam energies with comparison capabilities.
 
@@ -113,29 +113,29 @@ const sources = {
 
 # My Analysis Page
 
-<BeamEnergyCompareViewer :sources="sources">
+<PlotCompareViewer :sources="sources">
 
 ## Section Title
 
-<BeamEnergyComparePlot
+<VerticalComparePlot
   plot-name="01_my_plot.png"
   title="My Plot Title"
   description="Description of what this plot shows."
 />
 
-<BeamEnergyComparePlot
+<VerticalComparePlot
   plot-name="02_another_plot.png"
   title="Another Plot"
 />
 
-</BeamEnergyCompareViewer>
+</PlotCompareViewer>
 ```
 
 **How it works:**
 
 1. Define a `sources` object in `<script setup>` mapping labels to base paths
-2. Wrap your content with `<BeamEnergyCompareViewer :sources="sources">`
-3. Use `<BeamEnergyComparePlot>` for each plot, specifying only the filename
+2. Wrap your content with `<PlotCompareViewer :sources="sources">`
+3. Use `<VerticalComparePlot>` for each plot, specifying only the filename
 
 **The `sources` object:**
 
@@ -151,7 +151,7 @@ const sources = {
 - **Values** are base paths where plots are stored
 - Comparisons are auto-generated for all pairs (e.g., "label1 vs label2")
 
-**BeamEnergyComparePlot props:**
+**VerticalComparePlot props:**
 
 | Prop | Required | Description |
 |------|----------|-------------|
@@ -169,14 +169,14 @@ const sources = {
 }
 </script>
 
-<BeamEnergyCompareViewer :sources="sources">
+<PlotCompareViewer :sources="sources">
 
-<BeamEnergyComparePlot
+<VerticalComparePlot
   plot-name="q2_distribution.png"
   title="Q² Distribution"
 />
 
-</BeamEnergyCompareViewer>
+</PlotCompareViewer>
 ```
 
 **Example comparing campaign versions:**
@@ -189,11 +189,11 @@ const sources = {
 }
 </script>
 
-<BeamEnergyCompareViewer :sources="sources">
+<PlotCompareViewer :sources="sources">
 
-<BeamEnergyComparePlot plot-name="summary.png" title="Summary" />
+<VerticalComparePlot plot-name="summary.png" title="Summary" />
 
-</BeamEnergyCompareViewer>
+</PlotCompareViewer>
 ```
 
 **Generated dropdown options:**
