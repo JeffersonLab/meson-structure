@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, provide } from 'vue'
+import { ref, computed, provide, watch, onMounted } from 'vue'
 
 // Props - sources is a Record<label, basePath>
 const props = defineProps<{
@@ -55,8 +55,46 @@ const comparisons = computed(() => {
   return result
 })
 
+// Check if a mode value is valid (exists in sources or comparisons)
+function isValidMode(mode: string): boolean {
+  if (!mode) return false
+  // Check if it's a single source
+  if (sourceKeys.value.includes(mode)) return true
+  // Check if it's a valid comparison
+  return comparisons.value.some(c => c.value === mode)
+}
+
+// Get mode from URL query parameter
+function getModeFromUrl(): string | null {
+  if (typeof window === 'undefined') return null
+  const params = new URLSearchParams(window.location.search)
+  return params.get('mode')
+}
+
+// Update URL query parameter without page reload
+function updateUrlParam(mode: string) {
+  if (typeof window === 'undefined') return
+
+  const url = new URL(window.location.href)
+  if (mode) {
+    url.searchParams.set('mode', mode)
+  } else {
+    url.searchParams.delete('mode')
+  }
+
+  // Update URL without reloading
+  window.history.replaceState({}, '', url.toString())
+}
+
 // Default to first comparison if available, otherwise first single
 const getDefaultMode = () => {
+  // First, check URL for mode parameter
+  const urlMode = getModeFromUrl()
+  if (urlMode && isValidMode(urlMode)) {
+    return urlMode
+  }
+
+  // Fall back to first comparison or first single
   if (comparisons.value.length > 0) {
     return comparisons.value[0].value
   }
@@ -71,6 +109,11 @@ const selectedMode = ref(getDefaultMode())
 // Provide sources and selected mode to child components
 provide('plotSources', props.sources)
 provide('globalSelectedMode', selectedMode)
+
+// Watch for mode changes and update URL
+watch(selectedMode, (newMode) => {
+  updateUrlParam(newMode)
+})
 
 // Update event for child components
 function updateGlobalMode() {
@@ -90,6 +133,15 @@ function getModeDescription(mode: string): string {
   }
   return formatLabel(mode)
 }
+
+// On mount, sync URL if needed
+onMounted(() => {
+  // Update URL with current mode if not already set
+  const urlMode = getModeFromUrl()
+  if (!urlMode && selectedMode.value) {
+    updateUrlParam(selectedMode.value)
+  }
+})
 </script>
 
 <style scoped>
