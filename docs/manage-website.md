@@ -151,6 +151,18 @@ const sources = {
 - **Values** are base paths where plots are stored
 - Comparisons are auto-generated for all pairs (e.g., "label1 vs label2")
 
+**PlotCompareViewer props:**
+
+| Prop | Required | Description |
+|------|----------|-------------|
+| `:sources` | Yes | Object mapping labels to base paths |
+| `default-mode` | No | Initial mode to display (e.g., `"5×41 GeV"` or `"5×41 GeV_vs_10×100 GeV"`) |
+
+Example with default mode:
+```md
+<PlotCompareViewer :sources="sources" default-mode="10×100 GeV">
+```
+
 **VerticalComparePlot props:**
 
 | Prop | Required | Description |
