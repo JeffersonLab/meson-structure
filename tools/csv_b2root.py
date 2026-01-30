@@ -6,12 +6,12 @@ Analyzes EIC (Electron-Ion Collision) data by generating matplotlib plots
 comparing truth vs reconstructed kinematics.
 
 Usage:
-    csv_b2root.py file1.mc_dis.csv file2.mc_dis.csv ... -o /output/directory
+    csv_b2root.py file1.mc_dis.csv file1.reco_dis.csv ... -o /output/directory
 
-The script expects paired CSV files:
+The script expects paired CSV files (can be in different directories):
 - *mc_dis.csv: Monte Carlo truth data
 - *reco_dis.csv: Reconstructed data
-For each mc_dis.csv file provided, a corresponding reco_dis.csv file must exist.
+Files are paired by base name: foo.mc_dis.csv pairs with foo.reco_dis.csv
 
 Input CSV format (see docs/data-csv.md):
 - mc_dis.csv: Truth event-level values (evt, xbj, q2, y_d, w, ...)
@@ -48,25 +48,65 @@ Y_CUT_THRESHOLD = 0.1
 # File Handling
 # =============================================================================
 
-def validate_file_pairs(mc_dis_files: list[str]) -> list[tuple[str, str]]:
+def validate_file_pairs(input_files: list[str]) -> list[tuple[str, str]]:
     """
-    Validate that each mc_dis.csv file has a corresponding reco_dis.csv file.
-    """
-    pairs = []
-    missing_files = []
+    Validate input files and pair mc_dis.csv with reco_dis.csv by base name.
 
-    for mc_file in mc_dis_files:
-        reco_file = mc_file.replace('mc_dis.csv', 'reco_dis.csv')
-        if not os.path.exists(reco_file):
-            missing_files.append(reco_file)
+    Files are paired by their base name (ignoring directory):
+    - foo.mc_dis.csv pairs with foo.reco_dis.csv
+    - Files can be in different directories
+    """
+    mc_files = {}  # base_name -> full_path
+    reco_files = {}  # base_name -> full_path
+    ignored_files = []
+
+    for f in input_files:
+        basename = os.path.basename(f)
+        if basename.endswith('.mc_dis.csv'):
+            base_name = basename[:-len('.mc_dis.csv')]
+            mc_files[base_name] = f
+        elif basename.endswith('.reco_dis.csv'):
+            base_name = basename[:-len('.reco_dis.csv')]
+            reco_files[base_name] = f
         else:
-            pairs.append((mc_file, reco_file))
+            ignored_files.append(f)
 
-    if missing_files:
-        raise FileNotFoundError(
-            f"Missing corresponding reco_dis.csv files:\n"
-            + "\n".join(f"  - {f}" for f in missing_files)
-        )
+    if ignored_files:
+        print(f"Warning: Ignoring {len(ignored_files)} file(s) with unrecognized suffix:")
+        for f in ignored_files:
+            print(f"  - {os.path.basename(f)}")
+
+    # Find matching pairs
+    pairs = []
+    mc_only = []
+    reco_only = []
+
+    all_bases = set(mc_files.keys()) | set(reco_files.keys())
+    for base_name in sorted(all_bases):
+        has_mc = base_name in mc_files
+        has_reco = base_name in reco_files
+        if has_mc and has_reco:
+            pairs.append((mc_files[base_name], reco_files[base_name]))
+        elif has_mc:
+            mc_only.append(mc_files[base_name])
+        else:
+            reco_only.append(reco_files[base_name])
+
+    # Report errors
+    errors = []
+    if mc_only:
+        errors.append("mc_dis.csv files without matching reco_dis.csv:\n" +
+                      "\n".join(f"  - {os.path.basename(f)}" for f in mc_only))
+    if reco_only:
+        errors.append("reco_dis.csv files without matching mc_dis.csv:\n" +
+                      "\n".join(f"  - {os.path.basename(f)}" for f in reco_only))
+
+    if errors:
+        raise ValueError("\n".join(errors))
+
+    if not pairs:
+        raise ValueError("No valid file pairs found. Please provide matching "
+                         "*mc_dis.csv and *reco_dis.csv files.")
 
     return pairs
 
@@ -588,14 +628,18 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-    # Analyze specific files
-    %(prog)s data_5x41.mc_dis.csv data_10x100.mc_dis.csv -o ./output
+    # Provide both mc_dis and reco_dis files
+    %(prog)s data.mc_dis.csv data.reco_dis.csv -o ./output
+
+    # Files can be in different directories
+    %(prog)s /truth/data.mc_dis.csv /reco/data.reco_dis.csv -o ./output
 
     # Use glob patterns (shell expansion)
-    %(prog)s /data/*mc_dis.csv -o ./analysis_output
+    %(prog)s /data/*.csv -o ./analysis_output
 
 Notes:
-    - For each *mc_dis.csv file, a corresponding *reco_dis.csv file must exist
+    - Files are paired by base name: foo.mc_dis.csv <-> foo.reco_dis.csv
+    - Both mc_dis.csv and reco_dis.csv must be provided for each dataset
     - All plots are saved as PNG files in the output directory
         """
     )
@@ -604,7 +648,7 @@ Notes:
         'input_files',
         nargs='+',
         metavar='FILE',
-        help='Input mc_dis.csv files. Corresponding reco_dis.csv files must exist.'
+        help='Input CSV files (*mc_dis.csv and *reco_dis.csv). Paired by base name.'
     )
 
     parser.add_argument(
@@ -625,11 +669,11 @@ def main():
     print("Validating input files...")
     try:
         file_pairs = validate_file_pairs(args.input_files)
-    except FileNotFoundError as e:
+    except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Found {len(file_pairs)} valid file pairs.")
+    print(f"Found {len(file_pairs)} valid file pair(s).")
 
     # Run analysis
     run_analysis(file_pairs, args.output)
