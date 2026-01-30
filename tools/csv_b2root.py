@@ -4,7 +4,7 @@ EIC Data Analysis Script
 
 Analyzes EIC (Electron-Ion Collision) data by generating:
 - Matplotlib comparison plots (truth vs reconstructed)
-- Data-driven, variable-binned ROOT histograms
+- Data-driven, variable-binned 2D histograms (saved as numpy .npz files)
 
 Usage:
     csv_b2root.py file1.mc_dis.csv file2.mc_dis.csv ... -o /output/directory
@@ -13,29 +13,25 @@ The script expects paired CSV files:
 - *mc_dis.csv: Monte Carlo truth data
 - *reco_dis.csv: Reconstructed data
 For each mc_dis.csv file provided, a corresponding reco_dis.csv file must exist.
+
+Input CSV format (see docs/data-csv.md):
+- mc_dis.csv: Truth event-level values (evt, xbj, q2, y_d, w, ...)
+- reco_dis.csv: Reconstructed kinematics with method prefixes
+  (da_x, da_q2, electron_x, jb_x, etc.)
 """
 
 import argparse
-import glob
 import itertools
 import os
 import re
 import sys
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.colors import LogNorm
-
-try:
-    import ROOT
-    HAS_ROOT = True
-except ImportError:
-    HAS_ROOT = False
-    print("Warning: ROOT not available. ROOT histogram generation will be skipped.")
 
 
 # =============================================================================
@@ -50,7 +46,7 @@ class AnalysisConfig:
     kinematic_vars: list = None
     var_labels: dict = None
 
-    # ROOT histogram parameters
+    # Histogram binning parameters
     target_events_per_cell: float = 1000.0
     focus_strength: float = 1.5
 
@@ -699,7 +695,7 @@ def generate_limited_range_plots(df: pd.DataFrame, reco_methods: list[str],
 
 
 # =============================================================================
-# ROOT Histogram Generation
+# Histogram Generation (numpy-based, no ROOT dependency)
 # =============================================================================
 
 def create_focused_quantiles(num_bins: int, focus_strength: float = 1.5) -> np.ndarray:
@@ -717,23 +713,56 @@ def create_focused_quantiles(num_bins: int, focus_strength: float = 1.5) -> np.n
     return linear_space ** focus_strength
 
 
-def generate_root_histograms(df: pd.DataFrame, reco_methods: list[str],
-                              config: AnalysisConfig, beam_energy: str,
-                              output_dir: str) -> None:
-    """Generate data-driven ROOT histograms with variable binning."""
-    if not HAS_ROOT:
-        print("\n--- Skipping ROOT histograms (ROOT not available) ---")
-        return
+def create_2d_histogram(x: np.ndarray, y: np.ndarray,
+                        x_edges: np.ndarray, y_edges: np.ndarray) -> np.ndarray:
+    """
+    Create a 2D histogram using numpy.
 
-    print("\n--- Generating ROOT Histograms ---")
+    Args:
+        x, y: Data arrays
+        x_edges, y_edges: Bin edges
 
-    root_dir = os.path.join(output_dir, "root_files")
-    os.makedirs(root_dir, exist_ok=True)
+    Returns:
+        2D histogram counts array
+    """
+    mask = np.isfinite(x) & np.isfinite(y)
+    counts, _, _ = np.histogram2d(x[mask], y[mask], bins=[x_edges, y_edges])
+    return counts
+
+
+def save_histogram_npz(filepath: str, histograms: dict, metadata: dict) -> None:
+    """
+    Save histograms to a numpy .npz file.
+
+    Args:
+        filepath: Output file path
+        histograms: Dictionary of histogram data (counts, edges)
+        metadata: Dictionary of metadata (beam_energy, etc.)
+    """
+    np.savez(filepath, **histograms, **{f"meta_{k}": v for k, v in metadata.items()})
+
+
+def generate_histograms(df: pd.DataFrame, reco_methods: list[str],
+                        config: AnalysisConfig, beam_energy: str,
+                        output_dir: str) -> None:
+    """
+    Generate data-driven 2D histograms with variable binning.
+
+    Histograms are saved as numpy .npz files containing:
+    - x_edges: Bin edges for x (xbj)
+    - q2_edges: Bin edges for Q2
+    - h_truth: 2D histogram counts for truth values
+    - h_reco_{method}: 2D histogram counts for each reconstruction method
+    """
+    print("\n--- Generating 2D Histograms ---")
+
+    hist_dir = os.path.join(output_dir, "histograms")
+    os.makedirs(hist_dir, exist_ok=True)
 
     truth_x_col = config.truth_var_mapping['x']
     truth_q2_col = config.truth_var_mapping['q2']
 
-    # Calculate binning
+    # Calculate binning based on data density
     num_events = len(df)
     num_cells_target = num_events / config.target_events_per_cell
     num_bins = max(10, int(np.sqrt(num_cells_target)))
@@ -744,30 +773,23 @@ def generate_root_histograms(df: pd.DataFrame, reco_methods: list[str],
     q2_edges = np.unique(df[truth_q2_col].dropna().quantile(focused_quantiles).to_numpy())
 
     if len(x_edges) < 2 or len(q2_edges) < 2:
-        print("  Could not determine valid binning. Skipping ROOT histograms.")
+        print("  Could not determine valid binning. Skipping histograms.")
         return
 
     print(f"  Generated {len(x_edges)-1} bins for x and {len(q2_edges)-1} bins for Q2.")
 
-    # Create main ROOT file
-    root_path = os.path.join(root_dir, f"{beam_energy}_focused_variable_binned_hists.root")
-    root_file = ROOT.TFile(root_path, "RECREATE")
-    print(f"  Saving to: {root_path}")
+    # Build histogram data dictionary
+    histograms = {
+        'x_edges': x_edges,
+        'q2_edges': q2_edges,
+    }
 
     # Truth histogram
-    h_truth = ROOT.TH2D(
-        "h_truth_x_q2_focused_bins",
-        f"Truth x vs Q2 ({beam_energy});x_bj;Q^2 (GeV^2)",
-        len(x_edges) - 1, x_edges,
-        len(q2_edges) - 1, q2_edges
+    histograms['h_truth'] = create_2d_histogram(
+        df[truth_x_col].to_numpy(),
+        df[truth_q2_col].to_numpy(),
+        x_edges, q2_edges
     )
-
-    x_vals = df[truth_x_col].to_numpy()
-    q2_vals = df[truth_q2_col].to_numpy()
-    for i in range(len(x_vals)):
-        if np.isfinite(x_vals[i]) and np.isfinite(q2_vals[i]):
-            h_truth.Fill(x_vals[i], q2_vals[i])
-    h_truth.Write()
 
     # Reco histograms per method
     for method in reco_methods:
@@ -777,33 +799,31 @@ def generate_root_histograms(df: pd.DataFrame, reco_methods: list[str],
         if reco_x_col not in df.columns or reco_q2_col not in df.columns:
             continue
 
-        h_reco = ROOT.TH2D(
-            f"h_reco_{method}_x_q2_focused_bins",
-            f"Reco x vs Q2 ({method}, {beam_energy});x_bj;Q^2 (GeV^2)",
-            len(x_edges) - 1, x_edges,
-            len(q2_edges) - 1, q2_edges
+        histograms[f'h_reco_{method}'] = create_2d_histogram(
+            df[reco_x_col].to_numpy(),
+            df[reco_q2_col].to_numpy(),
+            x_edges, q2_edges
         )
 
-        x_vals = df[reco_x_col].to_numpy()
-        q2_vals = df[reco_q2_col].to_numpy()
-        for i in range(len(x_vals)):
-            if np.isfinite(x_vals[i]) and np.isfinite(q2_vals[i]):
-                h_reco.Fill(x_vals[i], q2_vals[i])
-        h_reco.Write()
+    # Save to file
+    metadata = {
+        'beam_energy': beam_energy,
+        'num_events': num_events,
+        'reco_methods': ','.join(reco_methods),
+    }
 
-    root_file.Close()
+    output_path = os.path.join(hist_dir, f"{beam_energy}_focused_variable_binned_hists.npz")
+    save_histogram_npz(output_path, histograms, metadata)
+    print(f"  Saved histograms to: {output_path}")
 
 
-def generate_high_y_root_histograms(df: pd.DataFrame, reco_methods: list[str],
-                                     config: AnalysisConfig, beam_energy: str,
-                                     output_dir: str) -> None:
-    """Generate ROOT histograms for high-y events."""
-    if not HAS_ROOT:
-        return
+def generate_high_y_histograms(df: pd.DataFrame, reco_methods: list[str],
+                                config: AnalysisConfig, beam_energy: str,
+                                output_dir: str) -> None:
+    """Generate histograms for high-y events (y > threshold)."""
+    print(f"\n--- Generating High-y Histograms (y > {config.y_cut_threshold}) ---")
 
-    print("\n--- Generating High-y ROOT Histograms (y > 0.1) ---")
-
-    high_y_dir = os.path.join(output_dir, "high_y_root_files")
+    high_y_dir = os.path.join(output_dir, "high_y_histograms")
     os.makedirs(high_y_dir, exist_ok=True)
 
     truth_x_col = config.truth_var_mapping['x']
@@ -836,45 +856,38 @@ def generate_high_y_root_histograms(df: pd.DataFrame, reco_methods: list[str],
             print(f"    Could not determine valid binning for {method}.")
             continue
 
-        # Create ROOT file
-        root_path = os.path.join(high_y_dir, f"{beam_energy}_{method}_high_y.root")
-        root_file = ROOT.TFile(root_path, "RECREATE")
-        print(f"    Saving to: {root_path}")
-
-        # Truth histogram
-        h_truth = ROOT.TH2D(
-            "h_truth_x_q2_high_y",
-            f"Truth x vs Q2 (y>0.1, {method});x_bj;Q^2",
-            len(x_edges) - 1, x_edges,
-            len(q2_edges) - 1, q2_edges
-        )
-
-        x_vals = df_high_y[truth_x_col].to_numpy()
-        q2_vals = df_high_y[truth_q2_col].to_numpy()
-        for i in range(len(x_vals)):
-            if np.isfinite(x_vals[i]) and np.isfinite(q2_vals[i]):
-                h_truth.Fill(x_vals[i], q2_vals[i])
-        h_truth.Write()
+        # Build histogram data
+        histograms = {
+            'x_edges': x_edges,
+            'q2_edges': q2_edges,
+            'h_truth': create_2d_histogram(
+                df_high_y[truth_x_col].to_numpy(),
+                df_high_y[truth_q2_col].to_numpy(),
+                x_edges, q2_edges
+            ),
+        }
 
         # Reco histogram
         reco_x_col = f"{method}_x"
         reco_q2_col = f"{method}_q2"
 
-        h_reco = ROOT.TH2D(
-            "h_reco_x_q2_high_y",
-            f"Reco x vs Q2 (y>0.1, {method});x_bj;Q^2",
-            len(x_edges) - 1, x_edges,
-            len(q2_edges) - 1, q2_edges
+        histograms['h_reco'] = create_2d_histogram(
+            df_high_y[reco_x_col].to_numpy(),
+            df_high_y[reco_q2_col].to_numpy(),
+            x_edges, q2_edges
         )
 
-        x_vals = df_high_y[reco_x_col].to_numpy()
-        q2_vals = df_high_y[reco_q2_col].to_numpy()
-        for i in range(len(x_vals)):
-            if np.isfinite(x_vals[i]) and np.isfinite(q2_vals[i]):
-                h_reco.Fill(x_vals[i], q2_vals[i])
-        h_reco.Write()
+        # Save to file
+        metadata = {
+            'beam_energy': beam_energy,
+            'method': method,
+            'y_cut': config.y_cut_threshold,
+            'num_events': num_events,
+        }
 
-        root_file.Close()
+        output_path = os.path.join(high_y_dir, f"{beam_energy}_{method}_high_y.npz")
+        save_histogram_npz(output_path, histograms, metadata)
+        print(f"    Saved to: {output_path}")
 
 
 # =============================================================================
@@ -934,8 +947,8 @@ def analyze_beam_energy(file_pairs: list[tuple[str, str]], beam_energy: str,
     generate_resolution_plots(merged_df, reco_methods, config, beam_energy, output_dir)
     generate_y_cut_plots(merged_df, reco_methods, config, beam_energy, output_dir)
     generate_limited_range_plots(merged_df, reco_methods, config, beam_energy, output_dir)
-    generate_root_histograms(merged_df, reco_methods, config, beam_energy, output_dir)
-    generate_high_y_root_histograms(merged_df, reco_methods, config, beam_energy, output_dir)
+    generate_histograms(merged_df, reco_methods, config, beam_energy, output_dir)
+    generate_high_y_histograms(merged_df, reco_methods, config, beam_energy, output_dir)
 
     print(f"\nAnalysis for {beam_energy} complete.")
 
@@ -947,7 +960,7 @@ def analyze_beam_energy(file_pairs: list[tuple[str, str]], beam_energy: str,
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
-        description="Analyze EIC data: generate plots and ROOT histograms from CSV files.",
+        description="Analyze EIC data: generate plots and histograms from CSV files.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -961,6 +974,7 @@ Notes:
     - For each *mc_dis.csv file, a corresponding *reco_dis.csv file must exist
     - Files are automatically grouped by beam energy (e.g., 5x41, 10x100, 18x275)
     - Output is organized into subdirectories by beam energy
+    - Histograms are saved as numpy .npz files (no ROOT dependency)
         """
     )
 
@@ -975,7 +989,7 @@ Notes:
         '-o', '--output',
         required=True,
         metavar='DIR',
-        help='Output directory for plots and ROOT files'
+        help='Output directory for plots and histogram files'
     )
 
     parser.add_argument(
@@ -983,7 +997,7 @@ Notes:
         type=float,
         default=1000.0,
         metavar='N',
-        help='Target events per ROOT histogram cell (default: 1000)'
+        help='Target events per histogram cell (default: 1000)'
     )
 
     parser.add_argument(
