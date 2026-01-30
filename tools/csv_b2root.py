@@ -48,13 +48,41 @@ Y_CUT_THRESHOLD = 0.1
 # File Handling
 # =============================================================================
 
-def validate_file_pairs(mc_dis_files: list[str]) -> list[tuple[str, str]]:
+def validate_file_pairs(input_files: list[str]) -> list[tuple[str, str]]:
     """
-    Validate that each mc_dis.csv file has a corresponding reco_dis.csv file.
+    Validate input files and pair mc_dis.csv with corresponding reco_dis.csv files.
+
+    Accepts either:
+    - Only mc_dis.csv files (will auto-find reco_dis.csv)
+    - Mixed mc_dis.csv and reco_dis.csv files (will pair by base name)
     """
     pairs = []
     missing_files = []
+    skipped_files = []
 
+    # Filter to only mc_dis.csv files
+    mc_dis_files = []
+    for f in input_files:
+        if f.endswith('mc_dis.csv'):
+            mc_dis_files.append(f)
+        elif f.endswith('reco_dis.csv'):
+            skipped_files.append(f)
+        else:
+            skipped_files.append(f)
+
+    if skipped_files:
+        print(f"Note: Ignoring {len(skipped_files)} non-mc_dis.csv file(s):")
+        for f in skipped_files:
+            print(f"  - {os.path.basename(f)}")
+
+    if not mc_dis_files:
+        raise ValueError(
+            "No mc_dis.csv files found in input.\n"
+            "Please provide *mc_dis.csv files. The script will automatically "
+            "find corresponding *reco_dis.csv files."
+        )
+
+    # Find corresponding reco_dis.csv files
     for mc_file in mc_dis_files:
         reco_file = mc_file.replace('mc_dis.csv', 'reco_dis.csv')
         if not os.path.exists(reco_file):
@@ -625,11 +653,11 @@ def main():
     print("Validating input files...")
     try:
         file_pairs = validate_file_pairs(args.input_files)
-    except FileNotFoundError as e:
+    except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Found {len(file_pairs)} valid file pairs.")
+    print(f"Found {len(file_pairs)} valid file pair(s).")
 
     # Run analysis
     run_analysis(file_pairs, args.output)
