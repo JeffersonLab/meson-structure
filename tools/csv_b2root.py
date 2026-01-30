@@ -225,6 +225,11 @@ def save_2d_histogram(x: np.ndarray, y: np.ndarray, xlabel: str, ylabel: str,
     x_filtered = x[mask]
     y_filtered = y[mask]
 
+    # Need at least a few points to make a meaningful histogram
+    if len(x_filtered) < 10:
+        print(f"Skipping {filename}: too few data points ({len(x_filtered)}).")
+        return
+
     if custom_range:
         data_range = custom_range
     else:
@@ -236,11 +241,30 @@ def save_2d_histogram(x: np.ndarray, y: np.ndarray, xlabel: str, ylabel: str,
     plt.figure()
     plt.xscale(x_scale)
     plt.yscale(y_scale)
-    plt.hist2d(x_filtered, y_filtered, bins=bins, cmap='viridis',
-               range=data_range, norm=LogNorm(vmin=vmin))
+
+    # Use fewer bins if we have sparse data
+    actual_bins = min(bins, max(10, len(x_filtered) // 5))
+
+    try:
+        h, xedges, yedges, im = plt.hist2d(
+            x_filtered, y_filtered, bins=actual_bins, cmap='viridis',
+            range=data_range, norm=LogNorm(vmin=vmin)
+        )
+        plt.colorbar(im, label="Counts")
+    except ValueError:
+        # Fall back to linear scale if LogNorm fails
+        plt.close()
+        plt.figure()
+        plt.xscale(x_scale)
+        plt.yscale(y_scale)
+        h, xedges, yedges, im = plt.hist2d(
+            x_filtered, y_filtered, bins=actual_bins, cmap='viridis',
+            range=data_range
+        )
+        plt.colorbar(im, label="Counts")
+
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    plt.colorbar(label="Counts")
     plt.title(title, fontsize=10)
 
     if annotation:
