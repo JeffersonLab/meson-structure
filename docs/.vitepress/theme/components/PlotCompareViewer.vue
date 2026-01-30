@@ -28,9 +28,10 @@
 <script setup lang="ts">
 import { ref, computed, provide, onMounted } from 'vue'
 
-// Props - sources is a Record<label, basePath>
+// Props - sources is a Record<label, basePath>, defaultMode is optional
 const props = defineProps<{
   sources: Record<string, string>
+  defaultMode?: string
 }>()
 
 // Extract keys from sources
@@ -86,8 +87,13 @@ function updateUrlParam(mode: string) {
   window.history.replaceState({}, '', url.toString())
 }
 
-// Get default mode (first comparison or first single)
+// Get default mode (prop > first comparison > first single)
 function getDefaultMode(): string {
+  // Use defaultMode prop if provided and valid
+  if (props.defaultMode && isValidMode(props.defaultMode)) {
+    return props.defaultMode
+  }
+  // Fall back to first comparison or first single
   if (comparisons.value.length > 0) {
     return comparisons.value[0].value
   }
