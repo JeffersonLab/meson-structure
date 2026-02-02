@@ -56,6 +56,7 @@ export default withMermaid({
                 text: 'Campaign 2025-10',
                 link: '/campaign-2025-10/campaign-2025-10',
                 items: [
+                    {text: "Reco DIS All", link: '/campaign-2025-10/reco-dis-all'},
                 ]
             },
             {
