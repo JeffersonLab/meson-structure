@@ -434,17 +434,14 @@ class JobRunner:
         print("="*80)
 
 
-def load_config():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    config_path = os.path.join(script_dir, 'config.yaml')
-    
+def load_config(config_path):
     config = OmegaConf.load(config_path)
     return config
 
 
-def load_config_for_energy(energy):
+def load_config_for_energy(config_path, energy):
     """Expand configuration paths for a specific energy."""
-    config = load_config()
+    config = load_config(config_path)
     return OmegaConf.merge(config, {"energy": energy})
 
 

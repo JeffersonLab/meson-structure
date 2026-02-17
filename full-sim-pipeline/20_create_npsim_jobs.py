@@ -4,6 +4,7 @@ npsim_pipeline.py
 Generate and submit afterburner jobs using JobRunner.
 """
 
+import argparse
 import os
 from typing import Dict
 import yaml
@@ -80,15 +81,19 @@ def process_energy(config, energy):
 
 def main():
     """Main entry point."""
-    
+
+    parser = argparse.ArgumentParser(description="Generate npsim jobs.")
+    parser.add_argument('-c', '--config', required=True, help="Path to config YAML file")
+    args = parser.parse_args()
+
     # Load config
-    config = load_config()
+    config = load_config(args.config)
     energies = config.get('energies', [])
 
     # Process each energy
     print(f"Energies to process: {energies}")
     for energy in energies:
-        config = load_config_for_energy(energy)
+        config = load_config_for_energy(args.config, energy)
         process_energy(config, energy)
 
     print("ALL ENERGIES PROCESSED SUCCESSFULLY")
