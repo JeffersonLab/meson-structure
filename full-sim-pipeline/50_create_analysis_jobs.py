@@ -9,8 +9,8 @@ an analysis script on the full set.
 
 Output structure:
     {analysis_output}/{analysis_name}/{energy}/   - analysis results
-    {analysis_output}/{analysis_name}/jobs/        - generated scripts
-    {analysis_output}/{analysis_name}/logs/        - SLURM logs
+    {analysis_output}/jobs/                        - generated scripts
+    {analysis_output}/logs/                        - SLURM logs
 """
 
 import argparse
@@ -146,8 +146,12 @@ def write_run_all(jobs_dir, container_scripts, container, bind_dirs):
     return path
 
 
-def process_analysis(analysis, config_path, energies):
-    """Generate jobs for one analysis across all energies."""
+def process_analysis(analysis, config_path, energies, jobs_dir, logs_dir):
+    """Generate jobs for one analysis across all energies.
+
+    Returns (container_scripts, slurm_scripts, bind_dirs, container) collected
+    across all energies so the caller can build master scripts.
+    """
 
     analysis_name = analysis['name']
     script_path = os.path.join(project_root, analysis['script'])
@@ -160,16 +164,11 @@ def process_analysis(analysis, config_path, energies):
 
     if not os.path.isfile(script_path):
         print(f"  [ERROR] Script not found: {script_path}")
-        return
+        return [], [], None, None
 
     # Resolve analysis_output from base config (no energy interpolation needed)
     base_config = load_config(config_path)
     analysis_base = base_config.analysis_output
-
-    jobs_dir = os.path.join(analysis_base, analysis_name, 'jobs')
-    logs_dir = os.path.join(analysis_base, analysis_name, 'logs')
-    os.makedirs(jobs_dir, exist_ok=True)
-    os.makedirs(logs_dir, exist_ok=True)
 
     all_container = []
     all_slurm = []
@@ -231,15 +230,11 @@ def process_analysis(analysis, config_path, energies):
 
         print(f"    Generated: {basename}.container.sh, {basename}.slurm.sh")
 
-    if all_slurm and bind_dirs and container:
-        submit_path = write_submit_all(jobs_dir, all_slurm)
-        run_path = write_run_all(jobs_dir, all_container, container, bind_dirs)
+    print(f"\n  Summary for {analysis_name}:")
+    print(f"    Container scripts: {len(all_container)}")
+    print(f"    SLURM scripts:     {len(all_slurm)}")
 
-        print(f"\n  Summary for {analysis_name}:")
-        print(f"    Container scripts: {len(all_container)}")
-        print(f"    SLURM scripts:     {len(all_slurm)}")
-        print(f"    Submit all: {submit_path}")
-        print(f"    Run local:  {run_path}")
+    return all_container, all_slurm, bind_dirs, container
 
 
 def main():
@@ -258,8 +253,41 @@ def main():
     print(f"Energies: {energies}")
     print(f"Analyses: {len(ANALYSES)}")
 
+    # Shared jobs/ and logs/ under analysis_output
+    analysis_base = config.analysis_output
+    jobs_dir = os.path.join(analysis_base, 'jobs')
+    logs_dir = os.path.join(analysis_base, 'logs')
+    os.makedirs(jobs_dir, exist_ok=True)
+    os.makedirs(logs_dir, exist_ok=True)
+
+    all_container = []
+    all_slurm = []
+    last_bind_dirs = None
+    last_container = None
+
     for analysis in ANALYSES:
-        process_analysis(analysis, args.config, energies)
+        container_scripts, slurm_scripts, bind_dirs, container = \
+            process_analysis(analysis, args.config, energies, jobs_dir, logs_dir)
+        all_container.extend(container_scripts)
+        all_slurm.extend(slurm_scripts)
+        if bind_dirs:
+            last_bind_dirs = bind_dirs
+        if container:
+            last_container = container
+
+    if all_slurm and last_bind_dirs and last_container:
+        submit_path = write_submit_all(jobs_dir, all_slurm)
+        run_path = write_run_all(jobs_dir, all_container, last_container, last_bind_dirs)
+
+        print(f"\n{'='*80}")
+        print(f"MASTER SCRIPTS")
+        print(f"{'='*80}")
+        print(f"  Jobs dir:    {jobs_dir}")
+        print(f"  Logs dir:    {logs_dir}")
+        print(f"  Total container scripts: {len(all_container)}")
+        print(f"  Total SLURM scripts:     {len(all_slurm)}")
+        print(f"  Submit all (SLURM): {submit_path}")
+        print(f"  Run all (local):    {run_path}")
 
     print(f"\n{'='*80}")
     print("ALL ANALYSES PROCESSED SUCCESSFULLY")
