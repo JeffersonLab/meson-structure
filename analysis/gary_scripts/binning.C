@@ -2,7 +2,33 @@ struct Region {
   double Q2min, Q2max;
   double xmin, xmax;
   TH1D* h_t;
+  TH2D* htru_2d_t_f2n;
 };
+
+
+std::vector<Region> makeRegions(const std::vector<double>& Q2_bins,
+                                const std::vector<double>& x_bins)
+{
+  std::vector<Region> regions;
+  const auto nq = Q2_bins.size() - 1;
+  const auto nx = x_bins.size() - 1;
+  regions.reserve(nq * nx);
+
+  for (size_t iq = 0; iq < nq; ++iq) {
+    for (size_t ix = 0; ix < nx; ++ix) {
+      Region r{};
+      r.Q2min = Q2_bins[iq];
+      r.Q2max = Q2_bins[iq+1];
+      r.xmin  = x_bins[ix];
+      r.xmax  = x_bins[ix+1];
+      r.h_t   = nullptr; // we'll fill this later, or keep it unused
+      r.htru_2d_t_f2n = nullptr;
+      regions.emplace_back(r);
+    }
+  }
+  return regions;
+}
+
 
 void drawGrid(const std::vector<Region>& regions,
               const std::vector<double>& Q2_bins,

@@ -1,3 +1,15 @@
+//this needs to go before include mesonMC.h
+//otherwise dont get correct path
+//at compile time
+// #ifdef CTEQ_TBL_PATH
+//   #undef CTEQ_TBL_PATH
+// #endif
+// #define CTEQ_TBL_PATH "../../mesonSFgen/src/cteq-tbls"
+
+// #include "../../mesonSFgen/src/EIC_mesonMC.h"
+// //#include "../../mesonSFgen/src/EIC_mesonMC.cpp"
+// #include "../../mesonSFgen/src/functions/sf.h"
+
 #include "ePICReaction.h"
 #include "ParticleCreator.h"
 #include "ePICParticleCreator.h"
@@ -13,25 +25,30 @@
 #include <TCanvas.h>
 #include <TMath.h>
 
+#include "ePICFileStreamer.h"
 
-void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rachel/TDISEIC/data/reco/k_lambda_18x275_5000evt_001.edm4eic.root"}, std::string outfile="/w/work5/home/garyp/rad_trees/MCMatched_KLambda_18x275.root"){
+void ProcessMCMatchedKLambda(std::vector<std::string> infiles={"/w/work5/home/garyp/eic/meson-structure-2025-08/18x275/k_lambda_18x275_5000evt_00*.edm4eic.root"}, std::string outfile="/w/work5/home/garyp/rad_trees/MCMatched_KLambda_18x275.root"){
+  
+  //cteq pdf calculator for F2N
+  //initcteqpdf();
+  
   using namespace rad::names::data_type; //for Rec(), Truth()
   ROOT::EnableImplicitMT(8);
   
-  outfile="tempout.root";
+  //outfile="tempout.root";
   
   gBenchmark->Start("df total");
-  infile="root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-08/reco/18x275/k_lambda_18x275_5000evt_2000.edm4eic.root";
-  auto files = GetXRootDFiles("dtn-eic.jlab.org/","/volatile/eic/romanov/meson-structure-2025-08/reco/18x275/","edm4eic.root",1);
-  for(auto file : files)
+  infiles = rad::files::GetXRootDFiles("dtn-eic.jlab.org/","/volatile/eic/romanov/meson-structure-2025-08/reco/18x275/","edm4eic.root",-1);
+  for(auto file : infiles)
     std::cout << file << std::endl;
-  rad::config::ePICReaction epic{"events",files};
+  rad::config::ePICReaction epic{"events",infiles};
   epic.SetBeamsFromMC(); //for this file 0=ebeam 1=pbeam
   
   epic.AliasColumnsAndMatchWithMC();
   
   //rad::indice::UseAsID(index, offset) offset in case beam particle included in record
-  epic.setScatElectron(rad::indice::UseAsID(0,2), {"MCScatteredElectrons_objIdx.index"});
+  //epic.setScatElectron(rad::indice::UseAsID(0,2), {"MCScatteredElectrons_objIdx.index"});
+  epic.setScatElectronIndex(0);
   //epic.setParticleIndex("pprime",rad::indice::UseAsID(0,2),{"MCScatteredProtons_objIdx.index"},2212);
 
   
@@ -39,11 +56,11 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rac
   rad::epic::ePICParticleCreator epic_particles{epic};
   rad::epic::ePICParticleModifier  epic_modifier(epic);
   
+  //K^+ tagged meson - becomes inclusive missing X
+  //epic.setParticleIndex("K",1,321);
   //Lambda^0_s
   epic.setParticleIndex("Lambda",2,3122);
   epic_particles.MCMatchedZDCLambda("Lambda");
-  //K^+ tagged meson - becomes inclusive missing X
-  epic.setParticleIndex("K",1,321);
   
   epic.Particles().Miss("missX",{rad::names::ScatEle().data(),"Lambda"});
   
@@ -53,8 +70,12 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rac
   //must call this after all particles are configured
   epic.makeParticleMap();
   
+  // rad::rdf::PrintParticles(epic,Truth());
+  // rad::rdf::PrintParticles(epic,Rec());
+  
   epic_modifier.UndoCrossAngle("Lambda");
   epic_modifier.Apply("LambdaCrossAngle");
+  
   
   //option filtering of reconstructed tracks
   //epic.Filter("el_OK==1&&po_OK==1","partFilter");
@@ -71,7 +92,14 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rac
   rad::rdf::MissMass(epic,"Welec","{scat_ele}");
   rad::rdf::Mass(epic,"Whad","{missX,Lambda}");
   rad::rdf::Q2(epic,"Q2");
+  rad::rdf::nu(epic,"nu");
+  rad::rdf::y(epic,"y");
+  rad::rdf::xbj(epic,"xbj");
 
+  // epic.Define("inucl","1");
+  // epic.Define("tru_F2N",F2N, {"tru_xbj","tru_Q2","inucl"});
+  // epic.Define("rec_F2N",F2N, {"rec_xbj","rec_Q2","inucl"});
+  
   //t distribution, column name
   rad::rdf::TTop(epic,"t_top");
   rad::rdf::TBot(epic,"t_bot");
@@ -80,13 +108,13 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rac
   
   //CM production angles
   rad::rdf::CMAngles(epic,"CM");
-
+  
   //exlusivity
   rad::rdf::MissMass(epic,"MissMassX","{scat_ele,Lambda}");
-  rad::rdf::MissP(epic,"MissP_X","{scat_ele,K}");
-  rad::rdf::MissPt(epic,"MissPt_X","{scat_ele,K}");
-  rad::rdf::MissPz(epic,"MissPz_X","{scat_ele,K}");
-  rad::rdf::MissTheta(epic,"MissTheta_X","{scat_ele,K}");
+  rad::rdf::MissP(epic,"MissP_X","{scat_ele,Lambda}");
+  rad::rdf::MissPt(epic,"MissPt_X","{scat_ele,Lambda}");
+  rad::rdf::MissPz(epic,"MissPz_X","{scat_ele,Lambda}");
+  rad::rdf::MissTheta(epic,"MissTheta_X","{scat_ele,Lambda}");
 
   //decay angles
   rad::rdf::gn2s0s0s12::HelicityAngles(epic,"Heli");
@@ -103,7 +131,11 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rac
   //histo.Splitter().AddRegularDimension("xxx", rad::histo::RegularSplits(nbins,low,high) );
   histo.Init({Rec(),Truth()});//will create histograms for rec and truth
 
-  histo.Create<TH1D,double>({"hQ2",";Q^{2} [GeV^{2}]",100,0,500.},{"Q2"});
+  histo.Create<TH1D,double>({"hQ2",";Q^{2} [GeV^{2}]",100,0,500},{"Q2"});
+  histo.Create<TH1D,double>({"hnu",";#nu",100,0,15000},{"nu"});
+  histo.Create<TH1D,double>({"hy",";Q^{2} [GeV^{2}]",100,0,1},{"y"});
+  histo.Create<TH1D,double>({"hxbj",";Q^{2} [GeV^{2}]",100,0,1},{"xbj"});
+  
   histo.Create<TH1D,double>({"hWelec",";W (electro miss mass) [GeV/c^{2}]",100,0,200.},{"Welec"});
   histo.Create<TH1D,double>({"hWhad",";W (hadro final state) [GeV/c^{2}]",100,0,200.},{"Whad"});
   histo.Create<TH1D,double>({"hMissMassX",";M_{miss} [GeV/c^{2}]",1000,-200,200},{"MissMassX"});
@@ -116,10 +148,10 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rac
   histo.Create<TH1D,double>({"hcthCM",";cos(#theta_{CM})",100,-1,1},{"CM_CosTheta"});
   histo.Create<TH1D,double>({"hphCM",";#phi_{CM}",100,-TMath::Pi(),TMath::Pi()},{"CM_Phi"});
   
-  histo.Create<TH1D,double>({"hmissP",";p_{miss}(e',K)",1000,-100,100},{"MissP_X"});
-  histo.Create<TH1D,double>({"hmissPt",";p_{t,miss}(e',K)",100,0,10},{"MissPt_X"});
-  histo.Create<TH1D,double>({"hmissPz",";p_{z,miss}(e',K)",1000,-100,100},{"MissPz_X"});
-  histo.Create<TH1D,double>({"hmissTheta",";#theta_{miss}(e',K)",100,-TMath::Pi(),TMath::Pi()},{"MissTheta_X"});
+  histo.Create<TH1D,double>({"hmissP",";p_{miss}(e',#Lambda)",1000,-100,100},{"MissP_X"});
+  histo.Create<TH1D,double>({"hmissPt",";p_{t,miss}(e',#Lambda)",100,0,10},{"MissPt_X"});
+  histo.Create<TH1D,double>({"hmissPz",";p_{z,miss}(e',#Lambda)",1000,-100,100},{"MissPz_X"});
+  histo.Create<TH1D,double>({"hmissTheta",";#theta_{miss}(e',#Lambda)",100,-TMath::Pi(),TMath::Pi()},{"MissTheta_X"});
  
   //particle momenta
   histo.Create<TH1D,double>({"hpmag_elec",";p_{e'} [GeV/c]",100,-1,20},{"pmag[scat_ele]"});
@@ -203,6 +235,18 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infile={"/w/work0/home/rac
   histo.DrawSame("htheta_Lambda",gPad);
   c04->cd(4)->SetLogy();
   histo.DrawSame("hphi_Lambda",gPad);
+
+  //DIS Kinematic Diagnostics
+  TCanvas *c05 = new TCanvas();
+  c05->Divide(2,2);
+  c05->cd(1);
+  histo.DrawSame("hQ2",gPad);
+  c05->cd(2);
+  histo.DrawSame("hnu",gPad);
+  c05->cd(3);
+  histo.DrawSame("hy",gPad);
+  c05->cd(4);
+  histo.DrawSame("hxbj",gPad);
   
   gBenchmark->Stop("processing");
   gBenchmark->Print("processing");
