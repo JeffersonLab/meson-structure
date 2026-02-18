@@ -2,7 +2,7 @@
 
  **The website is**:
 
-- a part of the [meson-structure](https://github.com/JeffersonLab/meson-structure) repository. Sources at [docs/](https://github.com/JeffersonLab/meson-structure/tree/main/docs) 
+- a part of the [meson-structure](https://github.com/JeffersonLab/meson-structure) repository. Sources at [docs/](https://github.com/JeffersonLab/meson-structure/tree/main/docs)
 - updated automatically on every commit to the `main` branch
 - if there are errors building the website, they will be visible on the [GitHub Actions](https://github.com/JeffersonLab/meson-structure/actions) page
 - built using [VitePress](https://vitepress.vuejs.org/) and hosted on [GitHub Pages](https://pages.github.com/)
@@ -58,15 +58,15 @@ According to the above (and also EIC guidelines)
 - Reference images in markdown files, you use absolute paths starting from `docs/public/`:
 
   *Example:*
-  
-  > If image is located on the disk at: 
-  > 
+
+  > If image is located on the disk at:
+  >
   > ```
   > docs/public/analysis/campaign-2025-08/acceptance/5x41/01_example.png
   > ```
-  > 
+  >
   > Reference it in markdown as:
-  > 
+  >
   > ```markdown
   > ![Description](/analysis/campaign-2025-08/acceptance/5x41/01_example.png)
   > ```
@@ -83,10 +83,157 @@ According to the above (and also EIC guidelines)
 - `03_xbj_correlation.png`
 
 
+## Vue Components for Analysis Pages
+
+Custom Vue components are available to create interactive analysis pages with energy comparison features.
+Components are located in `docs/.vitepress/theme/components/`.
+
+### PlotCompareViewer & VerticalComparePlot
+
+These components work together to display plots across different beam energies with comparison capabilities.
+
+**Features:**
+- Configure plot sources (paths) per page - no hardcoded paths
+- Automatically generates dropdown options for single energies and all pairwise comparisons
+- Global selector controls all plots on the page
+- Each plot also has an individual selector for flexible viewing
+- **URL sharing:** Selected mode is synced to the URL query parameter (`?mode=...`), allowing you to share links to specific views
+
+**Basic Usage:**
+
+```md
+<script setup>
+const sources = {
+  '5×41 GeV': '/analysis/campaign-2025-08/acceptance/5x41/',
+  '10×100 GeV': '/analysis/campaign-2025-08/acceptance/10x100/',
+  '10×130 GeV': '/analysis/campaign-2025-08/acceptance/10x130/',
+  '18×275 GeV': '/analysis/campaign-2025-08/acceptance/18x275/'
+}
+</script>
+
+# My Analysis Page
+
+<PlotCompareViewer :sources="sources">
+
+## Section Title
+
+<VerticalComparePlot
+  plot-name="01_my_plot.png"
+  title="My Plot Title"
+  description="Description of what this plot shows."
+/>
+
+<VerticalComparePlot
+  plot-name="02_another_plot.png"
+  title="Another Plot"
+/>
+
+</PlotCompareViewer>
+```
+
+**How it works:**
+
+1. Define a `sources` object in `<script setup>` mapping labels to base paths
+2. Wrap your content with `<PlotCompareViewer :sources="sources">`
+3. Use `<VerticalComparePlot>` for each plot, specifying only the filename
+
+**The `sources` object:**
+
+```js
+const sources = {
+  'label1': '/path/to/label1/plots/',
+  'label2': '/path/to/label2/plots/',
+  // ... more labels
+}
+```
+
+- **Keys** are displayed directly as dropdown labels (use any format you want)
+- **Values** are base paths where plots are stored
+- Comparisons are auto-generated for all pairs (e.g., "label1 vs label2")
+
+**PlotCompareViewer props:**
+
+| Prop | Required | Description |
+|------|----------|-------------|
+| `:sources` | Yes | Object mapping labels to base paths |
+| `default-mode` | No | Initial mode to display (e.g., `"5×41 GeV"` or `"5×41 GeV_vs_10×100 GeV"`) |
+
+Example with default mode:
+```md
+<PlotCompareViewer :sources="sources" default-mode="10×100 GeV">
+```
+
+**VerticalComparePlot props:**
+
+| Prop | Required | Description |
+|------|----------|-------------|
+| `plot-name` | Yes | Filename of the plot (e.g., `"01_decay_points.png"`) |
+| `title` | No | Title displayed above the plot |
+| `description` | No | Description text below the title |
+
+**Example for a different campaign:**
+
+```md
+<script setup>
+const sources = {
+  '5×41 GeV': '/analysis/campaign-2025-10/kinematics/5x41/',
+  '18×275 GeV': '/analysis/campaign-2025-10/kinematics/18x275/'
+}
+</script>
+
+<PlotCompareViewer :sources="sources">
+
+<VerticalComparePlot
+  plot-name="q2_distribution.png"
+  title="Q² Distribution"
+/>
+
+</PlotCompareViewer>
+```
+
+**Example comparing campaign versions:**
+
+```md
+<script setup>
+const sources = {
+  'Campaign 2025-08': '/analysis/campaign-2025-08/results/',
+  'Campaign 2025-10': '/analysis/campaign-2025-10/results/'
+}
+</script>
+
+<PlotCompareViewer :sources="sources">
+
+<VerticalComparePlot plot-name="summary.png" title="Summary" />
+
+</PlotCompareViewer>
+```
+
+**Generated dropdown options:**
+
+For sources with keys `['5×41 GeV', '10×100 GeV', '10×130 GeV', '18×275 GeV']`, the dropdown will show:
+
+- **Single:** 5×41 GeV, 10×100 GeV, 10×130 GeV, 18×275 GeV
+- **Comparisons:** 5×41 GeV vs 10×100 GeV, 5×41 GeV vs 10×130 GeV, etc.
+
+**Sharing links with specific modes:**
+
+The selected mode is automatically synced to the URL via the `?mode=` query parameter. This allows you to share direct links to specific views:
+
+```
+# Single energy view
+https://yoursite.com/campaign-2025-08/acceptance?mode=5×41 GeV
+
+# Comparison view
+https://yoursite.com/campaign-2025-08/acceptance?mode=5×41 GeV_vs_10×100 GeV
+```
+
+When someone opens a shared link, the page will automatically display the specified mode.
+
+
 ## Run locally
 
-To preview the website on your local machine 
-you need to have [Node.js](https://nodejs.org/en/) installed. 
+To preview the website on your local machine
+you need to have [Node.js](https://nodejs.org/en/) installed.
 If it is not installed yet, e.g. use volta:
 
 Install dependencies (first time only):

@@ -1,37 +1,36 @@
 <template>
-  <div class="acceptance-plot">
+  <div class="compare-plot">
     <h3 v-if="title">{{ title }}</h3>
     <p v-if="description" class="description">{{ description }}</p>
 
     <div class="plot-controls">
-      <label :for="'energy-select-' + plotId">Energy Mode:</label>
-      <select 
-        :id="'energy-select-' + plotId" 
-        v-model="localEnergyMode" 
+      <select
+        :id="'source-select-' + plotId"
+        v-model="localMode"
         @change="loadImages"
       >
-        <option value="">-- Select energy mode --</option>
-        <option value="5x41">5×41</option>
-        <option value="10x100">10×100</option>
-        <option value="10x130">10×130</option>
-        <option value="18x275">18×275</option>
-        <option value="5x41_vs_10x100">5×41 vs 10×100</option>
-        <option value="5x41_vs_18x275">5×41 vs 18×275</option>
-        <option value="10x100_vs_10x130">10×100 vs 10×130</option>
-        <option value="10x100_vs_18x275">10×100 vs 18×275</option>
-        <option value="10x130_vs_18x275">10×130 vs 18×275</option>
+        <optgroup label="Single">
+          <option v-for="key in sourceKeys" :key="key" :value="key">
+            {{ formatLabel(key) }}
+          </option>
+        </optgroup>
+        <optgroup label="Comparisons">
+          <option v-for="comp in comparisons" :key="comp.value" :value="comp.value">
+            {{ comp.label }}
+          </option>
+        </optgroup>
       </select>
     </div>
 
     <div v-if="currentImages.length > 0" class="images-container">
-      <div 
-        v-for="(img, index) in currentImages" 
-        :key="index" 
+      <div
+        v-for="(img, index) in currentImages"
+        :key="index"
         class="image-wrapper"
       >
         <h4 v-if="img.label" class="image-label">{{ img.label }}</h4>
-        <img 
-          :src="img.src" 
+        <img
+          :src="img.src"
           :alt="img.alt"
           @error="handleImageError"
           class="plot-image"
@@ -40,8 +39,8 @@
       </div>
     </div>
 
-    <div v-else-if="localEnergyMode" class="no-data">
-      No plot available for selected energy mode
+    <div v-else-if="localMode" class="no-data">
+      No plot available for selected option
     </div>
   </div>
 </template>
@@ -60,11 +59,34 @@ const props = defineProps<{
 // Unique ID for this plot instance
 const plotId = Math.random().toString(36).substr(2, 9)
 
-// Inject global energy mode
-const globalEnergyMode = inject<any>('globalEnergyMode', ref(''))
+// Inject sources and global mode from parent
+const plotSources = inject<Record<string, string>>('plotSources', {})
+const globalSelectedMode = inject<any>('globalSelectedMode', ref(''))
 
-// Local energy mode (can be overridden by user)
-const localEnergyMode = ref('')
+// Extract keys from sources
+const sourceKeys = computed(() => Object.keys(plotSources))
+
+// Generate all pairwise comparisons
+const comparisons = computed(() => {
+  const keys = sourceKeys.value
+  const result: { value: string; label: string }[] = []
+
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = i + 1; j < keys.length; j++) {
+      const key1 = keys[i]
+      const key2 = keys[j]
+      result.push({
+        value: `${key1}_vs_${key2}`,
+        label: `${formatLabel(key1)} vs ${formatLabel(key2)}`
+      })
+    }
+  }
+
+  return result
+})
+
+// Local mode (synced with global but can be overridden)
+const localMode = ref('')
 
 // Current images to display
 interface PlotImage {
@@ -76,50 +98,69 @@ interface PlotImage {
 const currentImages = ref<PlotImage[]>([])
 
 // Watch global mode changes
-watch(globalEnergyMode, (newMode) => {
+watch(globalSelectedMode, (newMode) => {
   if (newMode) {
-    localEnergyMode.value = newMode
+    localMode.value = newMode
     loadImages()
   }
 })
 
 // Watch local mode changes
-watch(localEnergyMode, () => {
+watch(localMode, () => {
   loadImages()
 })
 
+// Format label for display (just return the key as-is)
+function formatLabel(key: string): string {
+  return key
+}
+
+// Build image path from source key
+function buildImagePath(key: string): string {
+  const basePath = plotSources[key] || ''
+  // Ensure path ends with / and combine with plotName
+  const normalizedPath = basePath.endsWith('/') ? basePath : basePath + '/'
+  return withBase(normalizedPath + props.plotName)
+}
+
 // Load images based on selected mode
 function loadImages() {
-  if (!localEnergyMode.value) {
+  if (!localMode.value) {
     currentImages.value = []
     return
   }
 
-  const mode = localEnergyMode.value
+  const mode = localMode.value
   const images: PlotImage[] = []
 
   if (mode.includes('_vs_')) {
     // Comparison mode: show two plots
-    const [energy1, energy2] = mode.split('_vs_')
+    const [key1, key2] = mode.split('_vs_')
 
-    images.push({
-      src: withBase(`/analysis/campaign-2025-08/acceptance/${energy1}/${props.plotName}`),
-      alt: `${props.title || props.plotName} - ${energy1}`,
-      label: `${energy1.replace('x', '×')} GeV`
-    })
+    if (plotSources[key1]) {
+      images.push({
+        src: buildImagePath(key1),
+        alt: `${props.title || props.plotName} - ${key1}`,
+        label: formatLabel(key1)
+      })
+    }
 
-    images.push({
-      src: withBase(`/analysis/campaign-2025-08/acceptance/${energy2}/${props.plotName}`),
-      alt: `${props.title || props.plotName} - ${energy2}`,
-      label: `${energy2.replace('x', '×')} GeV`
-    })
+    if (plotSources[key2]) {
+      images.push({
+        src: buildImagePath(key2),
+        alt: `${props.title || props.plotName} - ${key2}`,
+        label: formatLabel(key2)
+      })
+    }
   } else {
-    // Single energy mode
-    images.push({
-      src: withBase(`/analysis/campaign-2025-08/acceptance/${mode}/${props.plotName}`),
-      alt: `${props.title || props.plotName} - ${mode}`,
-      label: undefined
-    })
+    // Single mode
+    if (plotSources[mode]) {
+      images.push({
+        src: buildImagePath(mode),
+        alt: `${props.title || props.plotName} - ${mode}`,
+        label: undefined
+      })
+    }
   }
 
   currentImages.value = images
@@ -133,15 +174,15 @@ function handleImageError(event: Event) {
 
 // Initialize on mount
 onMounted(() => {
-  if (globalEnergyMode.value) {
-    localEnergyMode.value = globalEnergyMode.value
+  if (globalSelectedMode.value) {
+    localMode.value = globalSelectedMode.value
     loadImages()
   }
 })
 </script>
 
 <style scoped>
-.acceptance-plot {
+.compare-plot {
   margin: 2rem 0;
   padding: 0.75rem;
   background-color: var(--vp-c-bg-soft);
@@ -149,7 +190,7 @@ onMounted(() => {
   border: 1px solid var(--vp-c-divider);
 }
 
-.acceptance-plot h3 {
+.compare-plot h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: var(--vp-c-text-1);
@@ -162,30 +203,18 @@ onMounted(() => {
 }
 
 .plot-controls {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: var(--vp-c-bg);
-  border-radius: 4px;
-  border: 1px solid var(--vp-c-divider);
-}
-
-.plot-controls label {
-  display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--vp-c-text-1);
-  font-size: 14px;
 }
 
 .plot-controls select {
   width: 100%;
   max-width: 400px;
-  padding: 0.5rem;
+  padding: 0.4rem 0.5rem;
   border: 1px solid var(--vp-c-divider);
   border-radius: 4px;
   background-color: var(--vp-c-bg);
   color: var(--vp-c-text-1);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
 }
 
@@ -202,7 +231,7 @@ onMounted(() => {
 .images-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.75rem;
 }
 
 .image-wrapper {
@@ -210,8 +239,8 @@ onMounted(() => {
 }
 
 .image-label {
-  margin-bottom: 0.5rem;
-  font-size: 16px;
+  margin: 0 0 0.25rem 0;
+  font-size: 14px;
   font-weight: 600;
   color: var(--vp-c-brand);
 }
@@ -234,12 +263,8 @@ onMounted(() => {
 }
 
 /* Dark mode adjustments */
-.dark .acceptance-plot {
+.dark .compare-plot {
   background-color: var(--vp-c-bg-elv);
-}
-
-.dark .plot-controls {
-  background-color: var(--vp-c-bg-soft);
 }
 
 .dark .plot-controls select {
@@ -248,16 +273,12 @@ onMounted(() => {
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .acceptance-plot {
-    padding: 0.5rem;
-  }
-
-  .plot-controls {
+  .compare-plot {
     padding: 0.5rem;
   }
 
   .image-label {
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 </style>

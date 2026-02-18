@@ -4,6 +4,7 @@ npsim_pipeline.py
 Generate and submit afterburner jobs using JobRunner.
 """
 
+import argparse
 import os
 from typing import Dict
 import yaml
@@ -21,16 +22,15 @@ def create_container_script_template():
     mkdir -p $(dirname {output_file})
     
     echo ">"
-    echo "= EICRECON ==================================================================="
+    echo "= NPSIM ==================================================================="
     echo "==========================================================================="
-    echo "  Running eicrecon on:"
+    echo "  Running npsim on:"
     echo "    {input_file}"
     echo "  Resulting files:"
     echo "    {output_file}.*"
 
     source /opt/detector/epic-main/bin/thisepic.sh
-    cd $(dirname {output_file})
-    /usr/bin/time -v /usr/bin/time -v eicrecon -Ppodio:output_file={output_file}  {input_file} 2>&1
+    /usr/bin/time -v npsim --compactFile=$DETECTOR_PATH/epic.xml --runType run --inputFiles {input_file} --outputFile {output_file} --numberOfEvents 5000 2>&1
     
     echo ""
     echo "=========================================================================="
@@ -44,8 +44,8 @@ def create_container_script_template():
 def process_energy(config, energy):
     """Process all files for a specific energy."""
 
-    source_dir = config.dd4hep_output
-    output_dir = config.eicrecon_output
+    source_dir = config.afterburner_output
+    output_dir = config.dd4hep_output
     
     print("\n" + "="*60)
     print(f"PROCESSING ENERGY: {energy} GeV")
@@ -53,19 +53,20 @@ def process_energy(config, energy):
     print(f"Output: {output_dir}")
     
     # Find input files
-    input_files = find_input_files(source_dir, '*.edm4hep.root')
+    input_files = find_input_files(source_dir, '*.hepmc')
     if input_files is None:
         print(f"Skipping energy {energy} GeV due to no input files.")
         return
 
+
     # Create JobRunner instance with proper initialization
     runner = JobRunner(
         input_files=input_files,
-        output_file_name_func=exension_replacer('.edm4hep.root', '.edm4eic.root'),
+        output_file_name_func=exension_replacer('.afterburner.hepmc', '.edm4hep.root'),
         output_dir=output_dir,
         bind_dirs=config.bind_dirs,
         events=config.event_count,
-        container=config.container,
+        container=config['container'],
     )
     
     # Set the container job template
@@ -80,15 +81,19 @@ def process_energy(config, energy):
 
 def main():
     """Main entry point."""
-    
+
+    parser = argparse.ArgumentParser(description="Generate npsim jobs.")
+    parser.add_argument('-c', '--config', required=True, help="Path to config YAML file")
+    args = parser.parse_args()
+
     # Load config
-    config = load_config()
+    config = load_config(args.config)
     energies = config.get('energies', [])
 
     # Process each energy
     print(f"Energies to process: {energies}")
     for energy in energies:
-        config = load_config_for_energy(energy)
+        config = load_config_for_energy(args.config, energy)
         process_energy(config, energy)
 
     print("ALL ENERGIES PROCESSED SUCCESSFULLY")

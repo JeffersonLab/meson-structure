@@ -2,10 +2,10 @@
 # Campaign 2025-08 - Priority Processing Only
 
 # Base directories
-base_dir: "/volatile/eic/romanov/meson-structure-2025-10"
+base_dir: "/volatile/eic/romanov/meson-structure-2026-02"
 priority: "-priority"     # "_priority" or "" for normal processing
-hepmc_dir: "/volatile/eic/romanov/meson-structure-2025-10/eg-hepmc"
-reco_dir: "/volatile/eic/romanov/meson-structure-2025-10/reco"
+hepmc_dir: "/volatile/eic/romanov/meson-structure-2026-02/eg-hepmc"
+reco_dir: "/volatile/eic/romanov/meson-structure-2026-02/reco"
 
 # These are directories besides base_dir that will be bound inside the container
 bind_dirs: [

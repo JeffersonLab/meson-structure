@@ -10,7 +10,11 @@ The meson structure data is available from the following locations:
 On JLab ifarm:  
 
 ```bash
+# Reconstructed files
 /volatile/eic/romanov/meson-structure-2025-10/reco
+
+# CSV files 
+/volatile/eic/romanov/meson-structure-2025-10/csv
 
 # priority queues (first 1'000'000 events == 200 files from each energy range):
 /volatile/eic/romanov/meson-structure-2025-10/reco/5x41-priority
@@ -31,6 +35,9 @@ On XRootD (open for universities and public)
 ```bash
 xrdfs root://dtn-eic.jlab.org
 ls /volatile/eic/romanov/meson-structure-2025-10/reco
+
+# or for CSV files: 
+ls /volatile/eic/romanov/meson-structure-2025-10/csv
 ```
 
 In this campaign we put processing files in separate folders:

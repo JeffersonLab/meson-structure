@@ -204,3 +204,5 @@ analysis/avnish_scripts/*.csv
 
 analysis/gary_scripts/plots/
 analysis/gary_scripts/*.png
+
+.claude/
