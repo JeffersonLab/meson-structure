@@ -12,6 +12,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <edm4hep/SimCalorimeterHitCollection.h>
 #include <edm4hep/SimTrackerHitCollection.h>
 #include <edm4hep/CaloHitContributionCollection.h>
+#include <edm4hep/SimTrackerHit.h>
 
 #include <fmt/core.h>
 #include <fmt/ostream.h>
@@ -139,7 +140,7 @@ void process_tracker_hits(const podio::Frame& event, const std::string& collecti
         const auto& collection = event.get<edm4hep::SimTrackerHitCollection>(collection_name);
         bool detected = false;
         for (const auto& hit : collection) {
-            if (hit.getMCParticle().isAvailable() && hit.getMCParticle().getObjectID() == particle.getObjectID()) {
+            if (hit.getParticle().isAvailable() && hit.getParticle().getObjectID() == particle.getObjectID()) {
                 detected = true;
                 
                 // Write to detailed CSV
@@ -260,7 +261,7 @@ void process_event(const podio::Frame& event, int evt_id) {
 
         // Write Main CSV Header if needed
         if (!header_written) {
-            csv << "event,lam_id,"
+            csv << "evt,lam_id,"
                 << make_particle_header("lam") << ","
                 << make_particle_header("prot") << ","
                 << make_particle_header("pimin");
@@ -433,7 +434,7 @@ void csv_edm4hep_acceptance_ppim(const char* infile, const char* outfile, int ev
     }
 
     // Write headers for hits files
-    std::string hits_header = "event_id,lam_id,detector,hit_id,x,y,z,eDep,time,pathLength\n";
+    std::string hits_header = "evt,lam_id,detector,hit_id,x,y,z,eDep,time,pathLength\n";
     csv_prot_hits << hits_header;
     csv_pimin_hits << hits_header;
 
