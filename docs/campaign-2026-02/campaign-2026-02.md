@@ -47,6 +47,7 @@ uv sync
 # make campaign config and make it "main" config.yaml
 
 # Create npsim jobs
+uv run full-sim-pipeline/20_create_npsim_jobs.py --config full-sim-pipeline/config-campaign-2026-02.yaml 
 
 
 ```
