@@ -25,19 +25,11 @@ Overview:
 
 ## Campaign 2025-08
 
-[Campaign 2025-08 Link](./campaign-2025-08/campaign-2025-08.md)
+> **Note:** Campaign 2025-08 data has been removed from disk. The commands below are kept for historical reference.
 
-**Analyses:**
+Original MC files located in
 
- - ['EG comparison'](./campaign-2025-08/eg-comparison)
- - ['Acceptance'](./campaign-2025-08/acceptance)
- - ['Acceptance FF'](./campaign-2025-08/acceptance_ff)
-
-
-
-Original MC files located in 
-
-```bash 
+```bash
 /w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2
 ```
 
@@ -89,6 +81,8 @@ container_image: /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
 
 ## Campaign 2025-05
 
+> **Note:** Campaign 2025-05 data has been removed from disk. The commands below are kept for historical reference.
+
 ### Overview
 
 The Campaign 2025-05 run to make data current with EIC EPIC software updates. 
@@ -119,6 +113,7 @@ The campaign data is stored in the following locations (on JLab farm):
 
 ## Campaign 2025-03
 
+> **Note:** Campaign 2025-03 data has been removed from disk. The commands below are kept for historical reference.
 
 ### Overview
 
