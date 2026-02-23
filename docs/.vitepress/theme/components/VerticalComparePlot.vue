@@ -4,13 +4,11 @@
     <p v-if="description" class="description">{{ description }}</p>
 
     <div class="plot-controls">
-      <label :for="'source-select-' + plotId">Select:</label>
       <select
         :id="'source-select-' + plotId"
         v-model="localMode"
         @change="loadImages"
       >
-        <option value="">-- Select --</option>
         <optgroup label="Single">
           <option v-for="key in sourceKeys" :key="key" :value="key">
             {{ formatLabel(key) }}
@@ -205,30 +203,18 @@ onMounted(() => {
 }
 
 .plot-controls {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: var(--vp-c-bg);
-  border-radius: 4px;
-  border: 1px solid var(--vp-c-divider);
-}
-
-.plot-controls label {
-  display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--vp-c-text-1);
-  font-size: 14px;
 }
 
 .plot-controls select {
   width: 100%;
   max-width: 400px;
-  padding: 0.5rem;
+  padding: 0.4rem 0.5rem;
   border: 1px solid var(--vp-c-divider);
   border-radius: 4px;
   background-color: var(--vp-c-bg);
   color: var(--vp-c-text-1);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
 }
 
@@ -245,7 +231,7 @@ onMounted(() => {
 .images-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.75rem;
 }
 
 .image-wrapper {
@@ -253,8 +239,8 @@ onMounted(() => {
 }
 
 .image-label {
-  margin-bottom: 0.5rem;
-  font-size: 16px;
+  margin: 0 0 0.25rem 0;
+  font-size: 14px;
   font-weight: 600;
   color: var(--vp-c-brand);
 }
@@ -281,10 +267,6 @@ onMounted(() => {
   background-color: var(--vp-c-bg-elv);
 }
 
-.dark .plot-controls {
-  background-color: var(--vp-c-bg-soft);
-}
-
 .dark .plot-controls select {
   background-color: var(--vp-c-bg-elv);
 }
@@ -295,12 +277,8 @@ onMounted(() => {
     padding: 0.5rem;
   }
 
-  .plot-controls {
-    padding: 0.5rem;
-  }
-
   .image-label {
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 </style>
