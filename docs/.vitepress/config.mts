@@ -49,24 +49,24 @@ export default withMermaid({
                 items: [
                     { text: 'Data Access', link: '/data' },
                     { text: 'CSV Data', link: '/data-csv' },
-                    { text: 'Campaign log', link: '/campaigns' },
+                    { text: 'Campaigns', link: '/campaigns' },
+                ]
+            },
+            {
+                text: 'Campaign 2026-02',
+                link: '/campaign-2026-02/campaign-2026-02',
+                items: [
+                    {text: "Reco DIS All", link: '/campaign-2025-10/reco-dis-all'},
                 ]
             },
             {
                 text: 'Campaign 2025-10',
                 link: '/campaign-2025-10/campaign-2025-10',
                 items: [
+                    {text: "Reco DIS All", link: '/campaign-2025-10/reco-dis-all'},
                 ]
             },
-            {
-                text: 'Campaign 2025-08',
-                link: '/campaign-2025-08/campaign-2025-08',
-                items: [
-                    { text: 'EG comparison', link: '/campaign-2025-08/eg-comparison' },
-                    { text: 'Acceptance', link: '/campaign-2025-08/acceptance' },
-                    { text: 'Acceptance FF', link: '/campaign-2025-08/acceptance_ff' },
-                ]
-            },
+
             {
                 text: 'Analysis',
                 link: '/analysis',

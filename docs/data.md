@@ -12,6 +12,9 @@ On JLab ifarm:
 ```bash
 /work/eic3/users/romanov/meson-structure-2025-10/reco
 
+# CSV files 
+/volatile/eic/romanov/meson-structure-2025-10/csv
+
 # priority queues (first 1'000'000 events == 200 files from each energy range):
 /work/eic3/users/romanov/meson-structure-2025-10/reco/5x41-priority
 /work/eic3/users/romanov/meson-structure-2025-10/reco/10x100-priority

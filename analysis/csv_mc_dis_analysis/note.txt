@@ -1,0 +1,13 @@
+plot_mc.py produces reference plots of the MC csv files in png format. To use the code:
+
+	python3 plot_mc.py k_lambda_*_5000evt_*.mc_dis.csv [--outdir $mydir] [--bins $bins]
+
+
+	--outdir : option for specifying the output directory
+
+	--bins   : number of bins for the plots generated
+	
+	
+The input files can be a single or multiple csv files in sequence, or simply put k_lambda_*_5000evt_*.mc_dis.csv, which shall take all css files matching the format. The css files are not limited to a single energy setting but can be multiple ones, and the code would sort and merge the data from different energy settings. The output png files would have corresponding energy setting label on them.
+
+The output directory and the number of bins can be specified as well. If you don't specify the output directory, the default is the local directory. 
