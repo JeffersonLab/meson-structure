@@ -15,9 +15,11 @@ Overview:
 
 ## Campaign 2025-08
 
-Original MC files located in 
+> **Note:** Campaign 2025-08 data has been removed from disk. The commands below are kept for historical reference.
 
-```bash 
+Original MC files located in
+
+```bash
 /w/eic-scshelf2104/users/singhav/EIC_mesonsf_generator/OUTPUTS/kaon_lambda_v2
 ```
 
@@ -167,6 +169,8 @@ submit_all_slurm_jobs.sh
 
 ## Campaign 2025-05
 
+> **Note:** Campaign 2025-05 data has been removed from disk. The commands below are kept for historical reference.
+
 ### Overview
 
 The Campaign 2025-05 run to make data current with EIC EPIC software updates. 
@@ -224,6 +228,7 @@ submit_all_slurm_jobs.sh
 
 ## Campaign 2025-03
 
+> **Note:** Campaign 2025-03 data has been removed from disk. The commands below are kept for historical reference.
 
 ### Overview
 
