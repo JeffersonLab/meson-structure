@@ -35,7 +35,7 @@ DIS parameters:
 /volatile/eic/romanov/meson-structure-2025-08/eg-hepmc
 ```
 
-Commands log
+## Commands log
 
 ```bash
 # cd where scripts are
@@ -49,5 +49,10 @@ uv sync
 # Create npsim jobs
 uv run full-sim-pipeline/20_create_npsim_jobs.py --config full-sim-pipeline/config-campaign-2026-02.yaml 
 
+# After... Create eicrecon jobs
+uv run full-sim-pipeline/30_create_eicrecon_jobs.py --config full-sim-pipeline/config-campaign-2026-02.yaml
 
+# After now we have csv_dd4hep and csv_eicrecon different jobs
+uv run full-sim-pipeline/40_create_csv_dd4hep_jobs.py --config full-sim-pipeline/config-campaign-2026-02.yaml
+uv run full-sim-pipeline/41_create_csv_eicrecon_jobs.py --config full-sim-pipeline/config-campaign-2026-02.yaml
 ```

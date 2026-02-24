@@ -559,7 +559,7 @@ int main(int argc, char* argv[]) {
 // ROOT-macro entry point.
 // Call it from the prompt:  root -x -l -b -q 'csv_edm4hep_acceptance_npi0.cxx("file.root", "output.csv", 100)'
 // ---------------------------------------------------------------------------
-void csv_edm4hep_acceptance(const char* infile, const char* outfile, int events = -1)
+void csv_edm4hep_acceptance_npi0(const char* infile, const char* outfile, int events = -1)
 {
     fmt::print("'csv_mcpart_lambda' entry point is used. Arguments:\n");
     fmt::print("  infile:  {}\n", infile);
