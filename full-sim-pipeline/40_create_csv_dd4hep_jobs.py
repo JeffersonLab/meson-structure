@@ -28,26 +28,28 @@ def create_container_script_template():
 
     cd "{csv_convert_dir}"
 
-    convert() {{
-      local label="$1" macro="$2" out="$3"
+    if [ ! -f "{acceptance_ppim_output}.zip" ] || [ ! -f "{acceptance_ppim_pimin_hits_output}.zip" ] || [ ! -f "{acceptance_ppim_prot_hits_output}.zip" ]; then
+        echo "[RUN] ccsv_edm4hep_acceptance_ppim for {input_file}"
+        root -x -l -b -q csv_edm4hep_acceptance_ppim.cxx'("{input_file}","{acceptance_ppim_output}")'
+        echo "[ZIP] zipping files"
+        python3 -m zipfile -c "{acceptance_ppim_output}.zip" "{acceptance_ppim_output}"
+        python3 -m zipfile -c "{acceptance_ppim_pimin_hits_output}.zip" "{acceptance_ppim_pimin_hits_output}"
+        python3 -m zipfile -c "{acceptance_ppim_prot_hits_output}.zip" "{acceptance_ppim_prot_hits_output}"
+    else
+        echo "[SKIP] zipped files exists for {input_file}"
+    fi
 
-      if [ ! -f "$out" ]; then
-        echo "[RUN] $label via $macro"
-        root -x -l -b -q "$macro(\\"{input_file}\\",\\"$out\\")"
-      else
-        echo "[SKIP] $label CSV exists"
-      fi
+    echo "==========================================================================="
 
-      if [ -f "$out" ] && [ ! -f "$out.zip" ]; then
-        echo "[ZIP] $out -> $out.zip"
-        python3 -m zipfile -c "$out.zip" "$out"
-      else
-        echo "[SKIP] $label zip exists or CSV missing"
-      fi
-    }}
-
-    convert "acceptance_ppim"   "csv_edm4hep_acceptance_ppim.cxx"   "{csv_edm4hep_acceptance_ppim}"
-    convert "acceptance_npi0"   "csv_edm4hep_acceptance_npi0.cxx"   "{csv_edm4hep_acceptance_npi0}"
+    if [ ! -f "{acceptance_npi0_output}.zip" ]; then
+        echo "[RUN] csv_edm4hep_acceptance_npi0 for {input_file}"
+        root -x -l -b -q csv_edm4hep_acceptance_npi0.cxx'("{input_file}","{acceptance_npi0_output}")'
+        echo "[ZIP] zipping files"
+        python3 -m zipfile -c "{acceptance_npi0_output}.zip" "{acceptance_npi0_output}"
+    else
+        echo "[SKIP] zipped files exists for {input_file}"
+    fi
+    
    
     echo "==========================================================================="
     echo "Done. Outputs in: {input_dir}"
@@ -68,8 +70,10 @@ def make_custom_params_updater(config_path):
 
         params['csv_convert_dir'] = config.get('csv_convert_dir', csv_convert_dir_default)
         params['input_dir'] = input_dir
-        params['csv_edm4hep_acceptance_ppim'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim.csv")
-        params['csv_edm4hep_acceptance_npi0'] = os.path.join(output_dir, f"{csv_basename}.acceptance_npi0.csv")
+        params['acceptance_ppim_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim.csv")
+        params['acceptance_ppim_pimin_hits_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim_pimin_hits.csv")
+        params['acceptance_ppim_prot_hits_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim_prot_hits.csv")
+        params['acceptance_npi0_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_npi0.csv")
    
 
         return params

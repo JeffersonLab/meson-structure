@@ -147,9 +147,9 @@ bool has_particle_hits(const auto& hit_collection, const MCParticle& particle,
     for (const auto& hit: hit_collection) {
         for (const auto& contrib: hit.getContributions()) {
             if (contrib.getParticle().getObjectID() == particle.getObjectID()) {
-                fmt::print("{} hit: id={:<5} z={:<10.2f} contrib={} is of {} \n",
-                          detector_name, hit.id().index, hit.getPosition().z,
-                          hit.contributions_size(), particle_name);
+                // fmt::print("{} hit: id={:<5} z={:<10.2f} contrib={} is of {} \n",
+                //           detector_name, hit.id().index, hit.getPosition().z,
+                //           hit.contributions_size(), particle_name);
                 return true;
             }
         }
@@ -432,7 +432,7 @@ void process_event(const podio::Frame& event, int evt_id) {
             // Increment counter for n+pi0 decays with observable gammas
             stats.npi0_with_observable_gammas++;
 
-            fmt::print("---------------------------------------\n looking hits at event {}\n", evt_id);
+            // fmt::print("---------------------------------------\n looking hits at event {}\n", evt_id);
             flags = process_calo_hits_npi0(event, neut.value(), gam1.value(), gam2.value());
         }
 

@@ -261,7 +261,7 @@ void process_event(const podio::Frame& event, int evt_id) {
 
         // Write Main CSV Header if needed
         if (!header_written) {
-            csv << "evt,lam_id,"
+            csv << "event,lam_id,"
                 << make_particle_header("lam") << ","
                 << make_particle_header("prot") << ","
                 << make_particle_header("pimin");
@@ -385,7 +385,7 @@ int main(int argc, char* argv[]) {
     }
     
     // Write headers for hits files
-    std::string hits_header = "event_id,lam_id,detector,hit_id,x,y,z,eDep,time,pathLength\n";
+    std::string hits_header = "event,lam_id,detector,hit_id,x,y,z,eDep,time,pathLength\n";
     csv_prot_hits << hits_header;
     csv_pimin_hits << hits_header;
 
@@ -434,7 +434,7 @@ void csv_edm4hep_acceptance_ppim(const char* infile, const char* outfile, int ev
     }
 
     // Write headers for hits files
-    std::string hits_header = "evt,lam_id,detector,hit_id,x,y,z,eDep,time,pathLength\n";
+    std::string hits_header = "event,lam_id,detector,hit_id,x,y,z,eDep,time,pathLength\n";
     csv_prot_hits << hits_header;
     csv_pimin_hits << hits_header;
 

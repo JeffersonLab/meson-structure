@@ -289,7 +289,7 @@ void process_event(const podio::Frame& event, int evt_id) {
       Write CSV header
     ---------------------------------------------------------------------------*/
     if (!header_written) {
-        csv << "evt";
+        csv << "event";
         for (const auto& [name, coll] : kinDict) {
 
             csv << "," << fmt::format("{}_x",  name);
