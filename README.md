@@ -17,7 +17,7 @@ The branch ***analysis/multi-calo-lambda*** of the **meson-structure** repositor
 \* The error propagation is based on the assumption that the kaon structure function is proportional to the number of $\Lambda^0$ hyperons produced by the Sullivan process, $F_k\propto N_\Lambda$. This number is related to the reconstruction efficiency $\varepsilon$, the cross-section $\sigma$, and the EIC luminosity $L$, as $N_\Lambda=\varepsilon\times \sigma \times L $. Assuming Poisson statistics, the relative error is estimated as 
 
 $$
-\frac{\Delta F_k}{F_k} = \frac{1}{\sqrt{N_\Lambda}} = \frac{1}{\sqrt{\varepsilon \times \sigma \times L}} = \sqrt{\frac{N_\Lambda^{simu}}{N_\Lambda^{reco} \,\sigma\,L}}
+\frac{\Delta F_k}{F_k} = \frac{1}{\sqrt{N_\Lambda}} = \frac{1}{\sqrt{\varepsilon \times \sigma \times L}} = \sqrt{\frac{N_\Lambda^{simu}}{N_\Lambda^{reco} \times \sigma\times L}}
 $$
 
 ### Read or generate reconstructed ROOT Files with EICrecon
