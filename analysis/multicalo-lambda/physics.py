@@ -1,6 +1,6 @@
 from __future__ import annotations
 import numpy as np
-from .config import PhysicsConstants, DEFAULT_CONST
+from config import PhysicsConstants, DEFAULT_CONST
 
 
 def parse_proton_energy(beam_str: str) -> float:

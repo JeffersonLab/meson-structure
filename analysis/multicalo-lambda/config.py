@@ -6,14 +6,14 @@ from typing import Sequence
 
 @dataclass(frozen=True)
 class Paths:
-    inputs: Path = Path("./inputs")
+    inputs: Path = Path("/work/eic3/users/fraisse/meson-structure/data/")
     outputs: Path = Path("./outputs")
-    base_dir: Path = Path("./inputs")
+    base_dir: Path = Path("/work/eic3/users/fraisse/meson-structure/data/")
     afterburner_pattern: str = (
-        "./inputs/afterburner/{beam}-priority/"
+        "/work/eic3/users/romanov/meson-structure-2026-02/afterburner/{beam}-priority/"
         "k_lambda_{beam}_5000evt_{idx:04d}.afterburner.hepmc"
     )
-    gen_base_dir: Path = Path("./inputs/generator")
+    gen_base_dir: Path = Path("/work/eic3/users/romanov/meson-structure-2026-02/eg-orig-kaon-lambda/")
 
 
 @dataclass(frozen=True)

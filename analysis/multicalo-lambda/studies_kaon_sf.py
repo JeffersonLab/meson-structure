@@ -7,9 +7,9 @@ import uproot
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
-from .plotting import apply_mpl_style, ensure_outdir, savefig
-from .physics import proton_kinematics_for_beam, xk_from_xb_xl
-from .config import PhysicsConstants, DEFAULT_CONST
+from plotting import apply_mpl_style, ensure_outdir, savefig
+from physics import proton_kinematics_for_beam, xk_from_xb_xl
+from config import PhysicsConstants, DEFAULT_CONST
 
 
 def build_sigma_map_xb_q2(

@@ -4,7 +4,7 @@ from typing import Iterable
 import numpy as np
 import awkward as ak
 import uproot
-from .config import PhysicsConstants, Paths, DEFAULT_CONST, DEFAULT_PATHS
+from config import PhysicsConstants, Paths, DEFAULT_CONST, DEFAULT_PATHS
 
 
 def iter_reco_files(beam: str, nfiles: int, root_base_dir: Path, suffix: str) -> Iterable[Path]:

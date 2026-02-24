@@ -3,14 +3,14 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from .config import DEFAULT_CONST, DEFAULT_PATHS
-from .studies_lambda import (
+from config import DEFAULT_CONST, DEFAULT_PATHS
+from studies_lambda import (
     plot_angle_distrib,
     plot_lambda_spectra,
     plot_efficiencies,
     plot_nlambda_vs_kinematics_all,
 )
-from .studies_kaon import plot_relerr_kaon_sf_xK_Q2
+from studies_kaon_sf import plot_relerr_kaon_sf_xK_Q2
 
 
 def build_parser() -> argparse.ArgumentParser:

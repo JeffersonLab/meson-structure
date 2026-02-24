@@ -6,10 +6,10 @@ import awkward as ak
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-from .config import PhysicsConstants, Paths, DEFAULT_CONST, DEFAULT_PATHS
-from .io import read_lambda_geant4, read_lambda_eicrecon, read_lambda_afterburner, iter_reco_files
-from .physics import direct_energy_window, E_to_L, L_to_E, proton_kinematics_for_beam, xk_from_xb_xl
-from .plotting import apply_mpl_style, ensure_outdir, savefig
+from config import PhysicsConstants, Paths, DEFAULT_CONST, DEFAULT_PATHS
+from utils import read_lambda_geant4, read_lambda_eicrecon, read_lambda_afterburner, iter_reco_files
+from physics import direct_energy_window, E_to_L, L_to_E, proton_kinematics_for_beam, xk_from_xb_xl
+from plotting import apply_mpl_style, ensure_outdir, savefig
 
 
 def plot_lambda_spectra(
