@@ -57,42 +57,27 @@ def create_histograms():
     h = {}
 
     # --- Residuals (reco − MC) ---
-    h['dpx'] = Hist(Axis(120, -1.0, 1.0, name="dpx",
-                         label=r"$p_x^{\mathrm{reco}} - p_x^{\mathrm{MC}}$ [GeV/c]"))
-    h['dpy'] = Hist(Axis(120, -1.0, 1.0, name="dpy",
-                         label=r"$p_y^{\mathrm{reco}} - p_y^{\mathrm{MC}}$ [GeV/c]"))
-    h['dpz'] = Hist(Axis(120, -2.0, 2.0, name="dpz",
-                         label=r"$p_z^{\mathrm{reco}} - p_z^{\mathrm{MC}}$ [GeV/c]"))
+    h['dpx'] = Hist(Axis(120, -1.0, 1.0, name="dpx", label=r"$p_x^{\mathrm{reco}} - p_x^{\mathrm{MC}}$ [GeV/c]"))
+    h['dpy'] = Hist(Axis(120, -1.0, 1.0, name="dpy", label=r"$p_y^{\mathrm{reco}} - p_y^{\mathrm{MC}}$ [GeV/c]"))
+    h['dpz'] = Hist(Axis(120, -2.0, 2.0, name="dpz", label=r"$p_z^{\mathrm{reco}} - p_z^{\mathrm{MC}}$ [GeV/c]"))
 
     # --- MC electron momentum ---
-    h['mc_px'] = Hist(Axis(100, -5.0, 5.0, name="mc_px",
-                           label=r"MC $p_x^{e'}$ [GeV/c]"))
-    h['mc_py'] = Hist(Axis(100, -5.0, 5.0, name="mc_py",
-                           label=r"MC $p_y^{e'}$ [GeV/c]"))
-    h['mc_pz'] = Hist(Axis(100, -20.0, 0.0, name="mc_pz",
-                           label=r"MC $p_z^{e'}$ [GeV/c]"))
-    h['mc_p']  = Hist(Axis(100, 0.0, 20.0, name="mc_p",
-                           label=r"MC $|\vec{p}^{e'}|$ [GeV/c]"))
-    h['mc_pt'] = Hist(Axis(100, 0.0, 6.0, name="mc_pt",
-                           label=r"MC $p_T^{e'}$ [GeV/c]"))
+    h['mc_px'] = Hist(Axis(100, -5.0, 5.0, name="mc_px", label=r"MC $p_x^{e'}$ [GeV/c]"))
+    h['mc_py'] = Hist(Axis(100, -5.0, 5.0, name="mc_py", label=r"MC $p_y^{e'}$ [GeV/c]"))
+    h['mc_pz'] = Hist(Axis(100, -20.0, 20, name="mc_pz", label=r"MC $p_z^{e'}$ [GeV/c]"))
+    h['mc_p']  = Hist(Axis(100, 0.0, 20.0, name="mc_p", label=r"MC $|\vec{p}^{e'}|$ [GeV/c]"))
+    h['mc_pt'] = Hist(Axis(100, 0.0, 6.0, name="mc_pt", label=r"MC $p_T^{e'}$ [GeV/c]"))
 
     # --- Reconstructed electron momentum ---
-    h['reco_px'] = Hist(Axis(100, -5.0, 5.0, name="reco_px",
-                             label=r"Reco $p_x^{e'}$ [GeV/c]"))
-    h['reco_py'] = Hist(Axis(100, -5.0, 5.0, name="reco_py",
-                             label=r"Reco $p_y^{e'}$ [GeV/c]"))
-    h['reco_pz'] = Hist(Axis(100, -20.0, 0.0, name="reco_pz",
-                             label=r"Reco $p_z^{e'}$ [GeV/c]"))
-    h['reco_p']  = Hist(Axis(100, 0.0, 20.0, name="reco_p",
-                             label=r"Reco $|\vec{p}^{e'}|$ [GeV/c]"))
-    h['reco_pt'] = Hist(Axis(100, 0.0, 6.0, name="reco_pt",
-                             label=r"Reco $p_T^{e'}$ [GeV/c]"))
+    h['reco_px'] = Hist(Axis(100, -5.0, 5.0, name="reco_px", label=r"Reco $p_x^{e'}$ [GeV/c]"))
+    h['reco_py'] = Hist(Axis(100, -5.0, 5.0, name="reco_py", label=r"Reco $p_y^{e'}$ [GeV/c]"))
+    h['reco_pz'] = Hist(Axis(100, -20.0, 20, name="reco_pz", label=r"Reco $p_z^{e'}$ [GeV/c]"))
+    h['reco_p']  = Hist(Axis(100, 0.0, 20.0, name="reco_p", label=r"Reco $|\vec{p}^{e'}|$ [GeV/c]"))
+    h['reco_pt'] = Hist(Axis(100, 0.0, 6.0, name="reco_pt", label=r"Reco $p_T^{e'}$ [GeV/c]"))
 
     # --- Pseudorapidity ---
-    h['mc_eta']   = Hist(Axis(100, -6.0, 0.0, name="mc_eta",
-                               label=r"MC $\eta^{e'}$"))
-    h['reco_eta'] = Hist(Axis(100, -6.0, 0.0, name="reco_eta",
-                               label=r"Reco $\eta^{e'}$"))
+    h['mc_eta']   = Hist(Axis(100, -6.0, 6, name="mc_eta", label=r"MC $\eta^{e'}$"))
+    h['reco_eta'] = Hist(Axis(100, -6.0, 6, name="reco_eta", label=r"Reco $\eta^{e'}$"))
 
     return h
 
@@ -113,8 +98,8 @@ def concat_csvs_with_unique_events(files):
         else:
             df = pd.read_csv(file)
 
-        df['evt'] = df['evt'] + offset
-        offset = df['evt'].max() + 1
+        df['event'] = df['event'] + offset
+        offset = df['event'].max() + 1
         dfs.append(df)
 
     return pd.concat(dfs, ignore_index=True)

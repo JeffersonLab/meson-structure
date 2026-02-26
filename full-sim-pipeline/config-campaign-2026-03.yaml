@@ -2,23 +2,26 @@
 # Campaign 2025-08 - Priority Processing Only
 
 # Base directories
-base_dir: "/volatile/eic/romanov/meson-structure-2026-02"
+# base_dir is where all output will go, source_dir is where input files are located
+base_dir: "/volatile/eic/romanov/meson-structure-2026-03"
+source_dir: "/work/eic3/users/romanov/meson-structure-2026-03"
 priority: "-priority"     # "-priority" or "" for normal processing
-hepmc_dir: "/volatile/eic/romanov/meson-structure-2026-02/eg-hepmc"
-reco_dir: "/volatile/eic/romanov/meson-structure-2026-02/reco"
+
+
 
 # These are directories besides base_dir that will be bound inside the container
 bind_dirs: [
-  "${base_dir}"
+  "${base_dir}",
+  "${source_dir}",
 ]
 
 # Container
 #container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.10-stable"
-container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
-
+#container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+container: "/work/eic3/users/romanov/meson-structure-work/eicrecon_ff_multicalo.sif"
 
 # Scripts location
-scripts_dir: "/home/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
 
 # Test mode - set to true to test without actually submitting jobs
 dry_run: true
@@ -34,8 +37,8 @@ energies:
 event_count: 5000
 
 # Afterburner jobs
-afterburner_source: "${base_dir}/eg-hepmc/${energy}${priority}"
-afterburner_output: "${base_dir}/afterburner/${energy}${priority}"
+afterburner_source: "${source_dir}/eg-hepmc/${energy}${priority}"
+afterburner_output: "${source_dir}/afterburner/${energy}${priority}"
 
 
 # DD4Hep jobs

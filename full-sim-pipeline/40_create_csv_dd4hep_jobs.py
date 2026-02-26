@@ -117,6 +117,7 @@ def process_energy(config, config_path, energy):
         bind_dirs=bind_dirs,
         events=config.event_count,
         container=config.container,
+        beam_config=energy
     )
 
     # Set the container job template
