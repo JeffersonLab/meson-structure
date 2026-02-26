@@ -168,3 +168,135 @@ echo "    /volatile/eic/romanov/meson-structure-2025-07/reco/k_lambda_18x275_500
 
 echo "All steps completed for k_lambda_18x275_5000evt_074!"
 ```
+
+
+## Running with a custom EICrecon branch
+
+Sometimes you need a modified EICrecon — e.g. the
+[reco/ff-lambda-multicalo](https://github.com/eic/EICrecon/tree/reco/ff-lambda-multicalo) branch
+that adds far-forward Lambda reconstruction with multiple calorimeters.
+
+The idea is simple: take the standard container image (which already has all dependencies),
+build your EICrecon branch inside it, and override the environment so that
+`eicrecon` picks up the new libraries and plugins instead of the ones shipped with the image.
+
+There are two routes:
+1. **Build on a shared filesystem** (e.g. `/volatile`) inside the stock singularity image — no new image needed.
+2. **Build a new Docker image** on top of `eicweb/eic_xl:nightly`, push it to Docker Hub, then pull it as a singularity image.
+
+### Route 1: Build on shared filesystem (recommended for ifarm)
+
+This is the simplest approach. You build EICrecon once on `/volatile` (or `/work`)
+and then every slurm job sources the new environment before running.
+
+#### One-time build (interactive or in a slurm job)
+
+```bash
+#!/bin/bash
+set -e
+
+# Where to put the custom EICrecon build
+EICRECON_SRC=/volatile/eic/$USER/EICrecon
+EICRECON_INSTALL=/volatile/eic/$USER/EICrecon/install
+IMG=/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
+
+# Clone and checkout the branch (run on the host, /volatile is shared)
+git clone https://github.com/eic/EICrecon.git "$EICRECON_SRC"
+cd "$EICRECON_SRC"
+git checkout reco/ff-lambda-multicalo
+
+# Build inside the container so that all dependencies are found
+singularity exec \
+  -B /volatile/eic/$USER:/volatile/eic/$USER \
+  "$IMG" \
+  bash -c "
+    set -e
+    source /opt/detector/epic-main/bin/thisepic.sh
+    cd $EICRECON_SRC
+    cmake -B build -S . -DCMAKE_INSTALL_PREFIX=$EICRECON_INSTALL
+    cmake --build build -j\$(nproc)
+    cmake --install build
+  "
+```
+
+#### Using the custom build in your container script
+
+In the container script (the one that runs afterburner → npsim → eicrecon),
+source the custom EICrecon environment **after** the standard epic environment:
+
+```bash
+#!/bin/bash
+set -e
+
+# Standard environment
+source /opt/detector/epic-main/bin/thisepic.sh
+
+# Override with custom EICrecon
+EICRECON_INSTALL=/volatile/eic/$USER/EICrecon/install
+source "$EICRECON_INSTALL/bin/eicrecon-this.sh"
+
+# Verify
+echo "Using eicrecon from: $(which eicrecon)"
+echo "JANA_PLUGIN_PATH=$JANA_PLUGIN_PATH"
+
+# Now run as usual — eicrecon will use the custom build
+eicrecon -Ppodio:output_file=output.edm4eic.root input.edm4hep.root
+```
+
+`eicrecon-this.sh` prepends the install directory to `PATH`, `LD_LIBRARY_PATH`,
+and `JANA_PLUGIN_PATH` so the custom build takes priority over the image defaults.
+
+If for some reason `eicrecon-this.sh` is not available, you can set the variables manually:
+
+```bash
+export PATH="$EICRECON_INSTALL/bin:$PATH"
+export LD_LIBRARY_PATH="$EICRECON_INSTALL/lib:$LD_LIBRARY_PATH"
+export JANA_PLUGIN_PATH="$EICRECON_INSTALL/lib/EICrecon/plugins:$JANA_PLUGIN_PATH"
+```
+
+
+### Route 2: Build a new Docker image
+
+If you want a self-contained image (useful when sharing with others or for reproducibility),
+build a Docker image on top of the official one and then pull it as singularity.
+
+#### Dockerfile
+
+```dockerfile
+FROM eicweb/eic_xl:nightly
+
+RUN source /opt/detector/epic-main/bin/thisepic.sh && \
+    git clone --branch reco/ff-lambda-multicalo --depth 1 \
+        https://github.com/eic/EICrecon.git /opt/EICrecon && \
+    cd /opt/EICrecon && \
+    cmake -B build -S . -DCMAKE_INSTALL_PREFIX=/opt/EICrecon/install && \
+    cmake --build build -j"$(nproc)" && \
+    cmake --install build && \
+    rm -rf build .git
+
+# Source both environments on entry
+RUN echo 'source /opt/detector/epic-main/bin/thisepic.sh' >> /etc/bash.bashrc && \
+    echo 'source /opt/EICrecon/install/bin/eicrecon-this.sh' >> /etc/bash.bashrc
+```
+
+#### Build, push, and use on ifarm
+
+```bash
+# On a machine with Docker
+docker build -t yourdockerhub/eic_xl_ff_lambda:latest .
+docker push yourdockerhub/eic_xl_ff_lambda:latest
+
+# On ifarm — pull as singularity image (one time)
+singularity pull docker://yourdockerhub/eic_xl_ff_lambda:latest
+# This creates eic_xl_ff_lambda_latest.sif
+
+# Use in slurm jobs just like the standard image
+singularity exec \
+  -B /volatile/eic/$USER:/volatile/eic/$USER \
+  eic_xl_ff_lambda_latest.sif \
+  your_container_script.sh
+```
+
+With the Docker route the custom EICrecon is baked into the image,
+so container scripts don't need to source anything extra — the environment
+is already set up via `/etc/bash.bashrc`.
