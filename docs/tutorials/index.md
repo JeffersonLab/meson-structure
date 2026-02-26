@@ -5,15 +5,15 @@ Tutorials code examples are located at
 folder. 
 
 ### 01 Using uproot to process EDM4Hep 
-- [00_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/00_uproot.py)
+- [py_edm4eic_01_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_01_uproot.py)
   Very basic tutorial of iterating over files and events in uproot
 
-- [01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py) 
-  Analyzing EICrecon Data with Uproot library. 
-  Very basic example showing iteration over number of files and building histograms using pyhep `hist` package 
+- [py_edm4eic_02_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_02_plot_mcparticles.py)
+  Analyzing EICrecon Data with Uproot library.
+  Very basic example showing iteration over number of files and building histograms using pyhep `hist` package
 
 ### 02 Access metadata from event generator
-- [02 Metadata Tutorials]() and [02_metadata.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/02_metadata.py)
+- [02 Metadata Tutorials]() and [py_edm4eic_04_metadata.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_04_metadata.py)
   Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values.
 
   Metadata from the original event generator files are copied through the simulation chain.
