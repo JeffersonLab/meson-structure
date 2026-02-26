@@ -5,12 +5,14 @@ This page documents the meson structure simulation campaigns.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
-## Campaign 2026-02
+## Campaign 2026-03
 
-[Campaign 2026-02 Link](./campaign-2026-02/campaign-2026-02.md)
+[Campaign 2026-03 Link](./campaign-2026-03/campaign-2026-03.md)
 
 Overview: 
 - Uses 2026-02 image - EIC software update
+- Sets FF magnetic fields correctly
+- Uses multiple forward calorimeters for lambda neutral channel identification
 - On technical side: analysis automation
 
 
