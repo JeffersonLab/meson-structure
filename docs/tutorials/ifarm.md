@@ -82,14 +82,14 @@ singularity exec \
 /volatile/eic/romanov/meson-structure-2025-07/reco/k_lambda_18x275_5000evt_073.container.sh
 ```
 
-Instead of `script_to_run.sh` one can put commands directly, but it might be tricky in terms of quotes, special symbols, etc. Here is an example from [csv_convert/convert_campaign.slurm.sh](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/convert_campaign.slurm.sh): 
+Instead of `script_to_run.sh` one can put commands directly, but it might be tricky in terms of quotes, special symbols, etc. Here is an example from [csv_convert/convert_campaign.10x100.slurm.sh](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/convert_campaign.10x100.slurm.sh):
 
 ```bash
 singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
    bash -c 'cd /code && python3 convert_campaign.py /work && cd /work && for f in *.csv; do zip "${f}.zip" "$f"; done'
 ```
 
-For simulation campaign [full-sim-pipeline/create_jobs.py](https://github.com/JeffersonLab/meson-structure/blob/main/full-sim-pipeline/create_jobs.py) create such jobs for each hepmc file. 
+For simulation campaign [full-sim-pipeline/](https://github.com/JeffersonLab/meson-structure/tree/main/full-sim-pipeline) scripts create such jobs for each hepmc file.
 
 
 ### Full scripts example

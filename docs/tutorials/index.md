@@ -24,6 +24,6 @@ folder.
 
 ## EIC and external tutorials
 
-- [EIC full chain tutorial for JLab users](https://github.com/JeffersonLab/eic-sftware-tutorial/blob/main/README.md)
+- [EIC full chain tutorial for JLab users](https://github.com/JeffersonLab/eic-software-tutorial/blob/main/README.md)
 - [EIC official tutorials](https://eic.github.io/documentation/tutorials.html)
 
