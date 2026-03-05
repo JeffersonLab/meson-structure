@@ -31,7 +31,7 @@ def create_container_script_template():
 
     source /opt/detector/epic-main/bin/thisepic.sh
     cd $(dirname {output_file})
-    /usr/bin/time -v /usr/bin/time -v eicrecon -Ppodio:output_file={output_file}  {input_file} 2>&1
+    /usr/bin/time -v /usr/bin/time -v eicrecon -Pdd4hep:xml_files=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml  -Ppodio:output_file={output_file}  {input_file} 2>&1
     
     echo ""
     echo "=========================================================================="
@@ -67,6 +67,7 @@ def process_energy(config, energy):
         bind_dirs=config.bind_dirs,
         events=config.event_count,
         container=config.container,
+        beam_config=energy
     )
     
     # Set the container job template

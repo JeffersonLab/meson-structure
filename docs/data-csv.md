@@ -69,13 +69,13 @@ With python and pandas it is easy to organize them joined tables like
 - Conversion script: [csv_convert/csv_mc_dis.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_mc_dis.cxx)
 
 True event level values that come from the event generator.
-`evt` - evnet id in file, the rest of the names correspond to table: 
+`event` - evnet id in file, the rest of the names correspond to table: 
 [mc-variables](mc-variables)
 
 Columns: 
 
 ```
-evt
+event
 alphas
 mx2
 nu
@@ -194,12 +194,12 @@ MC beam electron:
 2. `mc_beam_elec_py` - Beam electron py [GeV/c]
 3. `mc_beam_elec_pz` - Beam electron pz [GeV/c]
 
-`evt` is the first column = event number. 
+`event` is the first column = event number. 
 
 So the complete column list is:
 
 ```
-evt,
+event,
 da_x,da_q2,da_y,da_nu,da_w,
 esigma_x,esigma_q2,esigma_y,esigma_nu,esigma_w,
 electron_x,electron_q2,electron_y,electron_nu,electron_w,
@@ -265,7 +265,7 @@ For each particle prefix, the next columns are saved:
 So in the end the columns are: 
 
 ```yaml
-evt,
+event,
 lam_id,lam_pdg,lam_gen,lam_sim,lam_px,lam_py,lam_pz,lam_vx,lam_vy,lam_vz,lam_epx,lam_epy,lam_epz,lam_time,lam_nd,
 prot_id,prot_pdg,prot_gen,prot_sim,prot_px,prot_py,prot_pz,prot_vx,prot_vy,prot_vz,prot_epx,prot_epy,prot_epz,prot_time,prot_nd,
 pimin_id,pimin_pdg,pimin_gen,pimin_sim,pimin_px,pimin_py,pimin_pz,pimin_vx,pimin_vy,pimin_vz,pimin_epx,pimin_epy,pimin_epz,pimin_time,pimin_nd,neut_id,
@@ -349,9 +349,9 @@ When we have multiple CSV files from different runs or datasets,
 each file starts its event numbering from 0:
 
 ```
-File 1: evt = [0, 1, 2, 3, 4, ...]
-File 2: evt = [0, 1, 2, 3, 4, ...]  ← ID Collision!
-File 3: evt = [0, 1, 2, 3, 4, ...]  ← ID Collision!
+File 1: event = [0, 1, 2, 3, 4, ...]
+File 2: event = [0, 1, 2, 3, 4, ...]  ← ID Collision!
+File 3: event = [0, 1, 2, 3, 4, ...]  ← ID Collision!
 ```
 
 **Problem**: Event 0 from File 1 is completely different from Event 0 from File 2, 
@@ -370,8 +370,8 @@ def concat_csvs_with_unique_events(files):
     
     for file in files:
         df = pd.read_csv(file)
-        df['evt'] = df['evt'] + offset  # Make IDs globally unique
-        offset = df['evt'].max() + 1    # Set offset for next file
+        df['event'] = df['event'] + offset  # Make IDs globally unique
+        offset = df['event'].max() + 1    # Set offset for next file
         dfs.append(df)
     
     return pd.concat(dfs, ignore_index=True)
@@ -383,7 +383,7 @@ dis_df = concat_csvs_with_unique_events(sorted(glob.glob("dis_parameters*.csv"))
 
 **Result**: Now we have globally unique event IDs:
 ```
-File 1: evt = [0, 1, 2, 3, 4]
-File 2: evt = [5, 6, 7, 8, 9]     ← No collision!  
-File 3: evt = [10, 11, 12, 13, 14] ← No collision!
+File 1: event = [0, 1, 2, 3, 4]
+File 2: event = [5, 6, 7, 8, 9]     ← No collision!  
+File 3: event = [10, 11, 12, 13, 14] ← No collision!
 ```

@@ -140,7 +140,7 @@ void process_file(const std::string& filename) {
 void process_event(const podio::Frame& event, int event_number) {
     // Write CSV header once
     if (!header_written) {
-        csv_file << "evt,alphas,mx2,nu,p_rt,pdrest,pperps,pperpz,q2,s_e,s_q,tempvar,tprime,tspectator,twopdotk,twopdotq,w,x_d,xbj,y_d,yplus\n";
+        csv_file << "event,alphas,mx2,nu,p_rt,pdrest,pperps,pperpz,q2,s_e,s_q,tempvar,tprime,tspectator,twopdotk,twopdotq,w,x_d,xbj,y_d,yplus\n";
         header_written = true;
     }
 

@@ -30,7 +30,7 @@ def create_container_script_template():
     echo "    {output_file}.*"
 
     source /opt/detector/epic-main/bin/thisepic.sh
-    /usr/bin/time -v npsim --compactFile=$DETECTOR_PATH/epic.xml --runType run --inputFiles {input_file} --outputFile {output_file} --numberOfEvents 5000 2>&1
+    /usr/bin/time -v npsim --compactFile=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml --runType run --inputFiles {input_file} --outputFile {output_file} --numberOfEvents 5000 2>&1
     
     echo ""
     echo "=========================================================================="
@@ -67,6 +67,7 @@ def process_energy(config, energy):
         bind_dirs=config.bind_dirs,
         events=config.event_count,
         container=config['container'],
+        beam_config=energy
     )
     
     # Set the container job template

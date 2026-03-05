@@ -82,14 +82,14 @@ singularity exec \
 /volatile/eic/romanov/meson-structure-2025-07/reco/k_lambda_18x275_5000evt_073.container.sh
 ```
 
-Instead of `script_to_run.sh` one can put commands directly, but it might be tricky in terms of quotes, special symbols, etc. Here is an example from [csv_convert/convert_campaign.slurm.sh](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/convert_campaign.slurm.sh): 
+Instead of `script_to_run.sh` one can put commands directly, but it might be tricky in terms of quotes, special symbols, etc. Here is an example from [csv_convert/convert_campaign.10x100.slurm.sh](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/convert_campaign.10x100.slurm.sh):
 
 ```bash
 singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
    bash -c 'cd /code && python3 convert_campaign.py /work && cd /work && for f in *.csv; do zip "${f}.zip" "$f"; done'
 ```
 
-For simulation campaign [full-sim-pipeline/create_jobs.py](https://github.com/JeffersonLab/meson-structure/blob/main/full-sim-pipeline/create_jobs.py) create such jobs for each hepmc file. 
+For simulation campaign [full-sim-pipeline/](https://github.com/JeffersonLab/meson-structure/tree/main/full-sim-pipeline) scripts create such jobs for each hepmc file.
 
 
 ### Full scripts example
@@ -167,4 +167,100 @@ echo "    /volatile/eic/romanov/meson-structure-2025-07/reco/k_lambda_18x275_500
 /usr/bin/time -v eicrecon -Ppodio:output_file=/volatile/eic/romanov/meson-structure-2025-07/reco/k_lambda_18x275_5000evt_074.edm4eic.root /volatile/eic/romanov/meson-structure-2025-07/reco/k_lambda_18x275_5000evt_074.edm4hep.root 2>&1
 
 echo "All steps completed for k_lambda_18x275_5000evt_074!"
+```
+
+
+## Running with a custom EICrecon branch
+
+Sometimes you need a modified EICrecon — e.g. the
+[reco/ff-lambda-multicalo](https://github.com/eic/EICrecon/tree/reco/ff-lambda-multicalo) branch
+that adds far-forward Lambda reconstruction with multiple calorimeters.
+
+The idea is to build a new singularity/apptainer image on top of the standard `eic_xl`
+image. The base image already ships all dependencies (ROOT, podio, EDM4hep, JANA, etc.).
+We clone the custom EICrecon branch, build and install it over the stock one, and bake
+the result into a new `.sif` image. After that, `singularity exec` or `singularity run`
+just works — no extra environment setup in your scripts.
+
+
+### Singularity definition file
+
+Create a file `eicrecon_custom.def`:
+
+```singularity
+Bootstrap: docker
+From: eicweb/eic_xl:nightly
+
+%post
+    # Source the full EIC/epic environment so cmake finds all dependencies
+    . /opt/detector/epic-main/bin/thisepic.sh
+
+    # Clone the custom EICrecon branch
+    git clone --branch reco/ff-lambda-multicalo --depth 1 \
+        https://github.com/eic/EICrecon.git /tmp/EICrecon
+    cd /tmp/EICrecon
+
+    # Build and install into /opt/EICrecon
+    cmake -B build -S . -DCMAKE_INSTALL_PREFIX=/opt/EICrecon
+    cmake --build build -j"$(nproc)"
+    cmake --install build
+
+    # Clean up build artifacts to keep the image small
+    rm -rf /tmp/EICrecon
+
+%environment
+    # Prepend custom EICrecon paths so it takes priority over the stock version
+    export PATH=/opt/EICrecon/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/EICrecon/lib:$LD_LIBRARY_PATH
+    export JANA_PLUGIN_PATH=/opt/EICrecon/lib/EICrecon/plugins${JANA_PLUGIN_PATH:+:$JANA_PLUGIN_PATH}
+```
+
+The `%environment` section is automatically sourced by singularity/apptainer on every
+`exec` / `run` / `shell`, so the custom EICrecon takes priority over the stock version
+that ships with the base image.
+
+
+### Build the image
+
+Building requires either root access or `--fakeroot` (available on ifarm):
+
+```bash
+# On ifarm (with --fakeroot)
+singularity build --fakeroot eicrecon_custom.sif eicrecon_custom.def
+
+# Or on a machine where you have root
+sudo singularity build eicrecon_custom.sif eicrecon_custom.def
+```
+
+This takes a while (EICrecon is a large C++ project). The resulting `.sif` file is
+a self-contained, read-only image.
+
+
+### Use in slurm jobs
+
+The custom image is a drop-in replacement for the stock one. Use it exactly the same
+way as described in the sections above:
+
+```bash
+# Instead of the stock image:
+#   IMG=/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
+# Use:
+IMG=/path/to/eicrecon_custom.sif
+
+singularity exec \
+  -B /volatile/eic/$USER:/volatile/eic/$USER \
+  "$IMG" \
+  your_container_script.sh
+```
+
+Container scripts don't need any special sourcing — `eicrecon` inside the image
+already points to the custom build:
+
+```bash
+#!/bin/bash
+set -e
+source /opt/detector/epic-main/bin/thisepic.sh
+
+# This runs the custom EICrecon — no extra setup needed
+eicrecon -Ppodio:output_file=output.edm4eic.root input.edm4hep.root
 ```

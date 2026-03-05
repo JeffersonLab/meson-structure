@@ -1,0 +1,31 @@
+# Building requires either root access or --fakeroot (available on ifarm):
+# On ifarm (with --fakeroot)
+#   singularity build --fakeroot eicrecon_custom.sif eicrecon_custom.def
+# Or on a machine where you have root
+#   sudo singularity build eicrecon_custom.sif eicrecon_custom.def
+
+Bootstrap: docker
+From: eicweb/eic_xl:nightly
+
+%post
+    # Source the full EIC/epic environment so cmake finds all dependencies
+    . /opt/detector/epic-main/bin/thisepic.sh
+
+    # Clone the custom EICrecon branch
+    git clone --branch reco/ff-lambda-multicalo --depth 1 \
+        https://github.com/eic/EICrecon.git /tmp/EICrecon
+    cd /tmp/EICrecon
+
+    # Build and install into /opt/EICrecon
+    cmake -B build -S . -DCMAKE_INSTALL_PREFIX=/opt/EICrecon
+    cmake --build build -j"$(nproc)"
+    cmake --install build
+
+    # Clean up build artifacts to keep the image small
+    rm -rf /tmp/EICrecon
+
+%environment
+    # Prepend custom EICrecon paths so it takes priority over the stock version
+    export PATH=/opt/EICrecon/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/EICrecon/lib:$LD_LIBRARY_PATH
+    export JANA_PLUGIN_PATH=/opt/EICrecon/lib/EICrecon/plugins${JANA_PLUGIN_PATH:+:$JANA_PLUGIN_PATH}

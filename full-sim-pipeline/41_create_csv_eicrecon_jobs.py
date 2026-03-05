@@ -88,7 +88,7 @@ def process_energy(config, config_path, energy):
     """Process all files for a specific energy."""
 
     source_dir = config.eicrecon_output
-    output_dir = config.csv_output
+    output_dir = config.csv_eicrecon_output
     csv_convert_dir = config.get('csv_convert_dir', csv_convert_dir_default)
 
     print("\n" + "="*80)
@@ -117,6 +117,7 @@ def process_energy(config, config_path, energy):
         bind_dirs=bind_dirs,
         events=config.event_count,
         container=config.container,
+        beam_config=energy
     )
 
     # Set the container job template

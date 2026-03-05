@@ -9,8 +9,8 @@ def concat_csvs_with_unique_events(files):
 
     for file in files:
         df = pd.read_csv(file)
-        df['evt'] = df['evt'] + offset
-        offset = df['evt'].max() + 1
+        df['event'] = df['event'] + offset
+        offset = df['event'].max() + 1
         dfs.append(df)
 
     return pd.concat(dfs, ignore_index=True)
@@ -20,4 +20,4 @@ lambda_df = concat_csvs_with_unique_events(sorted(glob.glob("mcpart_lambda*.csv"
 dis_df = concat_csvs_with_unique_events(sorted(glob.glob("dis_parameters*.csv")))
 
 # Join them
-joined = lambda_df.merge(dis_df, on='evt', how='inner')
+joined = lambda_df.merge(dis_df, on='event', how='inner')

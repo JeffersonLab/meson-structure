@@ -108,6 +108,7 @@ class JobRunner:
                  output_dir: str,
                  bind_dirs: List[str],
                  events: int = 5000,
+                 beam_config: str = "",
                  container: str = '/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly',
                  slurm_time: str = '24:00:00',
                  slurm_cpus_per_task: int = 1,
@@ -136,6 +137,7 @@ class JobRunner:
         self.config['slurm_mem_per_cpu'] = slurm_mem_per_cpu  # Fixed name
         self.config['slurm_account'] = slurm_account
         self.config['slurm_partition'] = slurm_partition
+        self.config['beam_config'] = beam_config
 
         # Store output filename function
         self.output_file_name_func = output_file_name_func
@@ -247,6 +249,7 @@ class JobRunner:
             'container': self.config['container'],
             'container_script': container_script,
             'bindings': bindings,  # Fixed: was 'bind_dir'
+            'beam_config': self.config['beam_config']
         }
         
         script_content = self.slurm_script_template.format(**params)

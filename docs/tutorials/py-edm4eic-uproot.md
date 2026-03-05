@@ -80,7 +80,7 @@ for chunk in uproot.iterate(
     # process chunk by chunk here
 ```
 
-See [tutorials/00_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/00_uproot.py)
+See [tutorials/py_edm4eic_01_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_01_uproot.py)
 
 Full code stub: 
 
@@ -155,7 +155,7 @@ The key features are:
 
 ### Histograms
 
-Look [tutorials/01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py)
+Look [tutorials/py_edm4eic_02_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/py_edm4eic_02_plot_mcparticles.py)
 for full details. 
 
 We use [hist](https://hist.readthedocs.io/en/latest/user-guide/notebooks/Plots.html) library, 
