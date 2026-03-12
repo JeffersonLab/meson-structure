@@ -230,15 +230,15 @@ void process_event(const podio::Frame& event, int evt_id) {
 
     // Write header on first output
     if (!header_written) {
-        csv << "evt,is_true_lam,"
+        csv << "evt,is_true_lam,true_prot_id,true_pi_id,"
             << make_particle_header("pi") << ","
             << "pi_nhits_b0,"
             << "pi_first_b0_x,pi_first_b0_y,pi_first_b0_z,"
             << "pi_ecal_contrib,"
             << "pi_first_ecal_x,pi_first_ecal_y,pi_first_ecal_z,"
-            << make_particle_header("p") << ","
-            << "p_nhits_rp,"
-            << "p_first_rp_x,p_first_rp_y,p_first_rp_z"
+            << make_particle_header("prot") << ","
+            << "prot_nhits_rp,"
+            << "prot_first_rp_x,prot_first_rp_y,prot_first_rp_z"
             << "\n";
         header_written = true;
     }
@@ -264,6 +264,7 @@ void process_event(const podio::Frame& event, int evt_id) {
             double ecal_z = has_ecal ? pion_ecal_first_z[pic_id] : 0.0;
 
             csv << evt_id << "," << (is_true ? 1 : 0) << ","
+                << true_prot_id << "," << true_pimin_id << ","
                 << particle_to_csv(pi_opt) << ","
                 << pic.nhits << ","
                 << pic.first_hit_x << "," << pic.first_hit_y << "," << pic.first_hit_z << ","
