@@ -49,8 +49,19 @@ def create_container_script_template():
     else
         echo "[SKIP] zipped files exists for {input_file}"
     fi
-    
-   
+
+    echo "==========================================================================="
+
+    if [ ! -f "{combinatorics_ppim_output}.zip" ]; then
+        echo "[RUN] csv_edm4hep_combinatorics_ppim for {input_file}"
+        root -x -l -b -q csv_edm4hep_combinatorics_ppim.cxx'("{input_file}","{combinatorics_ppim_output}")'
+        echo "[ZIP] zipping files"
+        python3 -m zipfile -c "{combinatorics_ppim_output}.zip" "{combinatorics_ppim_output}"
+    else
+        echo "[SKIP] zipped files exists for {input_file}"
+    fi
+
+
     echo "==========================================================================="
     echo "Done. Outputs in: {input_dir}"
     """)
@@ -74,7 +85,7 @@ def make_custom_params_updater(config_path):
         params['acceptance_ppim_pimin_hits_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim_pimin_hits.csv")
         params['acceptance_ppim_prot_hits_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim_prot_hits.csv")
         params['acceptance_npi0_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_npi0.csv")
-   
+        params['combinatorics_ppim_output'] = os.path.join(output_dir, f"{csv_basename}.ppim_combinatorics.csv")
 
         return params
     return custom_params_updater
