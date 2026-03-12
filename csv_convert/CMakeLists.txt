@@ -74,3 +74,13 @@ target_link_libraries(csv_acceptance
         EDM4HEP::edm4hep EDM4HEP::edm4hepDict
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
         fmt::fmt)
+
+add_executable(csv_ppim_combinatorics csv_edm4hep_ppim_combinatorics.cxx)
+
+target_link_libraries(csv_ppim_combinatorics
+        PRIVATE
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)
