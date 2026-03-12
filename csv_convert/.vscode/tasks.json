@@ -1,0 +1,52 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run csv_ppim_combinatorics",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/csv_ppim_combinatorics",
+            "args": [
+                // Replace these with your actual parameters
+                "--input", "data.csv",
+                "--output", "results.out",
+                "-v"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run csv_ppim_combinatorics (Prompt for Args)",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/csv_ppim_combinatorics",
+            "args": [
+                "${input:args}"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "args",
+            "type": "promptString",
+            "description": "Enter arguments for csv_ppim_combinatorics",
+            "default": "--help"
+        }
+    ]
+}

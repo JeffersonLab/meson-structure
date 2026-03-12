@@ -346,7 +346,7 @@ Notes:
 ### ppim_combinatorics
 
 - Files: `*.ppim_combinatorics.csv`
-- Conversion script: [csv_convert/csv_edm4hep_ppim_combinatorics.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_edm4hep_ppim_combinatorics.cxx)
+- Conversion script: [csv_convert/csv_edm4hep_combinatorics_ppim.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_edm4hep_combinatorics_ppim.cxx)
 - Analysis script: [csv_convert/analyse_ppim_combinatorics.py](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/analyse_ppim_combinatorics.py)
 
 Combinatoric proton + π⁻ candidate pairs for Λ → p + π⁻ searches using far-forward detectors.

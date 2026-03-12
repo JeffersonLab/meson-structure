@@ -22,6 +22,6 @@ echo "[INFO]  CSV_CONVERT_DIR    : $CSV_CONVERT_DIR"
 
 # Bind the whole campaign so script sees reco/ inside /work
 singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
-   bash -c 'cd /code &&root -x -l -b -q '\''csv_edm4hep_ppim_combinatorics.cxx("/work/k_lambda_18x275_5000evt_0001.edm4hep.root", "18x275_combinatorics.csv", 5000)'\'''
+   bash -c 'cd /code &&root -x -l -b -q '\''csv_edm4hep_combinatorics_ppim.cxx("/work/k_lambda_18x275_5000evt_0001.edm4hep.root", "18x275_combinatorics.csv", 5000)'\'''
 
 echo "[DONE]  Conversion job finished"

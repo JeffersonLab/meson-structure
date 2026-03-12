@@ -85,7 +85,7 @@ target_link_libraries(csv_acceptance_npi0
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
         fmt::fmt)
 
-add_executable(csv_ppim_combinatorics csv_edm4hep_ppim_combinatorics.cxx)
+add_executable(csv_ppim_combinatorics csv_edm4hep_combinatorics_ppim.cxx)
 
 target_link_libraries(csv_ppim_combinatorics
         PRIVATE

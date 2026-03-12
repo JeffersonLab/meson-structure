@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch csv_ppim_combinatorics",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/csv_ppim_combinatorics",
+            "args": [
+                // Replace these with your actual parameters, or use a task to prompt
+                "--input", "data.csv",
+                "--output", "results.out",
+                "-v"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": ""
+        }
+    ]
+}
