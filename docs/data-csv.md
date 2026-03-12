@@ -343,6 +343,94 @@ Notes:
 - If a particle is not reconstructed or missing, its columns will contain null values
 - The `n_particles` field for the Lambda indicates the number of reconstructed daughter particles
 
+### ppim_combinatorics
+
+- Files: `*.ppim_combinatorics.csv`
+- Conversion script: [csv_convert/csv_edm4hep_ppim_combinatorics.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_edm4hep_ppim_combinatorics.cxx)
+- Analysis script: [csv_convert/analyse_ppim_combinatorics.py](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/analyse_ppim_combinatorics.py)
+
+Combinatoric proton + π⁻ candidate pairs for Λ → p + π⁻ searches using far-forward detectors.
+**Each row is one (proton candidate, pion candidate) pair** found in an event — events with zero
+candidates produce no rows.
+
+**Candidate selection (MC-truth level):**
+
+| Candidate | Detector collection | Min hits |
+|-----------|---------------------|----------|
+| Proton | `ForwardRomanPotHits` | ≥ 2 |
+| Pion (π⁻) | `B0TrackerHits` | ≥ 3 |
+
+Pion candidates are additionally checked against `B0ECalHits` contributions; a flag records
+whether any calorimeter energy was deposited.
+
+**Truth matching:**
+The script locates the primary Λ in each event and stores its true daughter particle IDs in
+`true_prot_id` / `true_pi_id` (both are `-1` when no primary Λ decay is found). The
+`is_true_lam` flag is `1` when the row's candidate pair exactly matches those true daughters.
+
+> **Note:** the event-ID column is `evt` (not `event` as in other tables).
+
+#### Columns
+
+Event / truth metadata:
+
+1. `evt`           — event number
+2. `is_true_lam`   — 1 if this pair is the true p + π⁻ from the primary Λ, else 0
+3. `true_prot_id`  — MCParticle index of the true Lambda daughter proton (−1 if none)
+4. `true_pi_id`    — MCParticle index of the true Lambda daughter π⁻ (−1 if none)
+
+Pion candidate — MCParticle info (same 15-field schema as other tables, prefix `pi`):
+
+5–19. `pi_id, pi_pdg, pi_gen, pi_sim, pi_px, pi_py, pi_pz, pi_vx, pi_vy, pi_vz, pi_epx, pi_epy, pi_epz, pi_time, pi_nd`
+
+Pion candidate — B0 tracker hit info:
+
+20. `pi_nhits_b0`             — number of B0TrackerHits for this candidate
+21. `pi_first_b0_x`           — x of first registered B0TrackerHit [mm]
+22. `pi_first_b0_y`           — y of first registered B0TrackerHit [mm]
+23. `pi_first_b0_z`           — z of first registered B0TrackerHit [mm]
+
+Pion candidate — B0 ECal contribution:
+
+24. `pi_ecal_contrib`         — 1 if candidate left ≥1 hit contribution in B0ECalHits, else 0
+25. `pi_first_ecal_x`         — x of first B0ECal cell with contribution [mm] (0 if none)
+26. `pi_first_ecal_y`         — y of first B0ECal cell with contribution [mm] (0 if none)
+27. `pi_first_ecal_z`         — z of first B0ECal cell with contribution [mm] (0 if none)
+
+Proton candidate — MCParticle info (prefix `prot`):
+
+28–42. `prot_id, prot_pdg, prot_gen, prot_sim, prot_px, prot_py, prot_pz, prot_vx, prot_vy, prot_vz, prot_epx, prot_epy, prot_epz, prot_time, prot_nd`
+
+Proton candidate — Roman Pot hit info:
+
+43. `prot_nhits_rp`           — number of ForwardRomanPotHits for this candidate
+44. `prot_first_rp_x`         — x of first registered ForwardRomanPotHit [mm]
+45. `prot_first_rp_y`         — y of first registered ForwardRomanPotHit [mm]
+46. `prot_first_rp_z`         — z of first registered ForwardRomanPotHit [mm]
+
+Complete column list:
+
+```
+evt,
+is_true_lam,true_prot_id,true_pi_id,
+pi_id,pi_pdg,pi_gen,pi_sim,pi_px,pi_py,pi_pz,pi_vx,pi_vy,pi_vz,pi_epx,pi_epy,pi_epz,pi_time,pi_nd,
+pi_nhits_b0,pi_first_b0_x,pi_first_b0_y,pi_first_b0_z,
+pi_ecal_contrib,pi_first_ecal_x,pi_first_ecal_y,pi_first_ecal_z,
+prot_id,prot_pdg,prot_gen,prot_sim,prot_px,prot_py,prot_pz,prot_vx,prot_vy,prot_vz,prot_epx,prot_epy,prot_epz,prot_time,prot_nd,
+prot_nhits_rp,prot_first_rp_x,prot_first_rp_y,prot_first_rp_z
+```
+
+Notes:
+
+- Because rows are only written when at least one proton **and** one pion candidate exist, events
+  with zero candidates are absent from the file entirely.
+- Columns `true_prot_id` / `true_pi_id` can be joined against `pi_id` / `prot_id` to identify
+  **reversed assignments** — cases where the true proton reached B0 and the true pion reached the
+  Roman Pots — using `analyse_ppim_combinatorics.py`.
+- When combining multiple files, offset `evt` the same way as `event` in other tables
+  (see [Combine Multiple Files](#combine-multiple-files) below).
+
+
 ## Combine Multiple Files
 
 When we have multiple CSV files from different runs or datasets, 
