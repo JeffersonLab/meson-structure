@@ -169,7 +169,7 @@ def main() -> None:
     parser.add_argument("input", help="ppim_combinatorics CSV file")
     parser.add_argument("-o", "--output", default=".", help="Output directory for model & plots")
     parser.add_argument("--epochs", type=int, default=50, help="Training epochs (default: 50)")
-    parser.add_argument("--batch-size", type=int, default=256, help="Batch size (default: 256)")
+    parser.add_argument("--batch-size", type=int, default=32, help="Batch size (default: 256)")
     parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
     args = parser.parse_args()
 
@@ -179,9 +179,7 @@ def main() -> None:
     print(f"Keras version : {keras.__version__}")
 
     # --- Data -----------------------------------------------------------------
-    X_train, X_test, y_train, y_test, mean, std = load_data(
-        args.input, seed=args.seed,
-    )
+    X_train, X_test, y_train, y_test, mean, std = load_data(args.input, seed=args.seed,)
     print(f"Train samples : {len(y_train)}  |  Test samples : {len(y_test)}")
 
     # --- Class weights --------------------------------------------------------
