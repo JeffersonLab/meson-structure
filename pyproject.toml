@@ -20,5 +20,8 @@ dependencies = [
     "vector",
     "pandas",
     "pyyaml",
-    'omegaconf'
+    'omegaconf',
+    "keras>=3.0",
+    "jax[cpu]",
+    "scikit-learn",
 ]
