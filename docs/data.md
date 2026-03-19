@@ -5,7 +5,7 @@
 The meson structure data is available from the following locations:
 
 **LATEST PROCESSED FILES**  
-*(last update of October 2025)*
+*(last update of March 2026)*
 
 On JLab ifarm:  
 
