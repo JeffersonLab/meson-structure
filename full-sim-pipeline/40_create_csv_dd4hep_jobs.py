@@ -85,7 +85,7 @@ def make_custom_params_updater(config_path):
         params['acceptance_ppim_pimin_hits_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim_pimin_hits.csv")
         params['acceptance_ppim_prot_hits_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_ppim_prot_hits.csv")
         params['acceptance_npi0_output'] = os.path.join(output_dir, f"{csv_basename}.acceptance_npi0.csv")
-        params['combinatorics_ppim_output'] = os.path.join(output_dir, f"{csv_basename}.ppim_combinatorics.csv")
+        params['combinatorics_ppim_output'] = os.path.join(output_dir, f"{csv_basename}.combinatorics_ppm.csv")
 
         return params
     return custom_params_updater

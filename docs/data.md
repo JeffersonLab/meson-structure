@@ -10,22 +10,22 @@ The meson structure data is available from the following locations:
 On JLab ifarm:  
 
 ```bash
-/work/eic3/users/romanov/meson-structure-2025-10/reco
+/volatile/eic/romanov/meson-structure-2026-03/reco
 
 # CSV files 
-/volatile/eic/romanov/meson-structure-2025-10/csv
+/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon
 
 # priority queues (first 1'000'000 events == 200 files from each energy range):
-/work/eic3/users/romanov/meson-structure-2025-10/reco/5x41-priority
-/work/eic3/users/romanov/meson-structure-2025-10/reco/10x100-priority
-/work/eic3/users/romanov/meson-structure-2025-10/reco/10x130-priority
-/work/eic3/users/romanov/meson-structure-2025-10/reco/18x275-priority
+/volatile/eic/romanov/meson-structure-2026-03/reco/5x41-priority
+/volatile/eic/romanov/meson-structure-2026-03/reco/10x100-priority
+/volatile/eic/romanov/meson-structure-2026-03/reco/10x130-priority
+/volatile/eic/romanov/meson-structure-2026-03/reco/18x275-priority
 
-#CSV files are located in csv folder now: 
-/work/eic3/users/romanov/meson-structure-2025-10/csv/5x41-priority
-/work/eic3/users/romanov/meson-structure-2025-10/csv/10x100-priority
-/work/eic3/users/romanov/meson-structure-2025-10/csv/10x130-priority
-/work/eic3/users/romanov/meson-structure-2025-10/csv/18x275-priority
+#CSV files are located in csv_eicrecon and csv_dd4hep folders now: 
+/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/5x41-priority
+/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/10x100-priority
+/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/10x130-priority
+/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/18x275-priority
 
 ```
 
@@ -33,7 +33,7 @@ On XRootD (open for universities and public)
 
 ```bash
 xrdfs root://dtn-eic.jlab.org
-ls /work/eic3/users/romanov/meson-structure-2025-10/reco
+ls /volatile/eic/romanov/meson-structure-2026-03/reco
 ```
 
 In this campaign we put processing files in separate folders:
@@ -45,7 +45,7 @@ In this campaign we put processing files in separate folders:
 - `reco` - EICrecon reconstruction results (`edm4eic.root` files)
 - `csv` -  CSV files from reconstructed results
 
-The campaign is made with [eic-shell v25.10.3](https://github.com/eic/containers/tree/v25.10.3-stable?tab=readme-ov-file) container
+The campaign is made with [eic-shell v26.03.0](https://github.com/eic/containers/tree/v26.03.0-stable?tab=readme-ov-file) container
 
 Writing libraries versions (important for C++ readout compatibility):
 - podio: v01-03
@@ -54,7 +54,7 @@ Writing libraries versions (important for C++ readout compatibility):
 - cxxstd: 20
 
 **Original MCEG files** on ifarm:
-`/work/eic3/users/romanov/meson-structure-2025-10/eg-orig-kaon-lambda`  
+`/volatile/eic/romanov/meson-structure-2026-03/eg-orig-kaon-lambda`  
 *(last update of August 2025)*
 
 
@@ -98,13 +98,13 @@ root://dtn-eic.jlab.org
 
 ```bash
 xrdfs root://dtn-eic.jlab.org
-ls /work/eic3/users/romanov/meson-structure-2025-10/reco
+ls /volatile/eic/romanov/meson-structure-2026-03/reco
 ```
 
 **To download** files: 
 
 ```bash
-xrdcp root://dtn-eic.jlab.org//work/eic3/users/romanov/meson-structure-2025-10/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root ./
+xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2026-03/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root ./
 ```
 
 **To use directly in scripts**:
@@ -113,5 +113,5 @@ xrdcp root://dtn-eic.jlab.org//work/eic3/users/romanov/meson-structure-2025-10/r
 # Both uproot and pyroot can work with links directly 
 # if XRootD is installed in the system
 import uproot
-file = uproot.open("root://dtn-eic.jlab.org//work/eic3/users/romanov/meson-structure-2025-10/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root")
+file = uproot.open("root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2026-03/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root")
 ```

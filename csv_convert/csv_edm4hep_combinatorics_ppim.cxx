@@ -349,7 +349,7 @@ int main(int argc, char* argv[]) {
 // ROOT-macro entry point.
 // root -x -l -b -q 'csv_edm4hep_ppim_combinatorics.cxx("file.root", "output.csv", 100)'
 // ---------------------------------------------------------------------------
-void csv_edm4hep_ppim_combinatorics(const char* infile, const char* outfile, int events = -1)
+void csv_edm4hep_combinatorics_ppim(const char* infile, const char* outfile, int events = -1)
 {
     fmt::print("'csv_edm4hep_ppim_combinatorics' entry point is used.\n");
 
