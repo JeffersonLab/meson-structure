@@ -24,4 +24,5 @@ dependencies = [
     "keras>=3.0",
     "jax[cpu]",
     "scikit-learn",
+    "duckdb"
 ]
