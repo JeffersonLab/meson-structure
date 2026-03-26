@@ -290,6 +290,9 @@ def parse_args():
         default="results",
         help="Directory to write output into (created if absent). Default: ./results"
     )
+
+    parser.add_argument("--beam", "-b", default=None, help="For compatibility. Is not used")
+
     parser.add_argument(
         "--nbins-q2", type=int, default=200,
         help="Number of bins for Q2 and x 2D histograms. Default: 200"

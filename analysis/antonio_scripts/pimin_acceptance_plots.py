@@ -155,6 +155,8 @@ def main() -> None:
         help="Output directory for results",
     )
 
+    parser.add_argument("--beam", "-b", default=None, help="For compatibility. Is not used")
+
     args = parser.parse_args()
 
     if len(args.files) % 2 != 0:
