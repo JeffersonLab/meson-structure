@@ -287,21 +287,16 @@ def plot_event_counts(df, path):
 ###############################################################################
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Scattered-electron analysis of reco_dis CSV files")
-    parser.add_argument('-o', '--outdir', type=str, default='scattered_electron_output',
-                        help='Directory for output plots')
-    parser.add_argument('-e', '--events', type=int, default=None,
-                        help='Max number of events to process')
+    parser = argparse.ArgumentParser(description="Scattered-electron analysis of reco_dis CSV files")
+    parser.add_argument('-o', '--outdir', type=str, default='scattered_electron_output', help='Directory for output plots')
+    parser.add_argument('-e', '--events', type=int, default=None, help='Max number of events to process')
     parser.add_argument('files', nargs='+', help='Input reco_dis CSV files')
     args = parser.parse_args()
 
     output_dir = Path(args.outdir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    print("=" * 70)
-    print("Scattered Electron Analysis")
-    print("=" * 70)
+    print(f"{'=' * 70}\nScattered Electron Analysis\n{'=' * 70}")
 
     # --- Load data ---
     print("\nLoading CSV files...")
