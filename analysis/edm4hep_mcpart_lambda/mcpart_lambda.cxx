@@ -202,9 +202,9 @@ void png_save(TH1* h) {
 // create_histograms
 //------------------------------------------------------------------------------
 void create_histograms() {
-    h_lam_p    = new TH1D("h_lam_p",    "#Lambda |#vec{p}|;|#vec{p}| [GeV/c];Counts",  100,  0,  50);
+    h_lam_p    = new TH1D("h_lam_p",    "#Lambda |#vec{p}|;|#vec{p}| [GeV/c];Counts",  100,  0, 200);
     h_lam_pt   = new TH1D("h_lam_pt",   "#Lambda p_{T};p_{T} [GeV/c];Counts",           100,  0,   5);
-    h_lam_pz   = new TH1D("h_lam_pz",   "#Lambda p_{z};p_{z} [GeV/c];Counts",           120, -10, 50);
+    h_lam_pz   = new TH1D("h_lam_pz",   "#Lambda p_{z};p_{z} [GeV/c];Counts",           120, -10, 200);
     h_lam_eta  = new TH1D("h_lam_eta",  "#Lambda #eta;#eta;Counts",                      100, -6,   6);
     h_lam_phi  = new TH1D("h_lam_phi",  "#Lambda #phi;#phi [rad];Counts",                100, -TMath::Pi(), TMath::Pi());
     h_lam_mass = new TH1D("h_lam_mass", "#Lambda mass;mass [GeV/c^{2}];Counts",          100, 1.0, 1.3);
@@ -223,9 +223,9 @@ void create_histograms() {
     h_lam_decay_rz = new TH2D("h_lam_decay_rz", "#Lambda decay vertex;z [mm];r [mm]",   150, -5000, 40000, 100, 0, 2000);
     h_lam_decay_xy = new TH2D("h_lam_decay_xy", "#Lambda decay vertex;x [mm];y [mm]",   200, -2000, 2000, 200, -2000, 2000);
 
-    h_lam_p_vs_eta  = new TH2D("h_lam_p_vs_eta",  "#Lambda |p| vs #eta;#eta;|p| [GeV/c]",    100, -6, 6, 100, 0, 50);
+    h_lam_p_vs_eta  = new TH2D("h_lam_p_vs_eta",  "#Lambda |p| vs #eta;#eta;|p| [GeV/c]",    100, -6, 6, 100, 0, 200);
     h_lam_pt_vs_eta = new TH2D("h_lam_pt_vs_eta", "#Lambda p_{T} vs #eta;#eta;p_{T} [GeV/c]",100, -6, 6, 100, 0,  5);
-    h_lam_pz_vs_pt  = new TH2D("h_lam_pz_vs_pt",  "#Lambda p_{z} vs p_{T};p_{T} [GeV/c];p_{z} [GeV/c]", 100, 0, 5, 120, -10, 50);
+    h_lam_pz_vs_pt  = new TH2D("h_lam_pz_vs_pt",  "#Lambda p_{z} vs p_{T};p_{T} [GeV/c];p_{z} [GeV/c]", 100, 0, 5, 120, -10, 200);
 
     h_prot_p   = new TH1D("h_prot_p",   "Proton |#vec{p}|;|#vec{p}| [GeV/c];Counts", 100, 0, 300);
     h_prot_pt  = new TH1D("h_prot_pt",  "Proton p_{T};p_{T} [GeV/c];Counts",          100, 0,  5);
