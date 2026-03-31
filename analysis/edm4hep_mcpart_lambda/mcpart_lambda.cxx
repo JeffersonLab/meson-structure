@@ -216,7 +216,7 @@ void create_histograms() {
     h_lam_decay_type->GetXaxis()->SetBinLabel(4, "Shower");
     h_lam_decay_type->GetXaxis()->SetBinLabel(5, "Other");
 
-    h_lam_nd = new TH1D("h_lam_nd", "#Lambda N daughters;N daughters;Counts", 10, -0.5, 9.5);
+    h_lam_nd = new TH1D("h_lam_nd", "#Lambda N daughters;N daughters;Counts", 25, -0.5, 24.5);
 
     h_lam_decay_z  = new TH1D("h_lam_decay_z",  "#Lambda decay z;z [mm];Counts",        150, -5000, 40000);
     h_lam_decay_r  = new TH1D("h_lam_decay_r",  "#Lambda decay r;r [mm];Counts",        100,     0,  2000);
@@ -227,11 +227,11 @@ void create_histograms() {
     h_lam_pt_vs_eta = new TH2D("h_lam_pt_vs_eta", "#Lambda p_{T} vs #eta;#eta;p_{T} [GeV/c]",100, -6, 6, 100, 0,  5);
     h_lam_pz_vs_pt  = new TH2D("h_lam_pz_vs_pt",  "#Lambda p_{z} vs p_{T};p_{T} [GeV/c];p_{z} [GeV/c]", 100, 0, 5, 120, -10, 50);
 
-    h_prot_p   = new TH1D("h_prot_p",   "Proton |#vec{p}|;|#vec{p}| [GeV/c];Counts", 100, 0, 50);
+    h_prot_p   = new TH1D("h_prot_p",   "Proton |#vec{p}|;|#vec{p}| [GeV/c];Counts", 100, 0, 300);
     h_prot_pt  = new TH1D("h_prot_pt",  "Proton p_{T};p_{T} [GeV/c];Counts",          100, 0,  5);
     h_prot_eta = new TH1D("h_prot_eta", "Proton #eta;#eta;Counts",                     100, -6, 6);
 
-    h_pimin_p   = new TH1D("h_pimin_p",   "#pi^{-} |#vec{p}|;|#vec{p}| [GeV/c];Counts", 100, 0, 20);
+    h_pimin_p   = new TH1D("h_pimin_p",   "#pi^{-} |#vec{p}|;|#vec{p}| [GeV/c];Counts", 100, 0, 40);
     h_pimin_pt  = new TH1D("h_pimin_pt",  "#pi^{-} p_{T};p_{T} [GeV/c];Counts",          100, 0,  5);
     h_pimin_eta = new TH1D("h_pimin_eta", "#pi^{-} #eta;#eta;Counts",                     100, -6, 6);
 
@@ -246,7 +246,7 @@ void create_histograms() {
     h_gam_eta    = new TH1D("h_gam_eta",    "#gamma #eta from #pi^{0};#eta;Counts",      100, -6, 6);
 
     h_ppi_opening_angle = new TH1D("h_ppi_opening_angle",
-        "Opening angle p-#pi^{-};#theta [rad];Counts", 100, 0, TMath::Pi());
+        "Opening angle p-#pi^{-};#theta [rad];Counts", 200, 0, 0.15);
     h_ppi_inv_mass = new TH1D("h_ppi_inv_mass",
         "Invariant mass p+#pi^{-};M [GeV/c^{2}];Counts", 200, 1.0, 1.3);
 
@@ -337,8 +337,9 @@ void process_event(const podio::Frame& event, int evt_id) {
                 decay_type = 2; neut_opt = daughters.at(1); pi0_opt = daughters.at(0);
             }
         } else {
-            for (const auto& d : daughters)
-                if (d.getPDG() == 3122) { decay_type = 3; break; }
+            // nd == 1 or nd > 2: anything with more than 2 daughters is a hadronic shower
+            if (daughters.size() > 2) decay_type = 3;
+            // nd == 1 stays at 4 (other)
         }
 
         if (neut_opt && pi0_opt) {
