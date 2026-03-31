@@ -18,6 +18,14 @@ All output goes into a single directory:
   ...                  # ~30 PNGs total
 ```
 
+### On ifarm 
+
+On ifarm you can simply run a .sh script
+
+```bash
+run_ifarm_mcpart_lambda_edm4hep.sh
+```
+
 ### TTree columns
 
 Same schema as `*.mcpart_lambda.csv`. One row per Lambda found in MCParticles.
