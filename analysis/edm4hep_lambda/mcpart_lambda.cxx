@@ -20,6 +20,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 
 #include "podio/Frame.h"
 #include "podio/ROOTReader.h"
+#include "podio/CollectionBase.h"
 #include <edm4hep/MCParticleCollection.h>
 
 #include <fmt/core.h>
@@ -167,6 +168,29 @@ TH1D* h_ppi_inv_mass      = nullptr;
 // Generator status
 TH1D* h_lam_gen_status = nullptr;
 
+// Event-level
+TH1D* h_evt_nparticles = nullptr;
+
+//------------------------------------------------------------------------------
+// frame_get: workaround for a podio::Frame::get<T>() template instantiation
+// issue observed on some builds. We go through the non-template overload that
+// returns a const CollectionBase* and cast to the wanted collection type.
+//------------------------------------------------------------------------------
+template <typename CollT>
+inline const CollT& frame_get(const podio::Frame& frame, const std::string& name) {
+    const podio::CollectionBase* base = frame.get(name);
+    if (!base) {
+        static const CollT empty{};
+        return empty;
+    }
+    const auto* typed = dynamic_cast<const CollT*>(base);
+    if (!typed) {
+        static const CollT empty{};
+        return empty;
+    }
+    return *typed;
+}
+
 //------------------------------------------------------------------------------
 // Helpers: kinematics
 //------------------------------------------------------------------------------
@@ -251,6 +275,9 @@ void create_histograms() {
         "Invariant mass p+#pi^{-};M [GeV/c^{2}];Counts", 200, 1.0, 1.3);
 
     h_lam_gen_status = new TH1D("h_lam_gen_status", "#Lambda generator status;status;Counts", 10, -0.5, 9.5);
+
+    h_evt_nparticles = new TH1D("h_evt_nparticles",
+        "Total MC particles per event;N particles;Events", 200, 0, 2000);
 }
 
 //------------------------------------------------------------------------------
@@ -268,7 +295,8 @@ void save_all_pngs() {
                     h_pi0_p, h_pi0_pt,
                     h_gam_energy, h_gam_eta,
                     h_ppi_opening_angle, h_ppi_inv_mass,
-                    h_lam_gen_status}) {
+                    h_lam_gen_status,
+                    h_evt_nparticles}) {
         png_save(h);
     }
     // 2D
@@ -309,7 +337,9 @@ void fill_daughter_hists(TH1D* h_p, TH1D* h_pt_h, TH1D* h_eta_h,
 // process_event
 //------------------------------------------------------------------------------
 void process_event(const podio::Frame& event, int evt_id) {
-    const auto& particles = event.get<MCParticleCollection>("MCParticles");
+    const auto& particles = frame_get<MCParticleCollection>(event, "MCParticles");
+
+    h_evt_nparticles->Fill(static_cast<double>(particles.size()));
 
     bool is_first_lambda = true;
 

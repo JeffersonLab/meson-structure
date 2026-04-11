@@ -30,3 +30,13 @@ target_link_libraries(mcpart_lambda
         EDM4HEP::edm4hep EDM4HEP::edm4hepDict
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
         fmt::fmt)
+
+add_executable(acceptance acceptance.cxx)
+
+target_link_libraries(acceptance
+        PRIVATE
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)
