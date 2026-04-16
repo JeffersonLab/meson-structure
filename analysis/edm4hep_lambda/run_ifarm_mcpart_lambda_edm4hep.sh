@@ -18,8 +18,9 @@ echo "[INFO]  Container image    : $IMG"
 echo "[INFO]  CSV_CONVERT_DIR    : $CSV_CONVERT_DIR"
 
 
-# Bind the whole campaign so script sees reco/ inside /work
+# Bind the whole campaign so script sees reco/ inside /work.
+# Input pattern uses a TChain wildcard — expanded inside the macro.
 singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
-   bash -c 'cd /code &&root -x -l -b -q '\''mcpart_lambda.cxx("/work/k_lambda_10x100_5000evt_0001.edm4hep.root,/work/k_lambda_10x100_5000evt_0002.edm4hep.root", "results_10x100", 50000)'\'''
+   bash -c 'cd /code && root -x -l -b -q '\''mcpart_lambda.cxx("/work/k_lambda_10x100_*.edm4hep.root", "results_10x100", 50000)'\'''
 
 echo "[DONE]  Conversion job finished"

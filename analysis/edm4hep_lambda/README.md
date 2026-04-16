@@ -53,14 +53,23 @@ Columns: `event`, `lam_is_first`, `lam_decay`, then 15 fields per particle with 
 
 ## Usage
 
+Input patterns may contain shell wildcards (e.g. `dir/*.root`) — they are
+expanded via [`TChain::Add`](https://root.cern/root/html602/TChain.html#TChain:Add@1)
+inside the program, so you can quote them to prevent the shell from expanding
+them first. Comma-separated lists of patterns are also accepted by the macro
+entry points.
+
 ### ROOT macro (no compilation needed)
 
 ```bash
 # single file
 root -x -l -b -q 'mcpart_lambda.cxx("input.edm4hep.root","output_dir")'
 
-# multiple files, comma-separated, limit to 5000 events
-root -x -l -b -q 'mcpart_lambda.cxx("f1.root,f2.root","output_dir",5000)'
+# wildcard, limit to 5000 events
+root -x -l -b -q 'mcpart_lambda.cxx("reco/*.edm4hep.root","output_dir",5000)'
+
+# mixing explicit files and wildcards, comma-separated
+root -x -l -b -q 'mcpart_lambda.cxx("f1.root,reco/*.root","output_dir",5000)'
 ```
 
 ### Compiled
@@ -68,8 +77,8 @@ root -x -l -b -q 'mcpart_lambda.cxx("f1.root,f2.root","output_dir",5000)'
 ```bash
 mkdir build && cd build
 cmake .. && make
-./mcpart_lambda -o output_dir input1.root input2.root
-./mcpart_lambda -n 5000 -o output_dir input1.root
+./mcpart_lambda -o output_dir "reco/*.edm4hep.root"
+./mcpart_lambda -n 5000 -o output_dir input1.root input2.root
 ```
 
 ### Dependencies
