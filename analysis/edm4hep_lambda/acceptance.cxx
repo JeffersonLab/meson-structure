@@ -12,14 +12,18 @@ R__LOAD_LIBRARY(libedm4eicDict)
 //   - total number of calorimeter hits per event
 //   - per-detector hit multiplicity for every tracker / calorimeter on the lists
 //
-// Usage (compiled):
-//   ./acceptance [-n N] [-o output_dir] input1.root [input2.root ...]
+// Input patterns support shell wildcards (e.g. "dir/*.root"), expanded via
+// TChain::Add — see https://root.cern/root/html602/TChain.html#TChain:Add@1
 //
-// Usage (ROOT macro, single file):
+// Usage (compiled):
+//   ./acceptance [-n N] [-o output_dir] "input*.root" [more_patterns ...]
+//
+// Usage (ROOT macro, single pattern):
 //   root -x -l -b -q 'acceptance.cxx("input.edm4hep.root","out_dir",100)'
 //
-// Usage (ROOT macro, multiple files — comma-separated):
-//   root -x -l -b -q 'acceptance.cxx("f1.root,f2.root","out_dir",100)'
+// Usage (ROOT macro, wildcards and/or comma-separated patterns):
+//   root -x -l -b -q 'acceptance.cxx("dir/*.root","out_dir",100)'
+//   root -x -l -b -q 'acceptance.cxx("f1.root,dir/*.root","out_dir",100)'
 
 // NOTE: we deliberately do NOT include edm4hep's SimTrackerHitCollection.h
 // or SimCalorimeterHitCollection.h. In the edm4hep version installed here
@@ -43,6 +47,9 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <TH1D.h>
 #include <TCanvas.h>
 #include <TSystem.h>
+#include <TChain.h>
+#include <TChainElement.h>
+#include <TObjArray.h>
 
 #include <map>
 #include <string>
@@ -227,10 +234,46 @@ std::vector<std::string> split_csv(const std::string& s) {
 }
 
 //------------------------------------------------------------------------------
+// expand_files_with_tchain: resolve a list of input patterns (which may
+// contain shell wildcards like "dir/*.root") into a concrete list of file
+// paths. We use TChain::Add purely for its wildcard-expansion machinery —
+// the actual event reading still goes through podio::ROOTReader, because
+// podio collections can't be read via the generic TTree interface.
+//
+// See https://root.cern/root/html602/TChain.html#TChain:Add@1
+//------------------------------------------------------------------------------
+std::vector<std::string> expand_files_with_tchain(const std::vector<std::string>& patterns) {
+    // "events" is the tree name podio writes event data into. TChain just
+    // stores it in each TChainElement; we never actually open the trees here.
+    TChain chain("events");
+    for (const auto& p : patterns) {
+        chain.Add(p.c_str());
+    }
+    std::vector<std::string> result;
+    TObjArray* files = chain.GetListOfFiles();
+    if (!files) return result;
+    for (int i = 0; i < files->GetEntries(); ++i) {
+        auto* el = dynamic_cast<TChainElement*>(files->At(i));
+        if (el) result.emplace_back(el->GetTitle());
+    }
+    return result;
+}
+
+//------------------------------------------------------------------------------
 // run
 //------------------------------------------------------------------------------
-void run(const std::vector<std::string>& infiles) {
+void run(const std::vector<std::string>& input_patterns) {
     prepare_output_dir(g_output_dir);
+
+    // Expand shell wildcards through TChain before touching podio.
+    auto infiles = expand_files_with_tchain(input_patterns);
+    if (infiles.empty()) {
+        fmt::print(stderr, "error: no input files matched the provided patterns\n");
+        for (const auto& p : input_patterns) fmt::print(stderr, "  pattern: {}\n", p);
+        return;
+    }
+    fmt::print("Resolved {} input file(s):\n", infiles.size());
+    for (const auto& f : infiles) fmt::print("  {}\n", f);
 
     std::string root_out = g_output_dir + "/acceptance.root";
     out_file = TFile::Open(root_out.c_str(), "RECREATE");
@@ -255,10 +298,11 @@ void run(const std::vector<std::string>& infiles) {
 
 //------------------------------------------------------------------------------
 // main (compiled mode)
-//   ./acceptance [-n N] [-o output_dir] input1.root [input2.root ...]
+//   ./acceptance [-n N] [-o output_dir] <pattern> [<pattern> ...]
+// Patterns may include shell wildcards (quote them to defer to TChain).
 //------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
-    std::vector<std::string> infiles;
+    std::vector<std::string> patterns;
     g_output_dir = "acceptance_out";
 
     for (int i = 1; i < argc; ++i) {
@@ -266,24 +310,26 @@ int main(int argc, char* argv[]) {
         if (a == "-n" && i + 1 < argc)      events_limit = std::atoi(argv[++i]);
         else if (a == "-o" && i + 1 < argc) g_output_dir = argv[++i];
         else if (a == "-h" || a == "--help") {
-            fmt::print("usage: {} [-n N] [-o output_dir] input1.root [...]\n", argv[0]);
+            fmt::print("usage: {} [-n N] [-o output_dir] <pattern> [<pattern> ...]\n", argv[0]);
+            fmt::print("  Patterns may use shell wildcards (e.g. \"dir/*.root\").\n");
             return 0;
         }
-        else if (!a.empty() && a[0] != '-') infiles.emplace_back(a);
+        else if (!a.empty() && a[0] != '-') patterns.emplace_back(a);
         else { fmt::print(stderr, "unknown option {}\n", a); return 1; }
     }
-    if (infiles.empty()) { fmt::print(stderr, "error: no input files\n"); return 1; }
+    if (patterns.empty()) { fmt::print(stderr, "error: no input patterns\n"); return 1; }
 
-    run(infiles);
+    run(patterns);
     return 0;
 }
 
 // ---------------------------------------------------------------------------
 // ROOT-macro entry point.
-// Single file:
+// Single pattern:
 //   root -x -l -b -q 'acceptance.cxx("input.edm4hep.root","out_dir",100)'
-// Multiple files (comma-separated):
-//   root -x -l -b -q 'acceptance.cxx("f1.root,f2.root","out_dir",100)'
+// Wildcards and/or comma-separated patterns:
+//   root -x -l -b -q 'acceptance.cxx("dir/*.root","out_dir",100)'
+//   root -x -l -b -q 'acceptance.cxx("f1.root,dir/*.root","out_dir",100)'
 // ---------------------------------------------------------------------------
 void acceptance(const char* infiles_csv,
                 const char* output_dir = "acceptance_out",
@@ -298,11 +344,11 @@ void acceptance(const char* infiles_csv,
     events_limit   = events;
     total_evt_seen = 0;
 
-    auto infiles = split_csv(infiles_csv);
-    if (infiles.empty()) {
-        fmt::print(stderr, "error: no input files in '{}'\n", infiles_csv);
+    auto patterns = split_csv(infiles_csv);
+    if (patterns.empty()) {
+        fmt::print(stderr, "error: no input patterns in '{}'\n", infiles_csv);
         return;
     }
 
-    run(infiles);
+    run(patterns);
 }
