@@ -245,12 +245,12 @@ void create_histograms() {
     h_lam_decay_type->GetXaxis()->SetBinLabel(4, "Shower");
     h_lam_decay_type->GetXaxis()->SetBinLabel(5, "Other");
 
-    h_lam_nd = new TH1D("h_lam_nd", "#Lambda N daughters;N daughters;Counts", 25, -0.5, 24.5);
+    h_lam_nd = new TH1D("h_lam_nd", "#Lambda N daughters;N daughters;Counts", 10, -0.5, 9.5);
 
     h_lam_decay_z  = new TH1D("h_lam_decay_z",  "#Lambda decay z;z [mm];Counts",        150, -5000, 40000);
-    h_lam_decay_r  = new TH1D("h_lam_decay_r",  "#Lambda decay r;r [mm];Counts",        100,     0,  2000);
-    h_lam_decay_rz = new TH2D("h_lam_decay_rz", "#Lambda decay vertex;z [mm];r [mm]",   150, -5000, 40000, 100, 0, 2000);
-    h_lam_decay_xy = new TH2D("h_lam_decay_xy", "#Lambda decay vertex;x [mm];y [mm]",   200, -2000, 2000, 200, -2000, 2000);
+    h_lam_decay_r  = new TH1D("h_lam_decay_r",  "#Lambda decay r;r [mm];Counts",        100,     0,  500);
+    h_lam_decay_rz = new TH2D("h_lam_decay_rz", "#Lambda decay vertex;z [mm];r [mm]",   150, -5000, 40000, 100, 0, 500);
+    h_lam_decay_xy = new TH2D("h_lam_decay_xy", "#Lambda decay vertex;x [mm];y [mm]",   200, -500, 500, 200, -500, 500);
 
     h_lam_p_vs_eta  = new TH2D("h_lam_p_vs_eta",  "#Lambda |p| vs #eta;#eta;|p| [GeV/c]",    100, -6, 6, 100, 0, 200);
     h_lam_pt_vs_eta = new TH2D("h_lam_pt_vs_eta", "#Lambda p_{T} vs #eta;#eta;p_{T} [GeV/c]",100, -6, 6, 100, 0,  5);
@@ -281,8 +281,7 @@ void create_histograms() {
 
     h_lam_gen_status = new TH1D("h_lam_gen_status", "#Lambda generator status;status;Counts", 10, -0.5, 9.5);
 
-    h_evt_nparticles = new TH1D("h_evt_nparticles",
-        "Total MC particles per event;N particles;Events", 200, 0, 2000);
+    h_evt_nparticles = new TH1D("h_evt_nparticles", "Total MC particles per event;N particles;Events", 100, 0-0.5, 100-0.5);
 }
 
 //------------------------------------------------------------------------------
@@ -473,6 +472,9 @@ void process_event(const podio::Frame& event, int evt_id) {
         }
 
         is_first_lambda = false;
+        // (!!!)
+        break;  // (!!!) We want only the first Lambda in each event, i.e. sullivan lambda. Don't care about the rest. 
+        //^^^^^ Look above!
     }
 }
 

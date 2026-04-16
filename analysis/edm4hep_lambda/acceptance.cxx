@@ -138,20 +138,19 @@ void png_save(TH1* h) {
 // create_histograms
 //------------------------------------------------------------------------------
 void create_histograms() {
-    h_evt_total_tracker_hits = new TH1D("h_evt_total_tracker_hits",
-        "Total tracker hits per event;N hits;Events", 200, 0, 20000);
+    h_evt_total_tracker_hits = new TH1D("h_evt_total_tracker_hits", "Total tracker hits per event;N hits;Events", 200, 0, 3000);
     h_evt_total_calo_hits = new TH1D("h_evt_total_calo_hits",
-        "Total calorimeter hits per event;N hits;Events", 200, 0, 20000);
+        "Total calorimeter hits per event;N hits;Events", 200, 0, 3000);
 
     for (const auto& name : tracker_collections) {
         std::string hname = "h_tracker_" + name;
         std::string title = fmt::format("{} hits per event;N hits;Events", name);
-        h_tracker_hits[name] = new TH1D(hname.c_str(), title.c_str(), 200, 0, 2000);
+        h_tracker_hits[name] = new TH1D(hname.c_str(), title.c_str(), 200, 0, 800);
     }
     for (const auto& name : calorimeter_collections) {
         std::string hname = "h_calo_" + name;
         std::string title = fmt::format("{} hits per event;N hits;Events", name);
-        h_calo_hits[name] = new TH1D(hname.c_str(), title.c_str(), 200, 0, 2000);
+        h_calo_hits[name] = new TH1D(hname.c_str(), title.c_str(), 200, 0, 800);
     }
 }
 

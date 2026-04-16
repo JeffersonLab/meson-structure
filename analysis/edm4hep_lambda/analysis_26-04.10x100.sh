@@ -26,6 +26,6 @@ singularity exec \
     -B "$CODE_DIR":/code \
     -B "$OUTPUT_DIR":/output \
     "$IMG" \
-    bash -c 'cd /code && root -x -l -b -q '"'"'mcpart_lambda.cxx("/work/*.edm4hep.root", "/output/ana_26-04_10x100")'"'"''
+    bash -c 'cd /code && root -x -l -b -q '"'"'mcpart_lambda.cxx("/work/*.edm4hep.root", "/output/ana_10x100_26-04")'"'"''
 
 echo "[DONE]  Job finished"
