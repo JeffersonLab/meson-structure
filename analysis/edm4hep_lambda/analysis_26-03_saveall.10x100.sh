@@ -26,6 +26,14 @@ singularity exec \
     -B "$CODE_DIR":/code \
     -B "$OUTPUT_DIR":/output \
     "$IMG" \
-    bash -c 'cd /code && root -x -l -b -q '"'"'mcpart_lambda.cxx("/work/*.edm4hep.root", "/output/ana_10x100_26-03_saveall")'"'"''
+    bash -c 'cd /code && root -x -l -b -q '"'"'mcpart_lambda.cxx("/work/*.edm4hep.root", "/output/ana_lam_10x100_26-03_saveall", 5000)'"'"''
+
+
+singularity exec \
+    -B "$CAMPAIGN":/work \
+    -B "$CODE_DIR":/code \
+    -B "$OUTPUT_DIR":/output \
+    "$IMG" \
+    bash -c 'cd /code && root -x -l -b -q '"'"'acceptance.cxx("/work/*.edm4hep.root", "/output/ana_acc_10x100_26-03_saveall", 5000)'"'"''
 
 echo "[DONE]  Job finished"

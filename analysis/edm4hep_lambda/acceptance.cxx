@@ -50,6 +50,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <TSystem.h>
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -106,6 +107,11 @@ TH1D* h_evt_total_calo_hits    = nullptr;
 std::map<std::string, TH1D*> h_tracker_hits;
 std::map<std::string, TH1D*> h_calo_hits;
 
+// Histograms that should be drawn with a logarithmic Y axis
+std::set<std::string> g_logy_histograms = {
+    "h_tracker_ForwardOffMTrackerHits",
+};
+
 //------------------------------------------------------------------------------
 // coll_size: return the number of hits in the named collection, or 0 if the
 // collection is not present in the event. Uses the non-template
@@ -124,6 +130,8 @@ void png_save(TH1* h) {
     if (!h) return;
     TCanvas c("c_tmp", "", 800, 600);
     c.SetLeftMargin(0.12);
+    if (g_logy_histograms.count(h->GetName()))
+        c.SetLogy();
     if (h->InheritsFrom("TH2")) {
         c.SetRightMargin(0.14);
         h->Draw("COLZ");
@@ -138,20 +146,38 @@ void png_save(TH1* h) {
 // create_histograms
 //------------------------------------------------------------------------------
 void create_histograms() {
-    h_evt_total_tracker_hits = new TH1D("h_evt_total_tracker_hits", "Total tracker hits per event;N hits;Events", 200, 0, 3000);
+    h_evt_total_tracker_hits = new TH1D("h_evt_total_tracker_hits",
+        "Total tracker hits per event;N hits;Events",       200, 0, 3000);
     h_evt_total_calo_hits = new TH1D("h_evt_total_calo_hits",
-        "Total calorimeter hits per event;N hits;Events", 200, 0, 3000);
+        "Total calorimeter hits per event;N hits;Events",   200, 0, 3000);
 
-    for (const auto& name : tracker_collections) {
-        std::string hname = "h_tracker_" + name;
-        std::string title = fmt::format("{} hits per event;N hits;Events", name);
-        h_tracker_hits[name] = new TH1D(hname.c_str(), title.c_str(), 200, 0, 800);
-    }
-    for (const auto& name : calorimeter_collections) {
-        std::string hname = "h_calo_" + name;
-        std::string title = fmt::format("{} hits per event;N hits;Events", name);
-        h_calo_hits[name] = new TH1D(hname.c_str(), title.c_str(), 200, 0, 800);
-    }
+    // --- Tracker detectors (individual limits per detector) ---
+    h_tracker_hits["B0TrackerHits"]          = new TH1D("h_tracker_B0TrackerHits",          "B0TrackerHits hits per event;N hits;Events",          100, 0,   50);
+    h_tracker_hits["BackwardMPGDEndcapHits"] = new TH1D("h_tracker_BackwardMPGDEndcapHits", "BackwardMPGDEndcapHits hits per event;N hits;Events", 100, 0,  200);
+    h_tracker_hits["DIRCBarHits"]            = new TH1D("h_tracker_DIRCBarHits",            "DIRCBarHits hits per event;N hits;Events",            200, 0,  800);
+    h_tracker_hits["DRICHHits"]              = new TH1D("h_tracker_DRICHHits",              "DRICHHits hits per event;N hits;Events",              200, 0,  800);
+    h_tracker_hits["ForwardMPGDEndcapHits"]  = new TH1D("h_tracker_ForwardMPGDEndcapHits",  "ForwardMPGDEndcapHits hits per event;N hits;Events",  100, 0,  200);
+    h_tracker_hits["ForwardOffMTrackerHits"] = new TH1D("h_tracker_ForwardOffMTrackerHits", "ForwardOffMTrackerHits hits per event;N hits;Events", 100, 0,   50);
+    h_tracker_hits["ForwardRomanPotHits"]    = new TH1D("h_tracker_ForwardRomanPotHits",    "ForwardRomanPotHits hits per event;N hits;Events",    100, 0,   50);
+    h_tracker_hits["LumiSpecTrackerHits"]    = new TH1D("h_tracker_LumiSpecTrackerHits",    "LumiSpecTrackerHits hits per event;N hits;Events",    100, 0,  100);
+    h_tracker_hits["MPGDBarrelHits"]         = new TH1D("h_tracker_MPGDBarrelHits",         "MPGDBarrelHits hits per event;N hits;Events",         100, 0,  200);
+    h_tracker_hits["OuterMPGDBarrelHits"]    = new TH1D("h_tracker_OuterMPGDBarrelHits",    "OuterMPGDBarrelHits hits per event;N hits;Events",    100, 0,  200);
+    h_tracker_hits["RICHEndcapNHits"]        = new TH1D("h_tracker_RICHEndcapNHits",        "RICHEndcapNHits hits per event;N hits;Events",        200, 0,  800);
+    h_tracker_hits["SiBarrelHits"]           = new TH1D("h_tracker_SiBarrelHits",           "SiBarrelHits hits per event;N hits;Events",           100, 0,  200);
+    h_tracker_hits["TOFBarrelHits"]          = new TH1D("h_tracker_TOFBarrelHits",          "TOFBarrelHits hits per event;N hits;Events",          100, 0,  200);
+    h_tracker_hits["TOFEndcapHits"]          = new TH1D("h_tracker_TOFEndcapHits",          "TOFEndcapHits hits per event;N hits;Events",          100, 0,  200);
+    h_tracker_hits["TaggerTrackerHits"]      = new TH1D("h_tracker_TaggerTrackerHits",      "TaggerTrackerHits hits per event;N hits;Events",      100, 0,  100);
+    h_tracker_hits["TrackerEndcapHits"]      = new TH1D("h_tracker_TrackerEndcapHits",      "TrackerEndcapHits hits per event;N hits;Events",      100, 0,  200);
+    h_tracker_hits["VertexBarrelHits"]       = new TH1D("h_tracker_VertexBarrelHits",       "VertexBarrelHits hits per event;N hits;Events",       100, 0,  200);
+
+    // --- Calorimeter detectors (individual limits per detector) ---
+    h_calo_hits["EcalFarForwardZDCHits"]  = new TH1D("h_calo_EcalFarForwardZDCHits",  "EcalFarForwardZDCHits hits per event;N hits;Events",  200, 0,  800);
+    h_calo_hits["B0ECalHits"]             = new TH1D("h_calo_B0ECalHits",             "B0ECalHits hits per event;N hits;Events",             100, 0,  200);
+    h_calo_hits["EcalEndcapPHits"]        = new TH1D("h_calo_EcalEndcapPHits",        "EcalEndcapPHits hits per event;N hits;Events",        200, 0,  800);
+    h_calo_hits["EcalEndcapPInsertHits"]  = new TH1D("h_calo_EcalEndcapPInsertHits",  "EcalEndcapPInsertHits hits per event;N hits;Events",  100, 0,  200);
+    h_calo_hits["HcalFarForwardZDCHits"]  = new TH1D("h_calo_HcalFarForwardZDCHits",  "HcalFarForwardZDCHits hits per event;N hits;Events",  200, 0,  800);
+    h_calo_hits["HcalEndcapPInsertHits"]  = new TH1D("h_calo_HcalEndcapPInsertHits",  "HcalEndcapPInsertHits hits per event;N hits;Events",  100, 0,  200);
+    h_calo_hits["LFHCALHits"]             = new TH1D("h_calo_LFHCALHits",             "LFHCALHits hits per event;N hits;Events",             200, 0,  800);
 }
 
 //------------------------------------------------------------------------------
