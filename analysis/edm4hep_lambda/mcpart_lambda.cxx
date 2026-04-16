@@ -38,6 +38,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <TMath.h>
 #include <TCanvas.h>
 #include <TSystem.h>
+#include <TStyle.h>
 
 #include <string>
 #include <vector>
@@ -231,6 +232,9 @@ void png_save(TH1* h) {
 // create_histograms
 //------------------------------------------------------------------------------
 void create_histograms() {
+    // entries + mean + stddev + integral
+    gStyle->SetOptStat(1001111);
+
     h_lam_p    = new TH1D("h_lam_p",    "#Lambda |#vec{p}|;|#vec{p}| [GeV/c];Counts",  100,  0, 200);
     h_lam_pt   = new TH1D("h_lam_pt",   "#Lambda p_{T};p_{T} [GeV/c];Counts",           100,  0,   5);
     h_lam_pz   = new TH1D("h_lam_pz",   "#Lambda p_{z};p_{z} [GeV/c];Counts",           120, -10, 200);

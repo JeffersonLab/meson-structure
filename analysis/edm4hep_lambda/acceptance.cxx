@@ -48,6 +48,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <TH1D.h>
 #include <TCanvas.h>
 #include <TSystem.h>
+#include <TStyle.h>
 
 #include <map>
 #include <set>
@@ -146,6 +147,9 @@ void png_save(TH1* h) {
 // create_histograms
 //------------------------------------------------------------------------------
 void create_histograms() {
+    // entries + mean + stddev + integral
+    gStyle->SetOptStat(1001111);
+
     h_evt_total_tracker_hits = new TH1D("h_evt_total_tracker_hits",
         "Total tracker hits per event;N hits;Events",       200, 0, 3000);
     h_evt_total_calo_hits = new TH1D("h_evt_total_calo_hits",
