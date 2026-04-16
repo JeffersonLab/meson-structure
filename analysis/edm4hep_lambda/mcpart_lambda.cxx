@@ -9,17 +9,18 @@ R__LOAD_LIBRARY(libedm4eicDict)
 // Reads edm4hep/edm4eic MCParticles, finds Lambda decays,
 // writes ROOT histograms + PNGs + a flat TTree (same columns as mcpart_lambda CSV).
 //
-// Input patterns support shell wildcards (e.g. "dir/*.root"), expanded via
-// TChain::Add — see https://root.cern/root/html602/TChain.html#TChain:Add@1
+// Input patterns support shell wildcards (e.g. "dir/*.root").
+// podio::ROOTReader::openFiles() passes each pattern to TChain::Add, which
+// handles wildcard expansion natively.
 //
 // Usage (compiled):
 //   ./mcpart_lambda [-n N] [-o output_dir] "input*.root" [more_patterns ...]
 //
-// Usage (ROOT macro, single pattern):
+// Usage (ROOT macro, single pattern or wildcard):
 //   root -x -l -b -q 'mcpart_lambda.cxx("input.edm4hep.root","out_dir",100)'
-//
-// Usage (ROOT macro, wildcards and/or comma-separated patterns):
 //   root -x -l -b -q 'mcpart_lambda.cxx("dir/*.root","out_dir",100)'
+//
+// Usage (ROOT macro, comma-separated patterns/wildcards):
 //   root -x -l -b -q 'mcpart_lambda.cxx("f1.root,dir/*.root","out_dir",100)'
 
 #include "podio/Frame.h"
@@ -37,9 +38,6 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <TMath.h>
 #include <TCanvas.h>
 #include <TSystem.h>
-#include <TChain.h>
-#include <TChainElement.h>
-#include <TObjArray.h>
 
 #include <string>
 #include <vector>
@@ -479,28 +477,6 @@ void process_event(const podio::Frame& event, int evt_id) {
 }
 
 //------------------------------------------------------------------------------
-// process_file
-//------------------------------------------------------------------------------
-void process_file(const std::string& fname) {
-    podio::ROOTReader rdr;
-    try {
-        rdr.openFile(fname);
-    } catch (const std::runtime_error& e) {
-        fmt::print(stderr, "Error opening file {}: {}\n", fname, e.what());
-        return;
-    }
-    const auto nEv = rdr.getEntries(podio::Category::Event);
-    fmt::print("  File: {} ({} events)\n", fname, nEv);
-
-    for (unsigned ie = 0; ie < nEv; ++ie) {
-        if (events_limit > 0 && total_evt_seen >= events_limit) return;
-        podio::Frame evt(rdr.readNextEntry(podio::Category::Event));
-        process_event(evt, total_evt_seen);
-        ++total_evt_seen;
-    }
-}
-
-//------------------------------------------------------------------------------
 // prepare_output_dir: create dir (ok if already exists)
 //------------------------------------------------------------------------------
 void prepare_output_dir(const std::string& dir) {
@@ -521,46 +497,26 @@ std::vector<std::string> split_csv(const std::string& s) {
 }
 
 //------------------------------------------------------------------------------
-// expand_files_with_tchain: resolve a list of input patterns (which may
-// contain shell wildcards like "dir/*.root") into a concrete list of file
-// paths. We use TChain::Add purely for its wildcard-expansion machinery —
-// the actual event reading still goes through podio::ROOTReader, because
-// podio collections can't be read via the generic TTree interface.
-//
-// See https://root.cern/root/html602/TChain.html#TChain:Add@1
-//------------------------------------------------------------------------------
-std::vector<std::string> expand_files_with_tchain(const std::vector<std::string>& patterns) {
-    // "events" is the tree name podio writes event data into. TChain just
-    // stores it in each TChainElement; we never actually open the trees here.
-    TChain chain("events");
-    for (const auto& p : patterns) {
-        chain.Add(p.c_str());
-    }
-    std::vector<std::string> result;
-    TObjArray* files = chain.GetListOfFiles();
-    if (!files) return result;
-    for (int i = 0; i < files->GetEntries(); ++i) {
-        auto* el = dynamic_cast<TChainElement*>(files->At(i));
-        if (el) result.emplace_back(el->GetTitle());
-    }
-    return result;
-}
-
-//------------------------------------------------------------------------------
 // run: shared logic for both entry points
 //------------------------------------------------------------------------------
-void run(const std::vector<std::string>& input_patterns) {
+void run(const std::vector<std::string>& infiles) {
     prepare_output_dir(g_output_dir);
 
-    // Expand shell wildcards through TChain before touching podio.
-    auto infiles = expand_files_with_tchain(input_patterns);
-    if (infiles.empty()) {
-        fmt::print(stderr, "error: no input files matched the provided patterns\n");
-        for (const auto& p : input_patterns) fmt::print(stderr, "  pattern: {}\n", p);
+    fmt::print("Input pattern(s):\n");
+    for (const auto& f : infiles) fmt::print("  {}\n", f);
+
+    podio::ROOTReader rdr;
+    try {
+        // openFiles passes each pattern to TChain::Add, which expands wildcards.
+        rdr.openFiles(infiles);
+    } catch (const std::runtime_error& e) {
+        fmt::print(stderr, "error opening files: {}\n", e.what());
         return;
     }
-    fmt::print("Resolved {} input file(s):\n", infiles.size());
-    for (const auto& f : infiles) fmt::print("  {}\n", f);
+
+    const auto nEv  = rdr.getEntries(podio::Category::Event);
+    const long limit = (events_limit > 0) ? events_limit : static_cast<long>(nEv);
+    fmt::print("Total events in chain: {}  (will process: {})\n", nEv, limit);
 
     std::string root_out = g_output_dir + "/mcpart_lambda.root";
     out_file = TFile::Open(root_out.c_str(), "RECREATE");
@@ -572,9 +528,13 @@ void run(const std::vector<std::string>& input_patterns) {
     create_histograms();
     setup_tree();
 
-    for (const auto& f : infiles) {
-        process_file(f);
+    for (unsigned ie = 0; ie < nEv; ++ie) {
         if (events_limit > 0 && total_evt_seen >= events_limit) break;
+        podio::Frame evt(rdr.readNextEntry(podio::Category::Event));
+        process_event(evt, total_evt_seen);
+        ++total_evt_seen;
+        if (total_evt_seen % 1000 == 0)
+            fmt::print("  ... {} / {} events processed\n", total_evt_seen, limit);
     }
 
     save_all_pngs();
