@@ -274,8 +274,8 @@ In addition to the particle blocks, each row starts with two **event/decay** col
 | Code | Meaning                          | Daughter rule                 |
 |:----:|----------------------------------|-------------------------------|
 |  0   | Not decayed                      | `daughters.size() == 0`       |
-|  1   | Λ → p π⁻                         | 2 daughters: {2212, −211}     |
-|  2   | Λ → n π⁰                         | 2 daughters: {2112, 111}      |
+|  1   | Λ → p π⁻                         | 2 daughters: PDG 2212 + PDG -211   |
+|  2   | Λ → n π⁰                         | 2 daughters: PDG 2112 + PDG 111    |
 |  3   | Shower                           | `daughters.size() > 2` (any)  |
 |  4   | Only p                           | 1 daughter, PDG 2212          |
 |  5   | Only π⁺                          | 1 daughter, PDG 211           |
