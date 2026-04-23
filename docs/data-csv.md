@@ -261,6 +261,7 @@ For each particle prefix, the next columns are saved:
 13. `{0}_epz`    -   epz
 14. `{0}_time`   -   time - Time of origin
 15. `{0}_nd`     -   nd - Number of daughters
+16. `{0}_np`     -   np - Number of parents
 
 In addition to the particle blocks, each row starts with two **event/decay** columns:
 
@@ -287,13 +288,13 @@ So in the end the columns are:
 
 ```yaml
 event,lam_is_first,lam_decay,
-lam_id,lam_pdg,lam_gen,lam_sim,lam_px,lam_py,lam_pz,lam_vx,lam_vy,lam_vz,lam_epx,lam_epy,lam_epz,lam_time,lam_nd,
-prot_id,prot_pdg,prot_gen,prot_sim,prot_px,prot_py,prot_pz,prot_vx,prot_vy,prot_vz,prot_epx,prot_epy,prot_epz,prot_time,prot_nd,
-pimin_id,pimin_pdg,pimin_gen,pimin_sim,pimin_px,pimin_py,pimin_pz,pimin_vx,pimin_vy,pimin_vz,pimin_epx,pimin_epy,pimin_epz,pimin_time,pimin_nd,
-neut_id,neut_pdg,neut_gen,neut_sim,neut_px,neut_py,neut_pz,neut_vx,neut_vy,neut_vz,neut_epx,neut_epy,neut_epz,neut_time,neut_nd,
-pizero_id,pizero_pdg,pizero_gen,pizero_sim,pizero_px,pizero_py,pizero_pz,pizero_vx,pizero_vy,pizero_vz,pizero_epx,pizero_epy,pizero_epz,pizero_time,pizero_nd,
-gamone_id,gamone_pdg,gamone_gen,gamone_sim,gamone_px,gamone_py,gamone_pz,gamone_vx,gamone_vy,gamone_vz,gamone_epx,gamone_epy,gamone_epz,gamone_time,gamone_nd,
-gamtwo_id,gamtwo_pdg,gamtwo_gen,gamtwo_sim,gamtwo_px,gamtwo_py,gamtwo_pz,gamtwo_vx,gamtwo_vy,gamtwo_vz,gamtwo_epx,gamtwo_epy,gamtwo_epz,gamtwo_time,gamtwo_nd
+lam_id,lam_pdg,lam_gen,lam_sim,lam_px,lam_py,lam_pz,lam_vx,lam_vy,lam_vz,lam_epx,lam_epy,lam_epz,lam_time,lam_nd,lam_np,
+prot_id,prot_pdg,prot_gen,prot_sim,prot_px,prot_py,prot_pz,prot_vx,prot_vy,prot_vz,prot_epx,prot_epy,prot_epz,prot_time,prot_nd,prot_np,
+pimin_id,pimin_pdg,pimin_gen,pimin_sim,pimin_px,pimin_py,pimin_pz,pimin_vx,pimin_vy,pimin_vz,pimin_epx,pimin_epy,pimin_epz,pimin_time,pimin_nd,pimin_np,
+neut_id,neut_pdg,neut_gen,neut_sim,neut_px,neut_py,neut_pz,neut_vx,neut_vy,neut_vz,neut_epx,neut_epy,neut_epz,neut_time,neut_nd,neut_np,
+pizero_id,pizero_pdg,pizero_gen,pizero_sim,pizero_px,pizero_py,pizero_pz,pizero_vx,pizero_vy,pizero_vz,pizero_epx,pizero_epy,pizero_epz,pizero_time,pizero_nd,pizero_np,
+gamone_id,gamone_pdg,gamone_gen,gamone_sim,gamone_px,gamone_py,gamone_pz,gamone_vx,gamone_vy,gamone_vz,gamone_epx,gamone_epy,gamone_epz,gamone_time,gamone_nd,gamone_np,
+gamtwo_id,gamtwo_pdg,gamtwo_gen,gamtwo_sim,gamtwo_px,gamtwo_py,gamtwo_pz,gamtwo_vx,gamtwo_vy,gamtwo_vz,gamtwo_epx,gamtwo_epy,gamtwo_epz,gamtwo_time,gamtwo_nd,gamtwo_np
 ```
 
 Notes:
@@ -348,8 +349,8 @@ Full header ordering:
 
 ```yaml
 event,lam_is_first,lam_decay,
-lam_id,…,lam_nd, prot_id,…,prot_nd, pimin_id,…,pimin_nd,
-neut_id,…,neut_nd, pizero_id,…,pizero_nd, gamone_id,…,gamone_nd, gamtwo_id,…,gamtwo_nd,
+lam_id,…,lam_np, prot_id,…,prot_np, pimin_id,…,pimin_np,
+neut_id,…,neut_np, pizero_id,…,pizero_np, gamone_id,…,gamone_np, gamtwo_id,…,gamtwo_np,
 neut_HcalFarForwardZDCHits, neut_HcalEndcapPInsertHits, neut_LFHCALHits,
 gamone_EcalFarForwardZDCHits, gamtwo_EcalFarForwardZDCHits,
 gamone_B0ECalHits,             gamtwo_B0ECalHits,
@@ -401,7 +402,7 @@ Full header ordering:
 
 ```yaml
 event,lam_is_first,lam_decay,
-lam_id,…,lam_nd, prot_id,…,prot_nd, pimin_id,…,pimin_nd,
+lam_id,…,lam_np, prot_id,…,prot_np, pimin_id,…,pimin_np,
 prot_<tracker-1>,…,prot_<tracker-17>,
 prot_<calo-1>,…,prot_<calo-7>,
 pimin_<tracker-1>,…,pimin_<tracker-17>,
@@ -536,44 +537,44 @@ Event / truth metadata:
 3. `true_prot_id`  — MCParticle index of the true Lambda daughter proton (−1 if none)
 4. `true_pi_id`    — MCParticle index of the true Lambda daughter π⁻ (−1 if none)
 
-Pion candidate — MCParticle info (same 15-field schema as other tables, prefix `pi`):
+Pion candidate — MCParticle info (same 16-field schema as other tables, prefix `pi`):
 
-5–19. `pi_id, pi_pdg, pi_gen, pi_sim, pi_px, pi_py, pi_pz, pi_vx, pi_vy, pi_vz, pi_epx, pi_epy, pi_epz, pi_time, pi_nd`
+5–20. `pi_id, pi_pdg, pi_gen, pi_sim, pi_px, pi_py, pi_pz, pi_vx, pi_vy, pi_vz, pi_epx, pi_epy, pi_epz, pi_time, pi_nd, pi_np`
 
 Pion candidate — B0 tracker hit info:
 
-20. `pi_nhits_b0`             — number of B0TrackerHits for this candidate
-21. `pi_first_b0_x`           — x of first registered B0TrackerHit [mm]
-22. `pi_first_b0_y`           — y of first registered B0TrackerHit [mm]
-23. `pi_first_b0_z`           — z of first registered B0TrackerHit [mm]
+21. `pi_nhits_b0`             — number of B0TrackerHits for this candidate
+22. `pi_first_b0_x`           — x of first registered B0TrackerHit [mm]
+23. `pi_first_b0_y`           — y of first registered B0TrackerHit [mm]
+24. `pi_first_b0_z`           — z of first registered B0TrackerHit [mm]
 
 Pion candidate — B0 ECal contribution:
 
-24. `pi_ecal_contrib`         — 1 if candidate left ≥1 hit contribution in B0ECalHits, else 0
-25. `pi_first_ecal_x`         — x of first B0ECal cell with contribution [mm] (0 if none)
-26. `pi_first_ecal_y`         — y of first B0ECal cell with contribution [mm] (0 if none)
-27. `pi_first_ecal_z`         — z of first B0ECal cell with contribution [mm] (0 if none)
+25. `pi_ecal_contrib`         — 1 if candidate left ≥1 hit contribution in B0ECalHits, else 0
+26. `pi_first_ecal_x`         — x of first B0ECal cell with contribution [mm] (0 if none)
+27. `pi_first_ecal_y`         — y of first B0ECal cell with contribution [mm] (0 if none)
+28. `pi_first_ecal_z`         — z of first B0ECal cell with contribution [mm] (0 if none)
 
 Proton candidate — MCParticle info (prefix `prot`):
 
-28–42. `prot_id, prot_pdg, prot_gen, prot_sim, prot_px, prot_py, prot_pz, prot_vx, prot_vy, prot_vz, prot_epx, prot_epy, prot_epz, prot_time, prot_nd`
+29–44. `prot_id, prot_pdg, prot_gen, prot_sim, prot_px, prot_py, prot_pz, prot_vx, prot_vy, prot_vz, prot_epx, prot_epy, prot_epz, prot_time, prot_nd, prot_np`
 
 Proton candidate — Roman Pot hit info:
 
-43. `prot_nhits_rp`           — number of ForwardRomanPotHits for this candidate
-44. `prot_first_rp_x`         — x of first registered ForwardRomanPotHit [mm]
-45. `prot_first_rp_y`         — y of first registered ForwardRomanPotHit [mm]
-46. `prot_first_rp_z`         — z of first registered ForwardRomanPotHit [mm]
+45. `prot_nhits_rp`           — number of ForwardRomanPotHits for this candidate
+46. `prot_first_rp_x`         — x of first registered ForwardRomanPotHit [mm]
+47. `prot_first_rp_y`         — y of first registered ForwardRomanPotHit [mm]
+48. `prot_first_rp_z`         — z of first registered ForwardRomanPotHit [mm]
 
 Complete column list:
 
 ```
 evt,
 is_true_lam,true_prot_id,true_pi_id,
-pi_id,pi_pdg,pi_gen,pi_sim,pi_px,pi_py,pi_pz,pi_vx,pi_vy,pi_vz,pi_epx,pi_epy,pi_epz,pi_time,pi_nd,
+pi_id,pi_pdg,pi_gen,pi_sim,pi_px,pi_py,pi_pz,pi_vx,pi_vy,pi_vz,pi_epx,pi_epy,pi_epz,pi_time,pi_nd,pi_np,
 pi_nhits_b0,pi_first_b0_x,pi_first_b0_y,pi_first_b0_z,
 pi_ecal_contrib,pi_first_ecal_x,pi_first_ecal_y,pi_first_ecal_z,
-prot_id,prot_pdg,prot_gen,prot_sim,prot_px,prot_py,prot_pz,prot_vx,prot_vy,prot_vz,prot_epx,prot_epy,prot_epz,prot_time,prot_nd,
+prot_id,prot_pdg,prot_gen,prot_sim,prot_px,prot_py,prot_pz,prot_vx,prot_vy,prot_vz,prot_epx,prot_epy,prot_epz,prot_time,prot_nd,prot_np,
 prot_nhits_rp,prot_first_rp_x,prot_first_rp_y,prot_first_rp_z
 ```
 

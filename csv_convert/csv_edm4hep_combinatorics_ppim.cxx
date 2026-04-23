@@ -48,12 +48,12 @@ bool header_written = false;
  */
 inline std::string particle_to_csv(const std::optional<MCParticle>& prt) {
     if (!prt) {
-        return ",,,,,,,,,,,,,,"; // 14 commas for 15 empty fields
+        return ",,,,,,,,,,,,,,,"; // 15 commas for 16 empty fields
     }
     const auto mom = prt->getMomentum();
     const auto vtx = prt->getVertex();
     const auto ep = prt->getEndpoint();
-    return fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
+    return fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
                                          prt->getObjectID().index, // 01  id
                                          prt->getPDG(), // 02  pdg
                                          prt->getGeneratorStatus(), // 03  gen
@@ -68,7 +68,8 @@ inline std::string particle_to_csv(const std::optional<MCParticle>& prt) {
                                          ep.y, // 12  epy
                                          ep.z, // 13  epz
                                          prt->getTime(), // 14  time
-                                         prt->getDaughters().size() // 15  nd
+                                         prt->getDaughters().size(), // 15  nd
+                                         prt->getParents().size() // 16  np
     );
 }
 
@@ -91,7 +92,8 @@ std::string make_particle_header(const std::string& prefix) {
         "{0}_epy,"    // 12
         "{0}_epz,"    // 13
         "{0}_time,"   // 14
-        "{0}_nd",     // 15 (no trailing comma)
+        "{0}_nd,"     // 15
+        "{0}_np",     // 16 (no trailing comma)
         prefix
     );
 }
