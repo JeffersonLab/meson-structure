@@ -98,25 +98,22 @@ def output_name_func(input_file, output_dir):
 
 def process_energy(config, config_path, energy):
     """Process all files for a specific energy."""
-
-    output_dir = config.csv_dd4hep_output
+    
     csv_convert_dir = config.get('csv_convert_dir', csv_convert_dir_default)
 
     print("\n" + "="*80)
     print(f"PROCESSING ENERGY: {energy} GeV")
-    print(f"Source: {config.dd4hep_output}")
+    print(f"Source: {config.csv_dd4hep_input}")
     print(f"CSV Macros: {csv_convert_dir}")
 
     # Find input files
-    input_files = find_input_files(config.dd4hep_output, '*.edm4hep.root')
+    input_files = find_input_files(config.csv_dd4hep_input, '*.edm4hep.root')
     if input_files is None:
         print(f"Skipping energy {energy} GeV due to no input files.")
         return
 
-    # Build bind_dirs - include csv_convert_dir
+    # include csv_convert_dir in bind_dirs
     bind_dirs = config.bind_dirs.copy() if 'bind_dirs' in config else []
-
-    # Ensure csv_convert_dir is in bind_dirs
     if csv_convert_dir not in bind_dirs:
         bind_dirs.append(csv_convert_dir)
 
@@ -124,7 +121,7 @@ def process_energy(config, config_path, energy):
     runner = JobRunner(
         input_files=input_files,
         output_file_name_func=output_name_func,
-        output_dir=output_dir,
+        output_dir=config.csv_dd4hep_output,
         bind_dirs=bind_dirs,
         events=config.event_count,
         container=config.container,
