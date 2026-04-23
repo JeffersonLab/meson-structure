@@ -49,8 +49,16 @@ II. ZY plane (same Z extent, no detector backdrop):
         lam_endpoints_zy_scatter.png
         lam_endpoints_zy_hist2d_{nd0,nd1,nd2,nd3plus,ndany}.png
 
-III. 1-D Z distributions with the EIC image as a header strip:
+III. ZR plane — R = sqrt(X^2 + Y^2), overlaid on EIC image (upper half):
+        lam_endpoints_zr_scatter.png
+        lam_endpoints_zr_hist2d_{nd0,nd1,nd2,nd3plus,ndany}.png
+
+IV. 1-D Z distributions with the EIC image as a header strip:
         lam_endpoints_z1d_{nd0,nd1,nd2,nd3plus,ndany}.png
+
+V. Λ polar angle wrt Z axis — all categories overlaid in a single figure:
+        lam_angle_theta.png          (linear y, mrad)
+        lam_angle_theta_log.png      (log y, to expose tails)
 """
 
 import argparse
@@ -233,6 +241,105 @@ def plot_zy_hist2d(z, y, title, out_path, z_lim, y_lim, bins=(500, 250)):
 
 
 # -----------------------------------------------------------------------
+# ZR plane (R = sqrt(X^2+Y^2)) — EIC image upper half as backdrop
+# -----------------------------------------------------------------------
+def plot_zr_scatter(z, r, codes, out_path):
+    fig, ax = create_plot_with_background()
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
+    r_max = max(abs(ylim[0]), abs(ylim[1]))
+
+    cmap = ListedColormap([c for _, _, c, _ in CATEGORIES])
+    norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
+    sc = ax.scatter(z, r, c=codes, cmap=cmap, norm=norm,
+                    s=3, alpha=0.55, edgecolors="none")
+
+    cbar = fig.colorbar(sc, ax=ax, ticks=[0, 1, 2, 3], shrink=0.75)
+    cbar.set_ticklabels([lbl for _, lbl, _, _ in CATEGORIES])
+    cbar.set_label("Λ daughters")
+
+    ax.set_xlim(xlim)
+    ax.set_ylim(0, r_max)
+    ax.set_xlabel("Z (mm)")
+    ax.set_ylabel("R = sqrt(X² + Y²) (mm)")
+    ax.set_title("Primary Λ endpoint, ZR plane — coloured by n daughters")
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out_path}  (N={len(z)})")
+
+
+def plot_zr_hist2d(z, r, title, out_path, bins=(500, 150)):
+    fig, ax = create_plot_with_background()
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
+    r_max = max(abs(ylim[0]), abs(ylim[1]))
+    r_range = (0.0, r_max)
+
+    if len(z) > 0:
+        h = ax.hist2d(z, r, bins=bins, cmap="viridis",
+                      norm=LogNorm(), alpha=0.80,
+                      range=[xlim, r_range])
+        fig.colorbar(h[3], ax=ax, shrink=0.75, label="counts (log)")
+    else:
+        ax.text(0.5, 0.5, "(no entries)", transform=ax.transAxes,
+                ha="center", va="center", color="red", fontsize=14)
+
+    ax.set_xlim(xlim)
+    ax.set_ylim(0, r_max)
+    ax.set_xlabel("Z (mm)")
+    ax.set_ylabel("R = sqrt(X² + Y²) (mm)")
+    ax.set_title(title)
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out_path}  (N={len(z)})")
+
+
+# -----------------------------------------------------------------------
+# Polar-angle (θ wrt Z) overlay of all categories
+# -----------------------------------------------------------------------
+def plot_theta_overlay(theta_by_cat, theta_any, out_path,
+                       bins=200, log_y=False, title_suffix=""):
+    """One figure, step histograms per category overlaid + 'any' outline."""
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    if len(theta_any) == 0:
+        ax.text(0.5, 0.5, "(no entries)", transform=ax.transAxes,
+                ha="center", va="center", color="red", fontsize=14)
+    else:
+        hi = float(np.nanpercentile(theta_any, 99.9))
+        hi = max(hi, 1.0)
+        rng = (0.0, hi)
+
+        for (key, label, color, _), data in zip(CATEGORIES, theta_by_cat):
+            if len(data) == 0:
+                continue
+            ax.hist(data, bins=bins, range=rng, histtype="step",
+                    linewidth=1.6, color=color,
+                    label=f"{label}  (N={len(data)})")
+
+        ax.hist(theta_any, bins=bins, range=rng, histtype="step",
+                linewidth=2.0, color="black", linestyle="--",
+                label=f"any nd  (N={len(theta_any)})")
+
+        # EIC hadron-beam crossing angle reference line
+        if rng[0] <= 25.0 <= rng[1]:
+            ax.axvline(25.0, color="grey", linewidth=1.0,
+                       linestyle=":", alpha=0.8,
+                       label="25 mrad (crossing)")
+
+        if log_y:
+            ax.set_yscale("log")
+
+        ax.legend(loc="upper right")
+
+    ax.set_xlabel("θ = ∠(p_Λ, +Z) (mrad)")
+    ax.set_ylabel("counts")
+    ax.set_title(f"Primary Λ polar angle vs. Z axis{title_suffix}")
+    ax.grid(alpha=0.3, linestyle="--")
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out_path}")
+
+
+# -----------------------------------------------------------------------
 # 1-D Z with EIC ribbon on top
 # -----------------------------------------------------------------------
 def plot_z1d_on_bg(z, title, out_path, color="steelblue", bins=400):
@@ -241,7 +348,13 @@ def plot_z1d_on_bg(z, title, out_path, color="steelblue", bins=400):
     ax_img = fig.add_subplot(gs[0])
     ax_hist = fig.add_subplot(gs[1], sharex=ax_img)
 
-    z_left, z_right, _, _ = _draw_bg(ax_img)
+    z_left, z_right, y_bot, y_top = _draw_bg(ax_img)
+    # Stretch the image to fill the axes box so its width matches the
+    # histogram's (sharex is not enough — imshow's default aspect='equal'
+    # shrinks the top axes and breaks vertical alignment of Z landmarks).
+    ax_img.set_aspect("auto")
+    ax_img.set_xlim(z_left, z_right)
+    ax_img.set_ylim(y_bot, y_top)
     ax_img.tick_params(axis="x", labelbottom=False)
     ax_img.set_ylabel("X (mm)")
     ax_img.set_title(title)
@@ -289,14 +402,18 @@ def main():
 
     df = concat_csvs_with_unique_events(files)
 
-    required = {"lam_is_first", "lam_nd", "lam_epx", "lam_epy", "lam_epz"}
+    required = {"lam_is_first", "lam_nd",
+                "lam_epx", "lam_epy", "lam_epz",
+                "lam_px", "lam_py", "lam_pz"}
     missing = required - set(df.columns)
     if missing:
         print(f"error: input CSV is missing columns {missing}", file=sys.stderr)
         sys.exit(1)
 
     df = df[df["lam_is_first"] == 1].copy()
-    df = df.dropna(subset=["lam_nd", "lam_epx", "lam_epy", "lam_epz"])
+    df = df.dropna(subset=["lam_nd",
+                           "lam_epx", "lam_epy", "lam_epz",
+                           "lam_px", "lam_py", "lam_pz"])
     df["lam_nd"] = df["lam_nd"].astype(int)
     print(f"Primary Λ rows after filtering: {len(df)}")
 
@@ -356,7 +473,23 @@ def main():
                    os.path.join(outdir, "lam_endpoints_zy_hist2d_ndany.png"),
                    z_lim, y_lim)
 
-    # -------- III. 1-D Z on top of EIC image --------------------------
+    # -------- III. ZR plane (EIC image upper half) --------------------
+    r = np.sqrt(x * x + y * y)
+
+    plot_zr_scatter(z[valid], r[valid], nd_codes[valid],
+                    os.path.join(outdir, "lam_endpoints_zr_scatter.png"))
+
+    for key, label, _, pred in CATEGORIES:
+        mask = pred(nd).to_numpy()
+        plot_zr_hist2d(z[mask], r[mask],
+                       f"Primary Λ endpoint ZR, {label}   (N={int(mask.sum())})",
+                       os.path.join(outdir, f"lam_endpoints_zr_hist2d_{key}.png"))
+
+    plot_zr_hist2d(z[valid], r[valid],
+                   f"Primary Λ endpoint ZR, any nd   (N={int(valid.sum())})",
+                   os.path.join(outdir, "lam_endpoints_zr_hist2d_ndany.png"))
+
+    # -------- IV. 1-D Z on top of EIC image ---------------------------
     for key, label, color, pred in CATEGORIES:
         mask = pred(nd).to_numpy()
         plot_z1d_on_bg(z[mask],
@@ -368,6 +501,22 @@ def main():
                    f"Primary Λ endpoint Z, any nd   (N={int(valid.sum())})",
                    os.path.join(outdir, "lam_endpoints_z1d_ndany.png"),
                    color="steelblue")
+
+    # -------- V. Polar angle θ with Z axis ----------------------------
+    px = df["lam_px"].to_numpy()
+    py = df["lam_py"].to_numpy()
+    pz = df["lam_pz"].to_numpy()
+    theta_mrad = 1000.0 * np.arctan2(np.sqrt(px * px + py * py), pz)
+
+    theta_by_cat = [theta_mrad[pred(nd).to_numpy()] for _, _, _, pred in CATEGORIES]
+    theta_any = theta_mrad[valid]
+
+    plot_theta_overlay(theta_by_cat, theta_any,
+                       os.path.join(outdir, "lam_angle_theta.png"),
+                       log_y=False)
+    plot_theta_overlay(theta_by_cat, theta_any,
+                       os.path.join(outdir, "lam_angle_theta_log.png"),
+                       log_y=True, title_suffix="  (log y)")
 
     print(f"\nDone. All plots in: {outdir}")
 
