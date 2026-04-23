@@ -262,14 +262,35 @@ For each particle prefix, the next columns are saved:
 14. `{0}_time`   -   time - Time of origin
 15. `{0}_nd`     -   nd - Number of daughters
 
-So in the end the columns are: 
+In addition to the particle blocks, each row starts with two **event/decay** columns:
+
+1. `event`          — event number (primary key).
+2. `lam_is_first`   — `1` if this Λ is the first Λ encountered in the event (the generated
+   spectator Λ), else `0`. One row per Λ is written, so files can contain multiple rows
+   per event if more than one Λ appears.
+3. `lam_decay`      — decay-channel code (see table below). This is the **shared decay code**
+   used by all three Λ CSVs (`mcpart_lambda`, `acceptance_npi0`, `acceptance_ppim`).
+
+| Code | Meaning                          | Daughter rule                 |
+|:----:|----------------------------------|-------------------------------|
+|  0   | Not decayed                      | `daughters.size() == 0`       |
+|  1   | Λ → p π⁻                         | 2 daughters: {2212, −211}     |
+|  2   | Λ → n π⁰                         | 2 daughters: {2112, 111}      |
+|  3   | Shower                           | `daughters.size() > 2` (any)  |
+|  4   | Only p                           | 1 daughter, PDG 2212          |
+|  5   | Only π⁺                          | 1 daughter, PDG 211           |
+|  6   | Only n                           | 1 daughter, PDG 2112          |
+|  7   | Only π⁰                          | 1 daughter, PDG 111           |
+|  8   | Other                            | anything not matching above   |
+
+So in the end the columns are:
 
 ```yaml
-event,
+event,lam_is_first,lam_decay,
 lam_id,lam_pdg,lam_gen,lam_sim,lam_px,lam_py,lam_pz,lam_vx,lam_vy,lam_vz,lam_epx,lam_epy,lam_epz,lam_time,lam_nd,
 prot_id,prot_pdg,prot_gen,prot_sim,prot_px,prot_py,prot_pz,prot_vx,prot_vy,prot_vz,prot_epx,prot_epy,prot_epz,prot_time,prot_nd,
-pimin_id,pimin_pdg,pimin_gen,pimin_sim,pimin_px,pimin_py,pimin_pz,pimin_vx,pimin_vy,pimin_vz,pimin_epx,pimin_epy,pimin_epz,pimin_time,pimin_nd,neut_id,
-neut_pdg,neut_gen,neut_sim,neut_px,neut_py,neut_pz,neut_vx,neut_vy,neut_vz,neut_epx,neut_epy,neut_epz,neut_time,neut_nd,
+pimin_id,pimin_pdg,pimin_gen,pimin_sim,pimin_px,pimin_py,pimin_pz,pimin_vx,pimin_vy,pimin_vz,pimin_epx,pimin_epy,pimin_epz,pimin_time,pimin_nd,
+neut_id,neut_pdg,neut_gen,neut_sim,neut_px,neut_py,neut_pz,neut_vx,neut_vy,neut_vz,neut_epx,neut_epy,neut_epz,neut_time,neut_nd,
 pizero_id,pizero_pdg,pizero_gen,pizero_sim,pizero_px,pizero_py,pizero_pz,pizero_vx,pizero_vy,pizero_vz,pizero_epx,pizero_epy,pizero_epz,pizero_time,pizero_nd,
 gamone_id,gamone_pdg,gamone_gen,gamone_sim,gamone_px,gamone_py,gamone_pz,gamone_vx,gamone_vy,gamone_vz,gamone_epx,gamone_epy,gamone_epz,gamone_time,gamone_nd,
 gamtwo_id,gamtwo_pdg,gamtwo_gen,gamtwo_sim,gamtwo_px,gamtwo_py,gamtwo_pz,gamtwo_vx,gamtwo_vy,gamtwo_vz,gamtwo_epx,gamtwo_epy,gamtwo_epz,gamtwo_time,gamtwo_nd
@@ -277,8 +298,144 @@ gamtwo_id,gamtwo_pdg,gamtwo_gen,gamtwo_sim,gamtwo_px,gamtwo_py,gamtwo_pz,gamtwo_
 
 Notes:
 
-- Particles may not be decayed. E.g. Lambda may just go outside of detector designated volume, 
-  in this case `lam_nd` - Number of daughters will be 0 and the rest of columns will be null 
+- Particles may not be decayed. E.g. Lambda may just go outside of detector designated volume,
+  in this case `lam_nd` - Number of daughters will be 0 and the rest of columns will be null.
+- Particle-block columns that don't apply to the observed decay channel are left empty
+  (e.g. `neut_*`, `pizero_*`, `gamone_*`, `gamtwo_*` are empty when `lam_decay == 1`).
+
+
+### acceptance_npi0
+
+- Files: `*.acceptance_npi0.csv`
+- Conversion script: [csv_convert/csv_edm4hep_acceptance_npi0.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_edm4hep_acceptance_npi0.cxx)
+
+Same per-Λ rows as [mcpart_lambda](#mcpart_lambda), **plus** per-particle MC-truth acceptance
+flags for the Λ → n π⁰ → n γ γ chain. One row per first Λ per event. Detection flags are
+`1` only when the Λ decayed via n+π⁰ **and** the π⁰ produced two observable photons; otherwise
+they are `0`. A flag is `1` iff the particle contributed to at least one SimCalorimeterHit in
+that detector collection.
+
+Column prefix (identical to `mcpart_lambda`):
+
+```yaml
+event,lam_is_first,lam_decay,
+<lam_*>, <prot_*>, <pimin_*>, <neut_*>, <pizero_*>, <gamone_*>, <gamtwo_*>
+```
+
+Followed by detection flags (column name = `<particle>_<EDM4hep collection name>`):
+
+Neutron in HCALs:
+
+1. `neut_HcalFarForwardZDCHits`
+2. `neut_HcalEndcapPInsertHits`
+3. `neut_LFHCALHits`
+
+Gamma-one in ECALs:
+
+4. `gamone_EcalFarForwardZDCHits`
+5. `gamone_B0ECalHits`
+6. `gamone_EcalEndcapPHits`
+7. `gamone_EcalEndcapPInsertHits`
+
+Gamma-two in ECALs (same four):
+
+8. `gamtwo_EcalFarForwardZDCHits`
+9. `gamtwo_B0ECalHits`
+10. `gamtwo_EcalEndcapPHits`
+11. `gamtwo_EcalEndcapPInsertHits`
+
+Full header ordering:
+
+```yaml
+event,lam_is_first,lam_decay,
+lam_id,…,lam_nd, prot_id,…,prot_nd, pimin_id,…,pimin_nd,
+neut_id,…,neut_nd, pizero_id,…,pizero_nd, gamone_id,…,gamone_nd, gamtwo_id,…,gamtwo_nd,
+neut_HcalFarForwardZDCHits, neut_HcalEndcapPInsertHits, neut_LFHCALHits,
+gamone_EcalFarForwardZDCHits, gamtwo_EcalFarForwardZDCHits,
+gamone_B0ECalHits,             gamtwo_B0ECalHits,
+gamone_EcalEndcapPHits,        gamtwo_EcalEndcapPHits,
+gamone_EcalEndcapPInsertHits,  gamtwo_EcalEndcapPInsertHits
+```
+
+Notes:
+
+- Detection flags are `0` for all non-n+π⁰ decays (nothing is looked up for those rows).
+- `has hit` means the MCParticle appears in at least one
+  `SimCalorimeterHit::getContributions()` of the collection.
+
+
+### acceptance_ppim
+
+- Files: `*.acceptance_ppim.csv`
+- Conversion script: [csv_convert/csv_edm4hep_acceptance_ppim.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_edm4hep_acceptance_ppim.cxx)
+
+Per-event acceptance flags for the Λ → p π⁻ channel. **Only events whose first-reachable Λ
+is a p π⁻ decay produce a row.** `lam_decay` is therefore always `1` in this file (it is
+kept for schema consistency with the other two Λ CSVs).
+
+Each particle (`prot`, `pimin`) gets a per-collection `0/1` flag for **every** EDM4hep
+tracker and calorimeter collection. Column names use the **full EDM4hep collection name**:
+`<particle>_<CollectionName>`.
+
+Tracker collections (17) checked for both `prot` and `pimin`:
+
+```
+B0TrackerHits, BackwardMPGDEndcapHits, DIRCBarHits, DRICHHits,
+ForwardMPGDEndcapHits, ForwardOffMTrackerHits, ForwardRomanPotHits,
+LumiSpecTrackerHits, MPGDBarrelHits, OuterMPGDBarrelHits,
+RICHEndcapNHits, SiBarrelHits, TOFBarrelHits, TOFEndcapHits,
+TaggerTrackerHits, TrackerEndcapHits, VertexBarrelHits
+```
+
+Calorimeter collections (7) checked for both `prot` and `pimin`:
+
+```
+EcalFarForwardZDCHits, B0ECalHits, EcalEndcapPHits, EcalEndcapPInsertHits,
+HcalFarForwardZDCHits, HcalEndcapPInsertHits, LFHCALHits
+```
+
+Flag rule: `1` if the particle has at least one hit (tracker:
+`SimTrackerHit::getParticle()` matches; calo: any contribution matches), else `0`.
+
+Full header ordering:
+
+```yaml
+event,lam_is_first,lam_decay,
+lam_id,…,lam_nd, prot_id,…,prot_nd, pimin_id,…,pimin_nd,
+prot_<tracker-1>,…,prot_<tracker-17>,
+prot_<calo-1>,…,prot_<calo-7>,
+pimin_<tracker-1>,…,pimin_<tracker-17>,
+pimin_<calo-1>,…,pimin_<calo-7>
+```
+
+#### Companion hit-detail CSVs
+
+The ppim script additionally writes two **long-format** per-hit CSVs, one row per hit:
+
+- `*.acceptance_ppim_prot_hits.csv` — detailed hits belonging to the proton candidate
+- `*.acceptance_ppim_pimin_hits.csv` — detailed hits belonging to the π⁻ candidate
+
+Columns (identical for both):
+
+| Column       | Description                                                             |
+|--------------|-------------------------------------------------------------------------|
+| `event`      | Event number (join key to the main ppim CSV).                           |
+| `lam_id`     | MCParticle index of the parent Λ (join key to `lam_id` in main CSV).    |
+| `detector`   | EDM4hep collection name (`B0TrackerHits`, `HcalFarForwardZDCHits`, …).  |
+| `hit_id`     | `SimHit::getObjectID().index`.                                          |
+| `x,y,z`      | Hit position [mm].                                                      |
+| `eDep`       | Energy deposit [GeV] (tracker: `getEDep()`, calo: `getEnergy()`).       |
+| `time`       | Hit time [ns]. For calo hits taken from the first matching contribution.|
+| `pathLength` | Tracker `getPathLength()`. **Always `0` for calorimeter rows.**         |
+
+Join pattern:
+
+```python
+import pandas as pd
+main = pd.read_csv("run.acceptance_ppim.csv")
+prot_hits = pd.read_csv("run.acceptance_ppim_prot_hits.csv")
+merged = prot_hits.merge(main, on=["event"], suffixes=("_hit", ""))
+```
 
 
 ### reco_ff_lambdas

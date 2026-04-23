@@ -103,7 +103,10 @@ void process_event(const podio::Frame&event, int evt_id) {
     for (const auto& lam: particles) {
         if (lam.getPDG() != 3122) continue; // not Λ⁰
 
-        int decay_type = 4; // 0 - not decayed, 1 - p-piminus, 2 - n-pizero, 3 - shower/recharge, 4 - other (what?)
+        // Decay classification:
+        //  0 - no daughters, 1 - p π⁻, 2 - n π⁰, 3 - shower (>2 daughters),
+        //  4 - only p, 5 - only π⁺, 6 - only n, 7 - only π⁰, 8 - other
+        int decay_type = 8;
 
         // -----------------------------------------------------------------
         // classify decay channel & pick final-state pointers
@@ -111,41 +114,42 @@ void process_event(const podio::Frame&event, int evt_id) {
         std::optional<MCParticle> prot, pimin, neut, pi0, gam1, gam2;
 
         auto daughters = lam.getDaughters();
+        const auto nd = daughters.size();
 
-        if (daughters.size() == 0) {
-            decay_type = 0;     // didn't decayed. Maybe went out of the volume
-        } else if (daughters.size() == 2) {
-            if (daughters.at(0).getPDG() == 2212 && daughters.at(1).getPDG() == -211) {
-                decay_type = 1; // p-piminus
+        if (nd == 0) {
+            decay_type = 0;
+        } else if (nd == 1) {
+            switch (daughters.at(0).getPDG()) {
+                case 2212: decay_type = 4; break; // only p
+                case 211:  decay_type = 5; break; // only π⁺
+                case 2112: decay_type = 6; break; // only n
+                case 111:  decay_type = 7; break; // only π⁰
+                default:   decay_type = 8; break;
+            }
+        } else if (nd == 2) {
+            const int pdg0 = daughters.at(0).getPDG();
+            const int pdg1 = daughters.at(1).getPDG();
+            if (pdg0 == 2212 && pdg1 == -211) {
+                decay_type = 1;
                 prot = daughters.at(0);
                 pimin = daughters.at(1);
-            }
-
-            if (daughters.at(1).getPDG() == 2212 && daughters.at(0).getPDG() == -211) {
-                decay_type = 1; // p-piminus
+            } else if (pdg1 == 2212 && pdg0 == -211) {
+                decay_type = 1;
                 prot = daughters.at(1);
                 pimin = daughters.at(0);
-            }
-
-            if (daughters.at(0).getPDG() == 2112 && daughters.at(1).getPDG() == 111) {
-                decay_type = 2; // n-pizero
+            } else if (pdg0 == 2112 && pdg1 == 111) {
+                decay_type = 2;
                 neut = daughters.at(0);
                 pi0 = daughters.at(1);
-            }
-
-            if (daughters.at(1).getPDG() == 2112 && daughters.at(0).getPDG() == 111) {
-                decay_type = 2; // n-pizero
+            } else if (pdg1 == 2112 && pdg0 == 111) {
+                decay_type = 2;
                 neut = daughters.at(1);
                 pi0 = daughters.at(0);
+            } else {
+                decay_type = 8;
             }
         } else {
-            // ... so ... it is complicated...
-            for (const auto& daughter: daughters) {
-                if (daughter.getPDG() == 3122) {
-                    decay_type = 3;     // It is recharging lambda - shower
-                    break;
-                }
-            }
+            decay_type = 3; // shower (>2 daughters)
         }
 
         // For neutron+pi0 we need to capture pi0 decay products if exists

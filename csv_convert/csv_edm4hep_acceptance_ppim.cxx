@@ -210,34 +210,60 @@ void process_calo_hits(const podio::Frame& event, const std::string& collection_
 void process_event(const podio::Frame& event, int evt_id) {
     const auto& particles = event.get<MCParticleCollection>("MCParticles");
 
+    // The first lambda in event should be the generated spectator lambda
+    bool is_first_lambda = true;
+
     for (const auto& lam: particles) {
         if (lam.getPDG() != 3122) continue; // not Λ⁰
 
-        // Check if it decays to p + pi-
-        auto daughters = lam.getDaughters();
-        if (daughters.size() != 2) continue;
-
+        // Classify decay (same scheme as mcpart_lambda / acceptance_npi0)
+        //  0 - no daughters, 1 - p π⁻, 2 - n π⁰, 3 - shower (>2 daughters),
+        //  4 - only p, 5 - only π⁺, 6 - only n, 7 - only π⁰, 8 - other
+        int decay_type = 8;
         std::optional<MCParticle> prot, pimin;
-        
-        // Check decay products
-        bool is_ppim = false;
-        if (daughters.at(0).getPDG() == 2212 && daughters.at(1).getPDG() == -211) {
-            is_ppim = true;
-            prot = daughters.at(0);
-            pimin = daughters.at(1);
-        } else if (daughters.at(1).getPDG() == 2212 && daughters.at(0).getPDG() == -211) {
-            is_ppim = true;
-            prot = daughters.at(1);
-            pimin = daughters.at(0);
+
+        auto daughters = lam.getDaughters();
+        const auto nd = daughters.size();
+
+        if (nd == 0) {
+            decay_type = 0;
+        } else if (nd == 1) {
+            switch (daughters.at(0).getPDG()) {
+                case 2212: decay_type = 4; break;
+                case 211:  decay_type = 5; break;
+                case 2112: decay_type = 6; break;
+                case 111:  decay_type = 7; break;
+                default:   decay_type = 8; break;
+            }
+        } else if (nd == 2) {
+            const int pdg0 = daughters.at(0).getPDG();
+            const int pdg1 = daughters.at(1).getPDG();
+            if (pdg0 == 2212 && pdg1 == -211) {
+                decay_type = 1;
+                prot = daughters.at(0);
+                pimin = daughters.at(1);
+            } else if (pdg1 == 2212 && pdg0 == -211) {
+                decay_type = 1;
+                prot = daughters.at(1);
+                pimin = daughters.at(0);
+            } else if ((pdg0 == 2112 && pdg1 == 111) || (pdg1 == 2112 && pdg0 == 111)) {
+                decay_type = 2;
+            } else {
+                decay_type = 8;
+            }
+        } else {
+            decay_type = 3;
         }
 
-        if (!is_ppim) continue;
-
-        // We found a Lambda -> p + pi- decay
-        int lam_id = lam.getObjectID().index;
+        // ppim script only writes rows for p + π⁻ decays
+        if (decay_type != 1) {
+            is_first_lambda = false;
+            continue;
+        }
 
         // Prepare detection map
         std::map<std::string, bool> detection_map;
+        int lam_id = lam.getObjectID().index;
 
         // Process Proton
         if (prot) {
@@ -261,57 +287,38 @@ void process_event(const podio::Frame& event, int evt_id) {
 
         // Write Main CSV Header if needed
         if (!header_written) {
-            csv << "event,lam_id,"
+            csv << "event,lam_is_first,lam_decay,"
                 << make_particle_header("lam") << ","
                 << make_particle_header("prot") << ","
                 << make_particle_header("pimin");
-            
+
             // Add columns for detection flags
-            for (const auto& name : tracker_collections) {
-                csv << ",prot_" << name;
-            }
-            for (const auto& name : calorimeter_collections) {
-                csv << ",prot_" << name;
-            }
-             for (const auto& name : tracker_collections) {
-                csv << ",pimin_" << name;
-            }
-            for (const auto& name : calorimeter_collections) {
-                csv << ",pimin_" << name;
-            }
+            for (const auto& name : tracker_collections)       csv << ",prot_"  << name;
+            for (const auto& name : calorimeter_collections)   csv << ",prot_"  << name;
+            for (const auto& name : tracker_collections)       csv << ",pimin_" << name;
+            for (const auto& name : calorimeter_collections)   csv << ",pimin_" << name;
             csv << "\n";
             header_written = true;
         }
 
         // Write Main CSV Data
-        csv << evt_id << "," << lam_id << ","
+        csv << evt_id << ","
+            << static_cast<int>(is_first_lambda) << ","
+            << decay_type << ","
             << particle_to_csv(lam) << ","
             << particle_to_csv(prot) << ","
             << particle_to_csv(pimin);
 
         // Write flags
-        for (const auto& name : tracker_collections) csv << "," << detection_map["prot_" + name];
+        for (const auto& name : tracker_collections)     csv << "," << detection_map["prot_" + name];
         for (const auto& name : calorimeter_collections) csv << "," << detection_map["prot_" + name];
-        for (const auto& name : tracker_collections) csv << "," << detection_map["pimin_" + name];
+        for (const auto& name : tracker_collections)     csv << "," << detection_map["pimin_" + name];
         for (const auto& name : calorimeter_collections) csv << "," << detection_map["pimin_" + name];
-        
+
         csv << "\n";
 
-        // We only process the first lambda per event? 
-        // The requirement says "first two colums must be event id and lambda id".
-        // It implies we might have multiple lambdas or we just need to identify them.
-        // The npi0 script breaks after first lambda.
-        // "break; // we only need first lambdas. One lambda per event."
-        // I will follow the same pattern for consistency unless instructed otherwise.
-        // But wait, the user said "first two colums must be event id and lambda id".
-        // If I break, I only get one.
-        // The npi0 script has:
-        // if (!header_written) { ... }
-        // csv << ...
-        // is_first_lambda = false;
-        // break; 
-        // So it strictly does one lambda per event. I will do the same.
-        break; 
+        // One Λ per event (matching mcpart_lambda / acceptance_npi0 convention).
+        break;
     }
 }
 
