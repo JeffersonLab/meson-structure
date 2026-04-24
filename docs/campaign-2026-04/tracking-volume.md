@@ -6,7 +6,7 @@ const sources = {
 }
 </script>
 
-# Tracking volume — `saveall` variant
+# New tracking volume Λ decays
 
 Test of new tracking volume setting.
 
@@ -14,32 +14,63 @@ See the [campaign index](./campaign-2026-04.md) for bug context and variant
 definitions.
 
 All plots are produced by `analysis/acceptance/plot_lambda_endpoints.py`,
-filtered to `lam_is_first == 1`, and grouped by daughter count
+filtered to `lam_is_first == 1` (primary = Sullivan lambdas), and grouped by daughter count
 `nd ∈ {0, 1, 2, ≥3, any}`.
 
 <PlotCompareViewer :sources="sources">
 
-## I. Λ decay classification
+## I.The most explanatory plots
 
-Column chart of primary-Λ decay codes as written by the converter.
-Codes match `csv_mcpart_lambda.cxx`:
-`0` no daughters · `1` p π- · `2` n π0 · `3` >2 daughters ·
-`4/5/6/7` single p / π+ / n / π0 · `8` other (non-standard 1- or 2-daughter
-combination).
+### Decay types
+
+Decay types are determined by MCParticle daughters of the primary lambdas coming from the interaction point. 
+(Primary = from Sullivan process)
+
+During analysis we calculate daughters and what are the daughters: 
+
+- `0` no daughters
+- `1`&`2` 2 daughters pπ- or nπ0 - anticipated lambda decays
+- `3` >2 daughters
+- `4/5/6/7` 1 daughter p / π+ / n / π0
+- `8` other - non-standard 1- or 2-daughter combination
 
 <VerticalComparePlot
   plot-name="lam_decay_counts.png"
   title="Primary Λ decay codes — counts per category"
 />
 
+
 <VerticalComparePlot
-  plot-name="lam_decay_counts_log.png"
-  title="Primary Λ decay codes — counts per category (log y)"
+  plot-name="lam_endpoints_z1d_overlay.png"
+  title="Λ endpoint Z — by number of daughters"
+  description="Step histograms per daughter-count category plus a dashed outline for the combined sample."
+/>
+
+
+<VerticalComparePlot
+  plot-name="lam_angle_theta.png"
+  title="Λ angle θ with Z+ (mrad)"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zx_scatter.png"
+  title="Scatter. Primary Λ endpoint ZX — coloured by n daughters"
+  description="Per-event scatter of Λ endpoints in the ZX plane. Colour encodes number of recorded daughters (0, 1, 2, ≥3)."
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zy_scatter.png"
+  title="Scatter. Primary Λ endpoint ZY — coloured by n daughters"
 />
 
 ## II. 1-D Λ endpoint Z distributions
 
-### Overlay (all categories on one figure)
+Λ endpoint Z corresponds to `MCParticle.endpoint.z` of lambdas. 
+I.e. the point where Geant4 decayed lambdas. 
+
+These plots just use number of daughters, not categories like above. 
+
+### Λ endpoint Z (all)
 
 <VerticalComparePlot
   plot-name="lam_endpoints_z1d_overlay.png"
@@ -47,12 +78,8 @@ combination).
   description="Step histograms per daughter-count category plus a dashed outline for the combined sample."
 />
 
-<VerticalComparePlot
-  plot-name="lam_endpoints_z1d_overlay_log.png"
-  title="Λ endpoint Z — categories overlaid (log y)"
-/>
 
-### Per category, with EIC image as a Z-landmark ribbon
+### Λ endpoint Z by N-daughters
 
 <VerticalComparePlot
   plot-name="lam_endpoints_z1d_ndany.png"
@@ -88,10 +115,6 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
   title="Primary Λ polar angle θ (mrad), categories overlaid"
 />
 
-<VerticalComparePlot
-  plot-name="lam_angle_theta_log.png"
-  title="Primary Λ polar angle θ (mrad), log y"
-/>
 
 ## IV. ZX plane (EIC detector overlay)
 
@@ -99,33 +122,30 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_scatter.png"
-  title="Primary Λ endpoint ZX — coloured by n daughters"
+  title="Scatter. Primary Λ endpoint ZX — coloured by n daughters"
   description="Per-event scatter of Λ endpoints in the ZX plane. Colour encodes number of recorded daughters (0, 1, 2, ≥3)."
 />
 
-### 2-D histogram, all categories (any nd)
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_hist2d_ndany.png"
   title="ZX endpoint density — any nd"
 />
 
-### 2-D histogram, nd = 0 (undecayed)
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_hist2d_nd0.png"
-  title="ZX endpoint density — nd = 0"
+  title="ZX endpoint density — nd = 0 (undecayed)"
   description="Primary Λ with no recorded daughters."
 />
 
-### 2-D histogram, nd = 1
+
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_hist2d_nd1.png"
   title="ZX endpoint density — nd = 1"
 />
 
-### 2-D histogram, nd = 2 (canonical two-body)
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_hist2d_nd2.png"
@@ -133,7 +153,7 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
   description="Canonical two-body Λ decay topology (p π- or n π0)."
 />
 
-### 2-D histogram, nd ≥ 3
+
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_hist2d_nd3plus.png"
@@ -142,14 +162,13 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
 
 ## V. ZY plane
 
-### Scatter
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zy_scatter.png"
-  title="Primary Λ endpoint ZY — coloured by n daughters"
+  title="Scatter. Primary Λ endpoint ZY — coloured by n daughters"
 />
 
-### 2-D histograms
+
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zy_hist2d_ndany.png"
@@ -182,14 +201,13 @@ R = sqrt(X² + Y²) is plotted with a minus sign so that points fall into the
 lower half of the detector cross-section, which is where the hadron-beam
 pipe bends.
 
-### Scatter
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zr_scatter.png"
   title="Primary Λ endpoint Z vs. -R — coloured by n daughters"
 />
 
-### 2-D histograms
+
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zr_hist2d_ndany.png"
