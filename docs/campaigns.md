@@ -5,6 +5,19 @@ This page documents the meson structure simulation campaigns.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
+## Campaign 2026-04
+
+[Campaign 2026-04 Link](./campaign-2026-04/campaign-2026-04.md)
+
+Overview:
+- Investigation campaign (not a full production run): targets two Lambda
+  MCParticle bugs ([eic/epic#1069](https://github.com/eic/epic/issues/1069),
+  [eic/epic#1081](https://github.com/eic/epic/pull/1081#pullrequestreview-4143804432)).
+- DD4hep + afterburner only; no reconstruction.
+- Compares `saveall` (`--part.keepAllParticles=True`) with `longtv` (extended
+  tracking volume).
+
+
 ## Campaign 2026-03
 
 [Campaign 2026-03 Link](./campaign-2026-03/campaign-2026-03.md)

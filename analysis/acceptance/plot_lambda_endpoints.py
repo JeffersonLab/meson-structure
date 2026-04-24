@@ -55,10 +55,16 @@ III. ZR plane — R = sqrt(X^2 + Y^2), overlaid on EIC image (upper half):
 
 IV. 1-D Z distributions with the EIC image as a header strip:
         lam_endpoints_z1d_{nd0,nd1,nd2,nd3plus,ndany}.png
+        lam_endpoints_z1d_overlay.png        (all categories on one figure)
+        lam_endpoints_z1d_overlay_log.png    (log y)
 
 V. Λ polar angle wrt Z axis — all categories overlaid in a single figure:
         lam_angle_theta.png          (linear y, mrad)
         lam_angle_theta_log.png      (log y, to expose tails)
+
+VI. Λ decay-code column chart (uses `lam_decay`, 9 codes from the converter):
+        lam_decay_counts.png         (linear y)
+        lam_decay_counts_log.png     (log y)
 """
 
 import argparse
@@ -241,12 +247,11 @@ def plot_zy_hist2d(z, y, title, out_path, z_lim, y_lim, bins=(500, 250)):
 
 
 # -----------------------------------------------------------------------
-# ZR plane (R = sqrt(X^2+Y^2)) — EIC image upper half as backdrop
+# ZR plane (R = sqrt(X^2+Y^2)) — identical layout to ZX, detector overlaid
 # -----------------------------------------------------------------------
 def plot_zr_scatter(z, r, codes, out_path):
     fig, ax = create_plot_with_background()
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
-    r_max = max(abs(ylim[0]), abs(ylim[1]))
 
     cmap = ListedColormap([c for _, _, c, _ in CATEGORIES])
     norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
@@ -258,7 +263,7 @@ def plot_zr_scatter(z, r, codes, out_path):
     cbar.set_label("Λ daughters")
 
     ax.set_xlim(xlim)
-    ax.set_ylim(0, r_max)
+    ax.set_ylim(ylim)
     ax.set_xlabel("Z (mm)")
     ax.set_ylabel("R = sqrt(X² + Y²) (mm)")
     ax.set_title("Primary Λ endpoint, ZR plane — coloured by n daughters")
@@ -267,29 +272,126 @@ def plot_zr_scatter(z, r, codes, out_path):
     print(f"wrote {out_path}  (N={len(z)})")
 
 
-def plot_zr_hist2d(z, r, title, out_path, bins=(500, 150)):
+def plot_zr_hist2d(z, r, title, out_path, bins=(500, 250)):
     fig, ax = create_plot_with_background()
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
-    r_max = max(abs(ylim[0]), abs(ylim[1]))
-    r_range = (0.0, r_max)
 
     if len(z) > 0:
         h = ax.hist2d(z, r, bins=bins, cmap="viridis",
                       norm=LogNorm(), alpha=0.80,
-                      range=[xlim, r_range])
+                      range=[xlim, ylim])
         fig.colorbar(h[3], ax=ax, shrink=0.75, label="counts (log)")
     else:
         ax.text(0.5, 0.5, "(no entries)", transform=ax.transAxes,
                 ha="center", va="center", color="red", fontsize=14)
 
     ax.set_xlim(xlim)
-    ax.set_ylim(0, r_max)
+    ax.set_ylim(ylim)
     ax.set_xlabel("Z (mm)")
     ax.set_ylabel("R = sqrt(X² + Y²) (mm)")
     ax.set_title(title)
     fig.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
     print(f"wrote {out_path}  (N={len(z)})")
+
+
+# -----------------------------------------------------------------------
+# 1-D Z overlay — all categories + 'any' on one figure
+# -----------------------------------------------------------------------
+def plot_z1d_overlay(z_by_cat, z_any, out_path,
+                     bins=400, log_y=False, title_suffix=""):
+    fig, ax = plt.subplots(figsize=(20, 7))
+
+    z_left, z_right, _, _ = _bg_extent()
+
+    if len(z_any) == 0:
+        ax.text(0.5, 0.5, "(no entries)", transform=ax.transAxes,
+                ha="center", va="center", color="red", fontsize=14)
+    else:
+        rng = (z_left, z_right)
+        for (key, label, color, _), data in zip(CATEGORIES, z_by_cat):
+            if len(data) == 0:
+                continue
+            ax.hist(data, bins=bins, range=rng, histtype="step",
+                    linewidth=1.6, color=color,
+                    label=f"{label}  (N={len(data)})")
+
+        ax.hist(z_any, bins=bins, range=rng, histtype="step",
+                linewidth=2.0, color="black", linestyle="--",
+                label=f"any nd  (N={len(z_any)})")
+
+        if log_y:
+            ax.set_yscale("log")
+
+        ax.legend(loc="upper left")
+
+    ax.set_xlim(z_left, z_right)
+    ax.set_xlabel("Z (mm)")
+    ax.set_ylabel("counts")
+    ax.set_title(f"Primary Λ endpoint Z — categories overlaid{title_suffix}")
+    ax.grid(alpha=0.3, linestyle="--")
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out_path}")
+
+
+# -----------------------------------------------------------------------
+# Decay-code column chart (9 codes from csv_mcpart_lambda.cxx)
+# -----------------------------------------------------------------------
+# (code, short label, multi-line x-tick label, bar colour)
+DECAY_CODES = [
+    (0, "no daughters",        "0\nno daughters",          "tab:blue"),
+    (1, "p π-",                "1\np π-",                  "tab:green"),
+    (2, "n π0",                "2\nn π0",                  "tab:orange"),
+    (3, "shower (>2 daug.)",   "3\nshower\n(>2 daug.)",    "tab:red"),
+    (4, "only p",              "4\nonly p",                "tab:purple"),
+    (5, "only π+",             "5\nonly π+",               "tab:brown"),
+    (6, "only n",              "6\nonly n",                "tab:pink"),
+    (7, "only π0",             "7\nonly π0",               "tab:olive"),
+    (8, "other / mixed",       "8\nother\n/ mixed",        "tab:gray"),
+]
+
+
+def plot_decay_counts(decay_series, out_path, log_y=False, title_suffix=""):
+    codes = [c for c, *_ in DECAY_CODES]
+    labels = [lbl for _, _, lbl, _ in DECAY_CODES]
+    colors = [clr for *_, clr in DECAY_CODES]
+
+    arr = decay_series.to_numpy()
+    counts = [int(np.sum(arr == c)) for c in codes]
+    total = sum(counts)
+
+    fig, ax = plt.subplots(figsize=(14, 7))
+    bars = ax.bar(codes, counts, color=colors,
+                  edgecolor="black", linewidth=0.6)
+
+    if total > 0:
+        # Annotate each bar with count and percentage
+        y_ref = max(counts) if not log_y else max(max(counts), 1)
+        for bar, cnt in zip(bars, counts):
+            pct = 100.0 * cnt / total
+            y = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width() / 2,
+                    y + (0.01 * y_ref if not log_y else y * 0.05),
+                    f"{cnt}\n{pct:.1f}%",
+                    ha="center", va="bottom", fontsize=9)
+
+    ax.set_xticks(codes)
+    ax.set_xticklabels(labels, fontsize=9)
+    ax.set_xlabel("lam_decay code")
+    ax.set_ylabel("N primary Λ")
+    ax.set_title(f"Primary Λ decay classification (N={total}){title_suffix}")
+    ax.grid(axis="y", alpha=0.3, linestyle="--")
+
+    if log_y:
+        ax.set_yscale("log")
+        ax.set_ylim(bottom=0.8)
+    else:
+        ax.set_ylim(top=max(counts) * 1.18 if max(counts) > 0 else 1)
+
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out_path}")
 
 
 # -----------------------------------------------------------------------
@@ -328,7 +430,7 @@ def plot_theta_overlay(theta_by_cat, theta_any, out_path,
         if log_y:
             ax.set_yscale("log")
 
-        ax.legend(loc="upper right")
+        ax.legend(loc="upper left")
 
     ax.set_xlabel("θ = ∠(p_Λ, +Z) (mrad)")
     ax.set_ylabel("counts")
@@ -402,7 +504,7 @@ def main():
 
     df = concat_csvs_with_unique_events(files)
 
-    required = {"lam_is_first", "lam_nd",
+    required = {"lam_is_first", "lam_nd", "lam_decay",
                 "lam_epx", "lam_epy", "lam_epz",
                 "lam_px", "lam_py", "lam_pz"}
     missing = required - set(df.columns)
@@ -411,9 +513,10 @@ def main():
         sys.exit(1)
 
     df = df[df["lam_is_first"] == 1].copy()
-    df = df.dropna(subset=["lam_nd",
+    df = df.dropna(subset=["lam_nd", "lam_decay",
                            "lam_epx", "lam_epy", "lam_epz",
                            "lam_px", "lam_py", "lam_pz"])
+    df["lam_decay"] = df["lam_decay"].astype(int)
     df["lam_nd"] = df["lam_nd"].astype(int)
     print(f"Primary Λ rows after filtering: {len(df)}")
 
@@ -502,6 +605,14 @@ def main():
                    os.path.join(outdir, "lam_endpoints_z1d_ndany.png"),
                    color="steelblue")
 
+    z_by_cat = [z[pred(nd).to_numpy()] for _, _, _, pred in CATEGORIES]
+    plot_z1d_overlay(z_by_cat, z[valid],
+                     os.path.join(outdir, "lam_endpoints_z1d_overlay.png"),
+                     log_y=False)
+    plot_z1d_overlay(z_by_cat, z[valid],
+                     os.path.join(outdir, "lam_endpoints_z1d_overlay_log.png"),
+                     log_y=True, title_suffix="  (log y)")
+
     # -------- V. Polar angle θ with Z axis ----------------------------
     px = df["lam_px"].to_numpy()
     py = df["lam_py"].to_numpy()
@@ -517,6 +628,14 @@ def main():
     plot_theta_overlay(theta_by_cat, theta_any,
                        os.path.join(outdir, "lam_angle_theta_log.png"),
                        log_y=True, title_suffix="  (log y)")
+
+    # -------- VI. Decay-code column chart -----------------------------
+    plot_decay_counts(df["lam_decay"],
+                      os.path.join(outdir, "lam_decay_counts.png"),
+                      log_y=False)
+    plot_decay_counts(df["lam_decay"],
+                      os.path.join(outdir, "lam_decay_counts_log.png"),
+                      log_y=True, title_suffix="  (log y)")
 
     print(f"\nDone. All plots in: {outdir}")
 
