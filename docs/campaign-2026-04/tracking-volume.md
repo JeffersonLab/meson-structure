@@ -1,8 +1,8 @@
 <script setup>
 const sources = {
-  '10x100 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv_10x100/',
-  '10x130 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv_10x130/',
-  '18x275 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv_18x275/'
+  '10x100 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv-10x100/',
+  '10x130 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv-10x130/',
+  '18x275 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv-18x275/'
 }
 </script>
 
