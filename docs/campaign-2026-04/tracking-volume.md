@@ -46,6 +46,11 @@ During analysis we calculate daughters and what are the daughters:
   description="Step histograms per daughter-count category plus a dashed outline for the combined sample."
 />
 
+<VerticalComparePlot
+  plot-name="lam_endpoints_z1d_nd2.png"
+  title="Λ endpoint Z for lambdas with 2 daughters"
+/>
+
 
 <VerticalComparePlot
   plot-name="lam_angle_theta.png"
