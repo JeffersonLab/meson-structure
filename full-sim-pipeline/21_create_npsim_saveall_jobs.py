@@ -18,7 +18,7 @@ def create_container_script_template():
     return textwrap.dedent("""\
     #!/bin/bash
     set -e
-       
+    
     echo ">"
     echo "= NPSIM ==================================================================="
     echo "==========================================================================="
@@ -28,12 +28,12 @@ def create_container_script_template():
     echo "    {output_file}.*"
 
     mkdir -p $(dirname {output_file})
-    cd $(dirname {output_file})
-                           
+    cd $(dirname {output_file})                           
+
     if [ -f "/opt/detector/epic-main/bin/thisepic.sh" ]; then
         source /opt/detector/epic-main/bin/thisepic.sh
     fi
-    /usr/bin/time -v npsim --part.userParticleHandler="Geant4TVUserParticleHandler" --compactFile=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml --runType run --inputFiles {input_file} --outputFile {output_file} --numberOfEvents 1000 2>&1
+    /usr/bin/time -v npsim --part.userParticleHandler="" --compactFile=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml --runType run --inputFiles {input_file} --outputFile {output_file} --numberOfEvents 500 2>&1
     
     echo ""
     echo "=========================================================================="
@@ -47,8 +47,8 @@ def create_container_script_template():
 def process_energy(config, energy):
     """Process all files for a specific energy."""
 
-    source_dir = config.dd4hep_input
-    output_dir = config.dd4hep_output
+    source_dir = config.dd4hep_saveall_input
+    output_dir = config.dd4hep_saveall_output
     
     print("\n" + "="*60)
     print(f"PROCESSING ENERGY: {energy} GeV")
