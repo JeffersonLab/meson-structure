@@ -1,0 +1,60 @@
+# Simplified Configuration for Meson Structure Pipeline
+# Campaign 2025-08 - Priority Processing Only
+
+# Base directories
+# base_dir is where all output will go, source_dir is where input files are located
+eic_campaign: "/volatile/eic/EPIC/RECO/26.02.0/epic_craterlake/EXCLUSIVE/MESON_SF_ABCONV/eicMesonSFGen-1.0.0/ep"
+base_dir: "/work/eic3/users/romanov/meson-structure-official-2026-02"
+source_dir: "/work/eic3/users/romanov/meson-structure-official-2026-02"
+priority: ""     # "-priority" or "" for normal processing
+
+# 10x100/
+
+# These are directories besides base_dir that will be bound inside the container
+bind_dirs: [
+  "${base_dir}",
+  "${source_dir}",
+]
+
+# Container
+#container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.10-stable"
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:26.02.0-stable"
+#container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+#container: "/work/eic3/users/romanov/meson-structure-work/eicrecon_ff_multicalo.sif"
+
+# Scripts location
+scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Test mode - set to true to test without actually submitting jobs
+dry_run: true
+
+# Energies to process
+energies: 
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Number of events per job
+event_count: 5000
+
+# Afterburner jobs
+afterburner_source: "${source_dir}/eg-hepmc/${energy}${priority}"
+afterburner_output: "${source_dir}/afterburner/${energy}${priority}"
+
+
+# DD4Hep jobs
+# afterburner_output is input here
+dd4hep_output: "${base_dir}/dd4hep/${energy}${priority}"
+
+# EICrecon jobs
+# dd4hep_output is input here
+eicrecon_output: "${eic_campaign}/${energy}"
+
+# Where to put CSV output
+# eicrecon_output and dd4hep_output are inputs here
+csv_dd4hep_output: "${base_dir}/csv_dd4hep/${energy}${priority}"
+csv_eicrecon_output: "${base_dir}/csv_eicrecon/${energy}${priority}"
+
+# Analysis results output
+analysis_output: "${base_dir}/analysis${priority}"

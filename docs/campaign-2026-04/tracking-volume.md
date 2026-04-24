@@ -1,17 +1,14 @@
 <script setup>
 const sources = {
-  '5x41 GeV':    '/analysis/campaign-2026-04/tracking-volume/saveall_5x41/',
-  '10x100 GeV':  '/analysis/campaign-2026-04/tracking-volume/saveall_10x100/',
-  '10x130 GeV':  '/analysis/campaign-2026-04/tracking-volume/saveall_10x130/',
-  '18x275 GeV':  '/analysis/campaign-2026-04/tracking-volume/saveall_18x275/'
+  '10x100 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv_10x100/',
+  '10x130 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv_10x130/',
+  '18x275 GeV':  '/analysis/campaign-2026-04/tracking-volume/longtv_18x275/'
 }
 </script>
 
 # Tracking volume — `saveall` variant
 
-Primary Λ endpoint plots for the `saveall` variant only (DD4hep run with
-`--part.keepAllParticles=True`). Browse by beam energy using the selector
-below or compare any two energies via the per-plot dropdown.
+Test of new tracking volume setting. 
 
 See the [campaign index](./campaign-2026-04.md) for bug context and variant
 definitions.

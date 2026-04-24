@@ -60,17 +60,10 @@ export default withMermaid({
                 ]
             },
             {
-                text: 'Campaign 2026-03',
-                link: '/campaign-2026-03/campaign-2026-03',
-                items: [
-                    {text: "Reco DIS All", link: '/campaign-2025-10/reco-dis-all'},
-                ]
-            },
-            {
                 text: 'Campaign 2025-10',
                 link: '/campaign-2025-10/campaign-2025-10',
                 items: [
-                    {text: "Reco DIS All", link: '/campaign-2025-10/reco-dis-all'},
+                    
                 ]
             },
 
