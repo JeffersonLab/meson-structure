@@ -39,6 +39,7 @@ During analysis we calculate daughters and what are the daughters:
   title="Primary Λ decay codes — counts per category"
 />
 
+### Endpoint Z & Angle
 
 <VerticalComparePlot
   plot-name="lam_endpoints_z1d_overlay.png"
@@ -51,11 +52,12 @@ During analysis we calculate daughters and what are the daughters:
   title="Λ endpoint Z for lambdas with 2 daughters"
 />
 
-
 <VerticalComparePlot
   plot-name="lam_angle_theta.png"
   title="Λ angle θ with Z+ (mrad)"
 />
+
+### Endpoint in ZX and ZY
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_scatter.png"
