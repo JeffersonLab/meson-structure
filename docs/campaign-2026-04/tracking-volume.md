@@ -70,7 +70,7 @@ I.e. the point where Geant4 decayed lambdas.
 
 These plots just use number of daughters, not categories like above. 
 
-### Λ endpoint Z (all)
+### Λ endpoint Z 1D (all)
 
 <VerticalComparePlot
   plot-name="lam_endpoints_z1d_overlay.png"
@@ -79,7 +79,7 @@ These plots just use number of daughters, not categories like above.
 />
 
 
-### Λ endpoint Z by N-daughters
+### Λ endpoint Z 1D by N-daughters
 
 <VerticalComparePlot
   plot-name="lam_endpoints_z1d_ndany.png"
@@ -118,7 +118,7 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
 
 ## IV. ZX plane (EIC detector overlay)
 
-### Scatter — coloured by daughter count
+### ZX Scatter — by daughter count
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_scatter.png"
@@ -126,6 +126,8 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
   description="Per-event scatter of Λ endpoints in the ZX plane. Colour encodes number of recorded daughters (0, 1, 2, ≥3)."
 />
 
+
+### ZX 2D histograms
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_hist2d_ndany.png"
@@ -162,13 +164,14 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
 
 ## V. ZY plane
 
+### ZY 2D Scatter
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zy_scatter.png"
   title="Scatter. Primary Λ endpoint ZY — coloured by n daughters"
 />
 
-
+### ZY 2D Histograms
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zy_hist2d_ndany.png"
@@ -201,13 +204,14 @@ R = sqrt(X² + Y²) is plotted with a minus sign so that points fall into the
 lower half of the detector cross-section, which is where the hadron-beam
 pipe bends.
 
+### ZR 2D Scatter
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zr_scatter.png"
   title="Primary Λ endpoint Z vs. -R — coloured by n daughters"
 />
 
-
+### ZR 2D Histograms
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zr_hist2d_ndany.png"
