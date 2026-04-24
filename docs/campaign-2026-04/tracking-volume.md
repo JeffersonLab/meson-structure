@@ -8,7 +8,7 @@ const sources = {
 
 # Tracking volume — `saveall` variant
 
-Test of new tracking volume setting. 
+Test of new tracking volume setting.
 
 See the [campaign index](./campaign-2026-04.md) for bug context and variant
 definitions.
@@ -19,127 +19,25 @@ filtered to `lam_is_first == 1`, and grouped by daughter count
 
 <PlotCompareViewer :sources="sources">
 
-## I. ZX plane (EIC detector overlay)
+## I. Λ decay classification
 
-### Scatter — coloured by daughter count
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zx_scatter.png"
-  title="Primary Λ endpoint ZX — coloured by n daughters"
-  description="Per-event scatter of Λ endpoints in the ZX plane. Colour encodes number of recorded daughters (0, 1, 2, ≥3)."
-/>
-
-### 2-D histogram, all categories (any nd)
+Column chart of primary-Λ decay codes as written by the converter.
+Codes match `csv_mcpart_lambda.cxx`:
+`0` no daughters · `1` p π- · `2` n π0 · `3` >2 daughters ·
+`4/5/6/7` single p / π+ / n / π0 · `8` other (non-standard 1- or 2-daughter
+combination).
 
 <VerticalComparePlot
-  plot-name="lam_endpoints_zx_hist2d_ndany.png"
-  title="ZX endpoint density — any nd"
-/>
-
-### 2-D histogram, nd = 0 (undecayed)
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zx_hist2d_nd0.png"
-  title="ZX endpoint density — nd = 0"
-  description="Primary Λ with no recorded daughters."
-/>
-
-### 2-D histogram, nd = 1
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zx_hist2d_nd1.png"
-  title="ZX endpoint density — nd = 1"
-/>
-
-### 2-D histogram, nd = 2 (canonical two-body)
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zx_hist2d_nd2.png"
-  title="ZX endpoint density — nd = 2"
-  description="Canonical two-body Λ decay topology (p π- or n π0)."
-/>
-
-### 2-D histogram, nd ≥ 3 (showering)
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zx_hist2d_nd3plus.png"
-  title="ZX endpoint density — nd ≥ 3"
-/>
-
-## II. ZY plane
-
-### Scatter
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zy_scatter.png"
-  title="Primary Λ endpoint ZY — coloured by n daughters"
-/>
-
-### 2-D histograms
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zy_hist2d_ndany.png"
-  title="ZY endpoint density — any nd"
+  plot-name="lam_decay_counts.png"
+  title="Primary Λ decay codes — counts per category"
 />
 
 <VerticalComparePlot
-  plot-name="lam_endpoints_zy_hist2d_nd0.png"
-  title="ZY endpoint density — nd = 0"
+  plot-name="lam_decay_counts_log.png"
+  title="Primary Λ decay codes — counts per category (log y)"
 />
 
-<VerticalComparePlot
-  plot-name="lam_endpoints_zy_hist2d_nd1.png"
-  title="ZY endpoint density — nd = 1"
-/>
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zy_hist2d_nd2.png"
-  title="ZY endpoint density — nd = 2"
-/>
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zy_hist2d_nd3plus.png"
-  title="ZY endpoint density — nd ≥ 3"
-/>
-
-## III. ZR plane (EIC detector overlay, R = sqrt(X²+Y²))
-
-### Scatter
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zr_scatter.png"
-  title="Primary Λ endpoint ZR — coloured by n daughters"
-  description="Radial view. Since R ≥ 0, only the upper half of the overlaid detector cross-section receives data points."
-/>
-
-### 2-D histograms
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zr_hist2d_ndany.png"
-  title="ZR endpoint density — any nd"
-/>
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zr_hist2d_nd0.png"
-  title="ZR endpoint density — nd = 0"
-/>
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zr_hist2d_nd1.png"
-  title="ZR endpoint density — nd = 1"
-/>
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zr_hist2d_nd2.png"
-  title="ZR endpoint density — nd = 2"
-/>
-
-<VerticalComparePlot
-  plot-name="lam_endpoints_zr_hist2d_nd3plus.png"
-  title="ZR endpoint density — nd ≥ 3"
-/>
-
-## IV. 1-D Λ endpoint Z distributions
+## II. 1-D Λ endpoint Z distributions
 
 ### Overlay (all categories on one figure)
 
@@ -181,7 +79,7 @@ filtered to `lam_is_first == 1`, and grouped by daughter count
   title="Λ endpoint Z — nd ≥ 3"
 />
 
-## V. Λ polar angle with respect to +Z
+## III. Λ polar angle with respect to +Z
 
 The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
 
@@ -193,6 +91,129 @@ The EIC hadron-beam crossing angle (25 mrad) is marked on both plots.
 <VerticalComparePlot
   plot-name="lam_angle_theta_log.png"
   title="Primary Λ polar angle θ (mrad), log y"
+/>
+
+## IV. ZX plane (EIC detector overlay)
+
+### Scatter — coloured by daughter count
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zx_scatter.png"
+  title="Primary Λ endpoint ZX — coloured by n daughters"
+  description="Per-event scatter of Λ endpoints in the ZX plane. Colour encodes number of recorded daughters (0, 1, 2, ≥3)."
+/>
+
+### 2-D histogram, all categories (any nd)
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zx_hist2d_ndany.png"
+  title="ZX endpoint density — any nd"
+/>
+
+### 2-D histogram, nd = 0 (undecayed)
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zx_hist2d_nd0.png"
+  title="ZX endpoint density — nd = 0"
+  description="Primary Λ with no recorded daughters."
+/>
+
+### 2-D histogram, nd = 1
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zx_hist2d_nd1.png"
+  title="ZX endpoint density — nd = 1"
+/>
+
+### 2-D histogram, nd = 2 (canonical two-body)
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zx_hist2d_nd2.png"
+  title="ZX endpoint density — nd = 2"
+  description="Canonical two-body Λ decay topology (p π- or n π0)."
+/>
+
+### 2-D histogram, nd ≥ 3
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zx_hist2d_nd3plus.png"
+  title="ZX endpoint density — nd ≥ 3"
+/>
+
+## V. ZY plane
+
+### Scatter
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zy_scatter.png"
+  title="Primary Λ endpoint ZY — coloured by n daughters"
+/>
+
+### 2-D histograms
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zy_hist2d_ndany.png"
+  title="ZY endpoint density — any nd"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zy_hist2d_nd0.png"
+  title="ZY endpoint density — nd = 0"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zy_hist2d_nd1.png"
+  title="ZY endpoint density — nd = 1"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zy_hist2d_nd2.png"
+  title="ZY endpoint density — nd = 2"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zy_hist2d_nd3plus.png"
+  title="ZY endpoint density — nd ≥ 3"
+/>
+
+## VI. Z vs. -R plane (EIC detector overlay, lower half)
+
+R = sqrt(X² + Y²) is plotted with a minus sign so that points fall into the
+lower half of the detector cross-section, which is where the hadron-beam
+pipe bends.
+
+### Scatter
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zr_scatter.png"
+  title="Primary Λ endpoint Z vs. -R — coloured by n daughters"
+/>
+
+### 2-D histograms
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zr_hist2d_ndany.png"
+  title="Z vs. -R endpoint density — any nd"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zr_hist2d_nd0.png"
+  title="Z vs. -R endpoint density — nd = 0"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zr_hist2d_nd1.png"
+  title="Z vs. -R endpoint density — nd = 1"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zr_hist2d_nd2.png"
+  title="Z vs. -R endpoint density — nd = 2"
+/>
+
+<VerticalComparePlot
+  plot-name="lam_endpoints_zr_hist2d_nd3plus.png"
+  title="Z vs. -R endpoint density — nd ≥ 3"
 />
 
 </PlotCompareViewer>

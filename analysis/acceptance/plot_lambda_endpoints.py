@@ -151,8 +151,14 @@ def collect_files(patterns, use_glob):
 # -----------------------------------------------------------------------
 # ZX plane
 # -----------------------------------------------------------------------
+# Figure size for detector-overlay plots. The image is ~39 000 × 6 000 mm
+# (aspect ~6.5:1), so (20, 4.5) leaves the axes box almost filling the
+# figure instead of letting aspect='equal' shrink it to a thin strip.
+BG_FIGSIZE = (20, 4.5)
+
+
 def plot_zx_scatter(z, x, codes, out_path):
-    fig, ax = create_plot_with_background()
+    fig, ax = create_plot_with_background(figsize=BG_FIGSIZE)
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
 
     cmap = ListedColormap([c for _, _, c, _ in CATEGORIES])
@@ -175,7 +181,7 @@ def plot_zx_scatter(z, x, codes, out_path):
 
 
 def plot_zx_hist2d(z, x, title, out_path, bins=(500, 250)):
-    fig, ax = create_plot_with_background()
+    fig, ax = create_plot_with_background(figsize=BG_FIGSIZE)
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
 
     if len(z) > 0:
@@ -248,14 +254,16 @@ def plot_zy_hist2d(z, y, title, out_path, z_lim, y_lim, bins=(500, 250)):
 
 # -----------------------------------------------------------------------
 # ZR plane (R = sqrt(X^2+Y^2)) — identical layout to ZX, detector overlaid
+# R is plotted with a minus sign so points fall into the *lower* half of
+# the detector cross-section, which is where the hadron-beam pipe bends.
 # -----------------------------------------------------------------------
 def plot_zr_scatter(z, r, codes, out_path):
-    fig, ax = create_plot_with_background()
+    fig, ax = create_plot_with_background(figsize=BG_FIGSIZE)
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
 
     cmap = ListedColormap([c for _, _, c, _ in CATEGORIES])
     norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
-    sc = ax.scatter(z, r, c=codes, cmap=cmap, norm=norm,
+    sc = ax.scatter(z, -r, c=codes, cmap=cmap, norm=norm,
                     s=3, alpha=0.55, edgecolors="none")
 
     cbar = fig.colorbar(sc, ax=ax, ticks=[0, 1, 2, 3], shrink=0.75)
@@ -265,19 +273,19 @@ def plot_zr_scatter(z, r, codes, out_path):
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     ax.set_xlabel("Z (mm)")
-    ax.set_ylabel("R = sqrt(X² + Y²) (mm)")
-    ax.set_title("Primary Λ endpoint, ZR plane — coloured by n daughters")
+    ax.set_ylabel("-R = -sqrt(X² + Y²) (mm)")
+    ax.set_title("Primary Λ endpoint, Z vs. -R — coloured by n daughters")
     fig.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
     print(f"wrote {out_path}  (N={len(z)})")
 
 
 def plot_zr_hist2d(z, r, title, out_path, bins=(500, 250)):
-    fig, ax = create_plot_with_background()
+    fig, ax = create_plot_with_background(figsize=BG_FIGSIZE)
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
 
     if len(z) > 0:
-        h = ax.hist2d(z, r, bins=bins, cmap="viridis",
+        h = ax.hist2d(z, -r, bins=bins, cmap="viridis",
                       norm=LogNorm(), alpha=0.80,
                       range=[xlim, ylim])
         fig.colorbar(h[3], ax=ax, shrink=0.75, label="counts (log)")
@@ -288,7 +296,7 @@ def plot_zr_hist2d(z, r, title, out_path, bins=(500, 250)):
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     ax.set_xlabel("Z (mm)")
-    ax.set_ylabel("R = sqrt(X² + Y²) (mm)")
+    ax.set_ylabel("-R = -sqrt(X² + Y²) (mm)")
     ax.set_title(title)
     fig.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
@@ -339,16 +347,20 @@ def plot_z1d_overlay(z_by_cat, z_any, out_path,
 # Decay-code column chart (9 codes from csv_mcpart_lambda.cxx)
 # -----------------------------------------------------------------------
 # (code, short label, multi-line x-tick label, bar colour)
+# Codes match csv_mcpart_lambda.cxx exactly. Note: code 3 is ANY >2-daughter
+# case (no Λ-in-daughters check is done by the converter). Code 8 is the
+# catch-all for non-standard 1- or 2-daughter combinations (e.g. 2-daughter
+# with PDGs other than {p,π-}/{n,π0}, or 1-daughter PDG not in {p,π+,n,π0}).
 DECAY_CODES = [
-    (0, "no daughters",        "0\nno daughters",          "tab:blue"),
-    (1, "p π-",                "1\np π-",                  "tab:green"),
-    (2, "n π0",                "2\nn π0",                  "tab:orange"),
-    (3, "shower (>2 daug.)",   "3\nshower\n(>2 daug.)",    "tab:red"),
-    (4, "only p",              "4\nonly p",                "tab:purple"),
-    (5, "only π+",             "5\nonly π+",               "tab:brown"),
-    (6, "only n",              "6\nonly n",                "tab:pink"),
-    (7, "only π0",             "7\nonly π0",               "tab:olive"),
-    (8, "other / mixed",       "8\nother\n/ mixed",        "tab:gray"),
+    (0, "no daughters",       "0\nno\ndaughters",           "tab:blue"),
+    (1, "p π-",               "1\np π-",                    "tab:green"),
+    (2, "n π0",                "2\nn π0",                   "tab:orange"),
+    (3, ">2 daughters",       "3\n>2\ndaughters",           "tab:red"),
+    (4, "only p",             "4\nonly p",                  "tab:purple"),
+    (5, "only π+",            "5\nonly π+",                 "tab:brown"),
+    (6, "only n",             "6\nonly n",                  "tab:pink"),
+    (7, "only π0",            "7\nonly π0",                 "tab:olive"),
+    (8, "other (non-std 1/2)", "8\nother\nnon-std\n1/2-d",  "tab:gray"),
 ]
 
 
