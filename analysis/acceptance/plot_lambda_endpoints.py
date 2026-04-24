@@ -374,7 +374,14 @@ def plot_decay_counts(decay_series, out_path, log_y=False, title_suffix=""):
     total = sum(counts)
 
     fig, ax = plt.subplots(figsize=(14, 7))
-    bars = ax.bar(codes, counts, color=colors,
+
+    # Under log scale, bar baseline 0 -> -inf and blows up the y-range.
+    # Switch to log *before* drawing and lift the baseline to 0.8.
+    bar_bottom = 0.8 if log_y else 0.0
+    if log_y:
+        ax.set_yscale("log")
+
+    bars = ax.bar(codes, counts, bottom=bar_bottom, color=colors,
                   edgecolor="black", linewidth=0.6)
 
     if total > 0:
@@ -382,7 +389,7 @@ def plot_decay_counts(decay_series, out_path, log_y=False, title_suffix=""):
         y_ref = max(counts) if not log_y else max(max(counts), 1)
         for bar, cnt in zip(bars, counts):
             pct = 100.0 * cnt / total
-            y = bar.get_height()
+            y = bar.get_y() + bar.get_height()
             ax.text(bar.get_x() + bar.get_width() / 2,
                     y + (0.01 * y_ref if not log_y else y * 0.05),
                     f"{cnt}\n{pct:.1f}%",
@@ -396,8 +403,8 @@ def plot_decay_counts(decay_series, out_path, log_y=False, title_suffix=""):
     ax.grid(axis="y", alpha=0.3, linestyle="--")
 
     if log_y:
-        ax.set_yscale("log")
-        ax.set_ylim(bottom=0.8)
+        top = max(counts) if counts else 1
+        ax.set_ylim(bottom=0.8, top=max(top * 2.5, 10))
     else:
         ax.set_ylim(top=max(counts) * 1.18 if max(counts) > 0 else 1)
 
