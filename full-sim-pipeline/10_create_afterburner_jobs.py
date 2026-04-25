@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 npsim_pipeline.py
-Generate and submit afterburner jobs using JobRunner.
+Generate and submit afterburner jobs using JobCreator.
 """
 
 import argparse
@@ -10,7 +10,7 @@ from typing import Dict
 import yaml
 import glob
 import textwrap
-from job_runner import JobRunner, exension_replacer, find_input_files, load_config, load_config_for_energy
+from job_creator import JobCreator, exension_replacer, find_input_files, load_config, load_config_for_energy, write_top_master_scripts
 
 
 def create_container_script_template():
@@ -54,11 +54,11 @@ def process_energy(config, energy):
     input_files = find_input_files(source_dir, '*.hepmc')
     if input_files is None:
         print(f"Skipping energy {energy} GeV due to no input files.")
-        return
+        return None
 
 
-    # Create JobRunner instance with proper initialization
-    runner = JobRunner(
+    # Create JobCreator instance with proper initialization
+    runner = JobCreator(
         input_files=input_files,
         output_file_name_func=exension_replacer('.hepmc', ''),  # afterburner adds extension by itself, so we remove it here
         output_dir=output_dir,
@@ -66,19 +66,20 @@ def process_energy(config, energy):
         events=config.event_count,
         container=config['container'],
     )
-    
+
     # Set the container job template and content generator
     runner.container_script_template = create_container_script_template()
     runner.container_script_params_updater = lambda params: {
             **params,
             'afterburn_preset_flag': "--preset=ip6_ep_130x10" if "10x130" in params['basename'] else ""
         }
-    
+
     # Run the job generator
     runner.run()
-    
+
     print("="*60)
     print(f"✓ Completed processing for {energy} GeV\n\n")
+    return runner
 
 
 def main():
@@ -94,10 +95,12 @@ def main():
 
     # Process each energy
     print(f"Energies to process: {energies}")
+    creators = []
     for energy in energies:
         config = load_config_for_energy(args.config, energy)
-        process_energy(config, energy)
+        creators.append(process_energy(config, energy))
 
+    write_top_master_scripts(creators)
     print("ALL ENERGIES PROCESSED SUCCESSFULLY")
 
 

@@ -1,7 +1,7 @@
 """
-job_runner.py
+job_creator.py
 
-A reusable JobRunner class for generating and managing HPC workflow scripts.
+A reusable JobCreator class for generating and managing HPC workflow scripts.
 Supports both SLURM submission and local sequential execution.
 
 EXAMPLES:
@@ -9,7 +9,7 @@ EXAMPLES:
 
 1. Minimal Working Example:
 ```python
-from job_runner import JobRunner
+from job_creator import JobCreator
 
 # Define how output files are named
 def output_name(input_file, output_dir):
@@ -17,7 +17,7 @@ def output_name(input_file, output_dir):
     return os.path.join(output_dir, basename)
 
 # Create runner with required parameters
-runner = JobRunner(
+runner = JobCreator(
     input_files=['file1.in', 'file2.in'],
     output_file_name_func=output_name,
     output_dir='/path/to/output',
@@ -37,13 +37,13 @@ runner.run()
 
 2. Advanced Example with Custom Generation:
 ```python
-from job_runner import JobRunner
+from job_creator import JobCreator
 
 def output_name(input_file, output_dir):
     return os.path.join(output_dir, os.path.basename(input_file) + '.processed')
 
 # Initialize with full configuration
-runner = JobRunner(
+runner = JobCreator(
     input_files=glob.glob('*.hepmc'),
     output_file_name_func=output_name,
     output_dir='/scratch/results',
@@ -99,7 +99,7 @@ from glob import glob
 from omegaconf import OmegaConf
 import yaml
 
-class JobRunner:
+class JobCreator:
     """Flexible job runner for HPC workflows with container support."""
     
     def __init__(self, 
@@ -116,7 +116,7 @@ class JobRunner:
                  slurm_account: str = 'eic',
                  slurm_partition: str = 'production',
                  ):
-        """Initialize JobRunner with configuration."""
+        """Initialize JobCreator with configuration."""
         
         # Initialize config dictionary first
         self.config = {
@@ -380,14 +380,17 @@ class JobRunner:
         # Create master submission scripts
         submit_script = self.write_submit_all_script()
         run_script = self.write_run_all_script()
-        
+        self.submit_all_script = submit_script
+        self.run_all_script = run_script
+
         # Print summary
         self.print_summary(submit_script, run_script)
+        return self
     
     def print_config(self):
         """Pretty print the current configuration."""
 
-        print(f"JobRunner v{self.config['script_version']}")
+        print(f"JobCreator v{self.config['script_version']}")
         print("\n" + "="*80)
         print("CONFIGURATION")
         print("="*80)
@@ -462,6 +465,92 @@ def find_input_files(source_dir, glob_pattern='*.hepmc'):
     print(f"Found {len(files)} input files")
 
     return files
+
+
+def write_top_master_scripts(creators, top_dir=None):
+    """Write top-level submit/run scripts that aggregate all per-energy creators.
+
+    Produces two files at `top_dir`:
+      - submit_all_slurm_jobs.sh : sbatch every individual SLURM script
+      - run_all_local.sh         : singularity exec every container script in sequence
+
+    If `top_dir` is None, it is derived as the common parent of all
+    creators' output_dirs (e.g. parent of `dd4hep_saveall/5x41`,
+    `dd4hep_saveall/10x100`, ... -> `dd4hep_saveall`).
+    """
+    creators = [c for c in creators if c is not None]
+    if not creators:
+        print("write_top_master_scripts: no creators, nothing to aggregate.")
+        return None, None
+
+    if top_dir is None:
+        top_dir = os.path.commonpath([c.config['output_dir'] for c in creators])
+    os.makedirs(top_dir, exist_ok=True)
+
+    # ---- submit_all_slurm_jobs.sh : flat list of `sbatch <slurm_script>` ----
+    submit_lines = ["#!/bin/bash", "set -e", "",
+                    "# Aggregate top-level submit script across all energies", ""]
+    total_slurm = 0
+    for c in creators:
+        submit_lines.append(f"# === {os.path.basename(c.config['output_dir'])} ===")
+        for s in c.generated_scripts['slurm']:
+            submit_lines.append(f"sbatch {s}")
+            total_slurm += 1
+        submit_lines.append("")
+    submit_lines.append(f'echo "Submitted {total_slurm} SLURM jobs across {len(creators)} energies!"')
+
+    submit_path = os.path.join(top_dir, 'submit_all_slurm_jobs.sh')
+    with open(submit_path, 'w') as f:
+        f.write('\n'.join(submit_lines))
+    os.chmod(submit_path, 0o755)
+
+    # ---- run_all_local.sh : run each container script via singularity ----
+    run_lines = ["#!/bin/bash", "set -e", "",
+                 "# Aggregate top-level local-run script across all energies", "",
+                 "START_TIME=$SECONDS", ""]
+
+    # Flatten (creator, container_script) pairs to compute total/index
+    pairs = []
+    for c in creators:
+        for cs in c.generated_scripts['container']:
+            pairs.append((c, cs))
+    total = len(pairs)
+
+    for i, (c, cs) in enumerate(pairs, 1):
+        bindings = ' '.join(f'-B {d}:{d}' for d in c.config['bind_dirs'])
+        basename = os.path.basename(cs)
+        run_lines.extend([
+            f'echo "[{i}/{total}] Running {basename}..."',
+            "JOB_START=$SECONDS",
+            f"singularity exec {bindings} {c.config['container']} {cs}",
+            "JOB_TIME=$((SECONDS - JOB_START))",
+            'echo "    Completed in $JOB_TIME seconds"',
+            "",
+        ])
+    run_lines.extend([
+        "TOTAL_TIME=$((SECONDS - START_TIME))",
+        'echo "====================================="',
+        f'echo "All {total} jobs across {len(creators)} energies completed!"',
+        'echo "Total execution time: $TOTAL_TIME seconds"',
+        'echo "====================================="',
+    ])
+
+    run_path = os.path.join(top_dir, 'run_all_local.sh')
+    with open(run_path, 'w') as f:
+        f.write('\n'.join(run_lines))
+    os.chmod(run_path, 0o755)
+
+    print("\n" + "=" * 80)
+    print("TOP-LEVEL MASTER SCRIPTS")
+    print("=" * 80)
+    print(f"  Top dir:          {top_dir}")
+    print(f"  Energies covered: {len(creators)}")
+    print(f"  Total SLURM jobs: {total_slurm}")
+    print(f"  Submit all:       {submit_path}")
+    print(f"  Run all locally:  {run_path}")
+    print("=" * 80)
+
+    return submit_path, run_path
 
 
 def exension_replacer(from_ext, to_ext):

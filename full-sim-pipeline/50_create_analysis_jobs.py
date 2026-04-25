@@ -18,7 +18,7 @@ import os
 import textwrap
 import datetime
 import yaml
-from job_runner import load_config, load_config_for_energy, find_input_files
+from job_creator import load_config, load_config_for_energy, find_input_files
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(this_dir)

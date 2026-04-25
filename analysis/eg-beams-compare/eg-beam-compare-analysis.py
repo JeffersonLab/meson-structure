@@ -33,6 +33,7 @@ import matplotlib.pyplot as plt
 FILE_PATHS = {
     "5x41":   r"/mnt/e/data/meson-structure/k_lambda_crossing_0_5.0on41.0_x0.0001-0.9000_q1.0-500.0.root",
     "10x100": r"/mnt/e/data/meson-structure/k_lambda_crossing_0_10.0on100.0_x0.0001-0.9000_q1.0-500.0.root",
+    "10x130": r"/mnt/e/data/meson-structure/k_lambda_crossing_0_10.0on100.0_x0.0001-0.9000_q1.0-500.0.root",
     "18x275": r"/mnt/e/data/meson-structure/k_lambda_crossing_0_18.0on275.0_x0.0001-0.9000_q1.0-500.0.root",
 }
 
@@ -40,6 +41,7 @@ FILE_PATHS = {
 COLORS = {
     "5x41":  "green",
     "10x100": "magenta",
+    "10x130": "brown",
     "18x275": "blue",
 }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 npsim_pipeline.py
-Generate and submit afterburner jobs using JobRunner.
+Generate and submit afterburner jobs using JobCreator.
 """
 
 import argparse
@@ -10,7 +10,7 @@ from typing import Dict
 import yaml
 import glob
 import textwrap
-from job_runner import JobRunner, exension_replacer, find_input_files, load_config, load_config_for_energy
+from job_creator import JobCreator, exension_replacer, find_input_files, load_config, load_config_for_energy, write_top_master_scripts
 
 
 def create_container_script_template():
@@ -57,10 +57,10 @@ def process_energy(config, energy):
     input_files = find_input_files(source_dir, '*.edm4hep.root')
     if input_files is None:
         print(f"Skipping energy {energy} GeV due to no input files.")
-        return
+        return None
 
-    # Create JobRunner instance with proper initialization
-    runner = JobRunner(
+    # Create JobCreator instance with proper initialization
+    runner = JobCreator(
         input_files=input_files,
         output_file_name_func=exension_replacer('.edm4hep.root', '.edm4eic.root'),
         output_dir=output_dir,
@@ -69,15 +69,16 @@ def process_energy(config, energy):
         container=config.container,
         beam_config=energy
     )
-    
+
     # Set the container job template
     runner.container_script_template = create_container_script_template()
-    
+
     # Run the job generator
     runner.run()
-    
+
     print("="*60)
     print(f"✓ Completed processing for {energy} GeV\n\n")
+    return runner
 
 
 def main():
@@ -93,10 +94,12 @@ def main():
 
     # Process each energy
     print(f"Energies to process: {energies}")
+    creators = []
     for energy in energies:
         config = load_config_for_energy(args.config, energy)
-        process_energy(config, energy)
+        creators.append(process_energy(config, energy))
 
+    write_top_master_scripts(creators)
     print("ALL ENERGIES PROCESSED SUCCESSFULLY")
 
 

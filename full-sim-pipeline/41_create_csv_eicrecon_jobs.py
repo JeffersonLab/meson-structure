@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 csv_convert_pipeline.py
-Generate and submit CSV conversion jobs using JobRunner.
+Generate and submit CSV conversion jobs using JobCreator.
 Processes .edm4eic.root files with ROOT macros to create CSV outputs.
 """
 
@@ -9,7 +9,7 @@ import argparse
 import os
 from typing import Dict
 import textwrap
-from job_runner import JobRunner, find_input_files, load_config, load_config_for_energy
+from job_creator import JobCreator, find_input_files, load_config, load_config_for_energy, write_top_master_scripts
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 csv_convert_dir_default = os.path.join(os.path.dirname(this_dir), 'csv_convert')
@@ -100,7 +100,7 @@ def process_energy(config, config_path, energy):
     input_files = find_input_files(source_dir, '*.edm4eic.root')
     if input_files is None:
         print(f"Skipping energy {energy} GeV due to no input files.")
-        return
+        return None
 
     # Build bind_dirs - include csv_convert_dir
     bind_dirs = config.bind_dirs.copy() if 'bind_dirs' in config else []
@@ -109,8 +109,8 @@ def process_energy(config, config_path, energy):
     if csv_convert_dir not in bind_dirs:
         bind_dirs.append(csv_convert_dir)
 
-    # Create JobRunner instance
-    runner = JobRunner(
+    # Create JobCreator instance
+    runner = JobCreator(
         input_files=input_files,
         output_file_name_func=output_name_func,
         output_dir=output_dir,
@@ -131,6 +131,7 @@ def process_energy(config, config_path, energy):
 
     print("="*80)
     print(f"✓ Completed processing for {energy} GeV\n\n")
+    return runner
 
 
 def main():
@@ -147,10 +148,12 @@ def main():
     print(f"Energies to process: {energies}\n")
 
     # Process each energy
+    creators = []
     for energy in energies:
         config = load_config_for_energy(args.config, energy)
-        process_energy(config, args.config, energy)
+        creators.append(process_energy(config, args.config, energy))
 
+    write_top_master_scripts(creators)
     print("\n" + "="*80)
     print("ALL ENERGIES PROCESSED SUCCESSFULLY")
     print("="*80)
