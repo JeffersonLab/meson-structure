@@ -40,4 +40,10 @@ dd4hep_saveall_input:  "${base_dir}/afterburner/${energy}-priority"
 dd4hep_saveall_output: "${base_dir}/dd4hep_saveall/${energy}"
 
 csv_dd4hep_input: "${dd4hep_output}"
-csv_dd4hep_output: "${base_dir}/csv_dd4hep${suffix}/${energy}"
+csv_dd4hep_output: "${base_dir}/csv_dd4hep/${energy}"
+
+eicrecon_input: "${dd4hep_output}"
+eicrecon_output: "${base_dir}/reco/${energy}"
+
+csv_eicrecon_input: "${eicrecon_output}"
+csv_eicrecon_output: "${base_dir}/csv_reco/${energy}"

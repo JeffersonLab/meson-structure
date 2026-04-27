@@ -18,7 +18,7 @@ All plots are produced by `analysis/acceptance/plot_lambda_endpoints.py`,
 filtered to `lam_is_first == 1` (primary = Sullivan lambdas), and grouped by daughter count
 `nd ∈ {0, 1, 2, ≥3, any}`.
 
-<PlotCompareViewer :sources="sources">
+<PlotCompareViewer :sources="sources" defaultMode="18x275 GeV">
 
 ## I.The most explanatory plots
 
@@ -42,11 +42,17 @@ During analysis we calculate daughters and what are the daughters:
 
 ### Endpoint Z & Angle
 
+Here we anticipate that "the normal" endpoint for lambda must have 2 decay particles or shower (>3 decay particles)
+
 <VerticalComparePlot
   plot-name="lam_endpoints_z1d_overlay.png"
   title="Λ endpoint Z — by number of daughters"
   description="Step histograms per daughter-count category plus a dashed outline for the combined sample."
 />
+
+The look on Z distribution of Λ endpoint only for primary (Sullivan) lambdas that had 2 daughters. 
+Previously this distribution was cut off after thecetral detector. 
+(You can see more 1d z decay point plots further)
 
 <VerticalComparePlot
   plot-name="lam_endpoints_z1d_nd2.png"
@@ -59,6 +65,10 @@ During analysis we calculate daughters and what are the daughters:
 />
 
 ### Endpoint in ZX and ZY
+
+- Orange - "normal" or DPG decay - 2 daughters
+- Red - 3 or more daughters => shower
+- Blue - no daughters (daughters are not saved!)
 
 <VerticalComparePlot
   plot-name="lam_endpoints_zx_scatter.png"

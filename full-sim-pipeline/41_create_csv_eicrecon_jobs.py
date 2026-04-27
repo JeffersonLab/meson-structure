@@ -89,7 +89,7 @@ def process_energy(config, energy, config_path):
     print(f"CSV Macros: {csv_convert_dir}")
 
     input_files = find_inputs_or_skip(
-        config.eicrecon_output, '*.edm4eic.root', energy, config.csv_eicrecon_output
+        config.csv_eicrecon_input, '*.edm4eic.root', energy, config.csv_eicrecon_output
     )
     if input_files is None:
         return None
