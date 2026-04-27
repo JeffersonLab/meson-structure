@@ -56,7 +56,7 @@ export default withMermaid({
                 text: 'Campaign 2026-04',
                 link: '/campaign-2026-04/campaign-2026-04',
                 items: [
-                    {text: "Tracking volume (saveall)", link: '/campaign-2026-04/tracking-volume'},
+                    {text: "Tracking volume", link: '/campaign-2026-04/tracking-volume'},
                 ]
             },
             {
