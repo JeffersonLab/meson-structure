@@ -29,7 +29,9 @@ def create_container_script_template():
     echo "  Resulting files:"
     echo "    {output_file}.*"
 
-    source /opt/detector/epic-main/bin/thisepic.sh
+    if [ -f "/opt/detector/epic-main/bin/thisepic.sh" ]; then
+        source /opt/detector/epic-main/bin/thisepic.sh
+    fi
     cd $(dirname {output_file})
     /usr/bin/time -v /usr/bin/time -v eicrecon -Pdd4hep:xml_files=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml  -Ppodio:output_file={output_file}  {input_file} 2>&1
     
@@ -45,7 +47,7 @@ def create_container_script_template():
 def process_energy(config, energy):
     """Process all files for a specific energy."""
 
-    source_dir = config.dd4hep_output
+    source_dir = config.eicrecon_input
     output_dir = config.eicrecon_output
     
     print("\n" + "="*60)
