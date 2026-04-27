@@ -4,13 +4,8 @@ npsim_pipeline.py
 Generate and submit afterburner jobs using JobCreator.
 """
 
-import argparse
-import os
-from typing import Dict
-import yaml
-import glob
 import textwrap
-from job_creator import JobCreator, exension_replacer, find_input_files, load_config, load_config_for_energy, write_top_master_scripts
+from job_creator import JobCreator, exension_replacer, find_inputs_or_skip, run_pipeline
 
 
 def create_container_script_template():
@@ -44,67 +39,27 @@ def create_container_script_template():
 
 
 
-def process_energy(config, energy):
-    """Process all files for a specific energy."""
-
-    source_dir = config.dd4hep_input
-    output_dir = config.dd4hep_output
-    
-    print("\n" + "="*60)
-    print(f"PROCESSING ENERGY: {energy} GeV")
-    print(f"Source: {source_dir}")
-    print(f"Output: {output_dir}")
-    
-    # Find input files
-    input_files = find_input_files(source_dir, '*.hepmc')
+def process_energy(config, energy, config_path=None):
+    """Build a JobCreator for one beam energy."""
+    input_files = find_inputs_or_skip(
+        config.dd4hep_input, '*.hepmc', energy, config.dd4hep_output
+    )
     if input_files is None:
-        print(f"Skipping energy {energy} GeV due to no input files.")
         return None
 
-
-    # Create JobCreator instance with proper initialization
     runner = JobCreator(
         input_files=input_files,
         output_file_name_func=exension_replacer('.afterburner.hepmc', '.edm4hep.root'),
-        output_dir=output_dir,
+        output_dir=config.dd4hep_output,
         bind_dirs=config.bind_dirs,
         events=config.event_count,
         container=config['container'],
-        beam_config=energy
+        beam_config=energy,
     )
-
-    # Set the container job template
     runner.container_script_template = create_container_script_template()
-
-    # Run the job generator
     runner.run()
-
-    print("="*60)
-    print(f"✓ Completed processing for {energy} GeV\n\n")
     return runner
 
 
-def main():
-    """Main entry point."""
-
-    parser = argparse.ArgumentParser(description="Generate npsim jobs.")
-    parser.add_argument('-c', '--config', required=True, help="Path to config YAML file")
-    args = parser.parse_args()
-
-    # Load config
-    config = load_config(args.config)
-    energies = config.get('energies', [])
-
-    # Process each energy
-    print(f"Energies to process: {energies}")
-    creators = []
-    for energy in energies:
-        config = load_config_for_energy(args.config, energy)
-        creators.append(process_energy(config, energy))
-
-    write_top_master_scripts(creators)
-    print("ALL ENERGIES PROCESSED SUCCESSFULLY")
-
-
 if __name__ == "__main__":
-    main()
+    run_pipeline(process_energy, description="Generate npsim jobs.")

@@ -467,6 +467,63 @@ def find_input_files(source_dir, glob_pattern='*.hepmc'):
     return files
 
 
+def find_inputs_or_skip(source_dir, glob_pattern, energy, output_dir=None):
+    """Print a per-energy header, search source_dir for inputs, return them.
+
+    Use as the first lines of a process_energy function:
+
+        files = find_inputs_or_skip(config.dd4hep_input, '*.hepmc', energy,
+                                    config.dd4hep_output)
+        if files is None:
+            return None
+
+    Returns None if no inputs were found (caller should `return None`).
+    """
+    print("\n" + "=" * 60)
+    print(f"PROCESSING ENERGY: {energy} GeV")
+    print(f"Source: {source_dir}")
+    if output_dir is not None:
+        print(f"Output: {output_dir}")
+    files = find_input_files(source_dir, glob_pattern)
+    if files is None:
+        print(f"Skipping energy {energy} GeV due to no input files.")
+    return files
+
+
+def run_pipeline(process_energy_fn, description="Generate jobs."):
+    """Standard CLI entry point for the XX_create_*_jobs.py scripts.
+
+    Parses --config, iterates over `config.energies`, calls
+    `process_energy_fn(config, energy, config_path)` for each, then writes
+    the top-level aggregated submit/run scripts.
+
+    `process_energy_fn` must return the JobCreator it built (or None to skip
+    that energy). The `config_path` argument is always passed; ignore it if
+    your process_energy_fn doesn't need it.
+
+    Authors who want different orchestration (e.g. extra CLI flags, custom
+    energy filtering, multi-stage pipelines) should write main() by hand
+    instead of calling this — it's intentionally a small convenience, not
+    a framework.
+    """
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('-c', '--config', required=True,
+                        help="Path to config YAML file")
+    args = parser.parse_args()
+
+    base = load_config(args.config)
+    energies = list(base.get('energies', []))
+    print(f"Energies to process: {energies}")
+
+    creators = []
+    for energy in energies:
+        config = load_config_for_energy(args.config, energy)
+        creators.append(process_energy_fn(config, energy, args.config))
+
+    write_top_master_scripts(creators)
+    print("ALL ENERGIES PROCESSED SUCCESSFULLY")
+
+
 def write_top_master_scripts(creators, top_dir=None):
     """Write top-level submit/run scripts that aggregate all per-energy creators.
 

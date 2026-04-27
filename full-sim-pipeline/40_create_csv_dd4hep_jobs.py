@@ -5,11 +5,10 @@ Generate and submit CSV conversion jobs using JobCreator.
 Processes .edm4eic.root files with ROOT macros to create CSV outputs.
 """
 
-import argparse
 import os
 from typing import Dict
 import textwrap
-from job_creator import JobCreator, find_input_files, load_config, load_config_for_energy, write_top_master_scripts
+from job_creator import JobCreator, find_inputs_or_skip, load_config, run_pipeline
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 csv_convert_dir_default = os.path.join(os.path.dirname(this_dir), 'csv_convert')
@@ -96,28 +95,21 @@ def output_name_func(input_file, output_dir):
     return os.path.dirname(input_file)
 
 
-def process_energy(config, config_path, energy):
-    """Process all files for a specific energy."""
-    
+def process_energy(config, energy, config_path):
+    """Build a JobCreator for one beam energy."""
     csv_convert_dir = config.get('csv_convert_dir', csv_convert_dir_default)
-
-    print("\n" + "="*80)
-    print(f"PROCESSING ENERGY: {energy} GeV")
-    print(f"Source: {config.csv_dd4hep_input}")
     print(f"CSV Macros: {csv_convert_dir}")
 
-    # Find input files
-    input_files = find_input_files(config.csv_dd4hep_input, '*.edm4hep.root')
+    input_files = find_inputs_or_skip(
+        config.csv_dd4hep_input, '*.edm4hep.root', energy, config.csv_dd4hep_output
+    )
     if input_files is None:
-        print(f"Skipping energy {energy} GeV due to no input files.")
         return None
 
-    # include csv_convert_dir in bind_dirs
     bind_dirs = config.bind_dirs.copy() if 'bind_dirs' in config else []
     if csv_convert_dir not in bind_dirs:
         bind_dirs.append(csv_convert_dir)
 
-    # Create JobCreator instance
     runner = JobCreator(
         input_files=input_files,
         output_file_name_func=output_name_func,
@@ -125,47 +117,13 @@ def process_energy(config, config_path, energy):
         bind_dirs=bind_dirs,
         events=config.event_count,
         container=config.container,
-        beam_config=energy
+        beam_config=energy,
     )
-
-    # Set the container job template
     runner.container_script_template = create_container_script_template()
-
-    # Add custom parameters updater
     runner.container_script_params_updater = make_custom_params_updater(config_path)
-
-    # Run the job generator
     runner.run()
-
-    print("="*80)
-    print(f"✓ Completed processing for {energy} GeV\n\n")
     return runner
 
 
-def main():
-    """Main entry point."""
-
-    parser = argparse.ArgumentParser(description="Generate CSV conversion jobs.")
-    parser.add_argument('-c', '--config', required=True, help="Path to config YAML file")
-    args = parser.parse_args()
-
-    config = load_config(args.config)
-    energies = config.get('energies', [])
-
-    print(f"{'='*80}\n CSV CONVERSION PIPELINE\n{'='*80}")
-    print(f"Energies to process: {energies}\n")
-
-    # Process each energy
-    creators = []
-    for energy in energies:
-        config = load_config_for_energy(args.config, energy)
-        creators.append(process_energy(config, args.config, energy))
-
-    write_top_master_scripts(creators)
-    print("\n" + "="*80)
-    print("ALL ENERGIES PROCESSED SUCCESSFULLY")
-    print("="*80)
-
-
 if __name__ == "__main__":
-    main()
+    run_pipeline(process_energy, description="Generate CSV conversion jobs (dd4hep).")
