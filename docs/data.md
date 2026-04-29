@@ -2,10 +2,52 @@
 
 ## Location
 
+
 The meson structure data is available from the following locations:
 
 **LATEST PROCESSED FILES**  
-*(last update of March 2026)*
+*(last update of April 2026)*
+
+> (!) Currently there is disturbance with data because of 
+> https://github.com/eic/epic/issues/1069
+
+While data is being regenerated (
+  [see campaign 26-04](https://jeffersonlab.github.io/meson-structure/campaign-2026-04/campaign-2026-04.html))
+
+There are 2 small data samples available at JLab ifarm or XRootD. 
+
+There is important distinction. Issue #1069 showed that
+even with tracking volume not all MCParticle daughters are
+saved even if they get to calorimeter sensitives. We run 
+special "_saveall" flavor of data with epic DD4Hep which 
+save all MCParticles and their connections to hits, etc. 
+
+> I.E. (!!!) ALL ACCEPTANCE STUDIES MUST BE DONE USING "_saveall" DATA
+
+All reconstruction based analysis should be fine. 
+
+
+```bash
+/work/eic3/users/romanov/meson-structure-2026-04-check
+```
+
+On XRootD (open for universities and public)
+
+```bash
+xrdfs root://dtn-eic.jlab.org
+ls /work/eic3/users/romanov/meson-structure-2026-04-check
+```
+
+Subdirectories
+- afterburner - eg + beam effects
+- csv_dd4hep - dd4hep output based CSVs for accepance analysis
+- csv_reco - reconstruction based CSVs
+- dd4hep - EDM4Hep simulated data. New tracking volume (#1069) 
+- reco - EICrecon reconstructed data (of dd4hep)
+- dd4hep_saveall - EDM4Hep simulated data. All MCParticles saved for acceptance perfomance studies
+
+
+Older (and not valid in terms of issue \#1069 data:)
 
 On JLab ifarm:  
 
