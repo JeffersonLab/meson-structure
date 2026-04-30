@@ -101,7 +101,7 @@ def process_energy(config, energy, config_path):
     print(f"CSV Macros: {csv_convert_dir}")
 
     input_files = find_inputs_or_skip(
-        config.csv_dd4hep_input, '*.edm4hep.root', energy, config.csv_dd4hep_output
+        config.csv_dd4hep_saveall_input, '*.edm4hep.root', energy, config.csv_dd4hep_saveall_output
     )
     if input_files is None:
         return None
@@ -113,7 +113,7 @@ def process_energy(config, energy, config_path):
     runner = JobCreator(
         input_files=input_files,
         output_file_name_func=output_name_func,
-        output_dir=config.csv_dd4hep_output,
+        output_dir=config.csv_dd4hep_saveall_output,
         bind_dirs=bind_dirs,
         events=config.event_count,
         container=config.container,
