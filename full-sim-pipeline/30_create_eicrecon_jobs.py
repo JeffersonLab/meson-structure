@@ -27,7 +27,7 @@ def create_container_script_template():
     if [ -f "/opt/detector/epic-main/bin/thisepic.sh" ]; then
         source /opt/detector/epic-main/bin/thisepic.sh
     fi
-    cd $(dirname {output_file})
+    cd $(dirname {output_file})/..
     /usr/bin/time -v /usr/bin/time -v eicrecon -Pdd4hep:xml_files=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml  -Ppodio:output_file={output_file}  {input_file} 2>&1
     
     echo ""
