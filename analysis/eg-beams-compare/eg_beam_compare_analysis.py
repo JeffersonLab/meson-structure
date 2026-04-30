@@ -153,7 +153,7 @@ def process_file(filename, chunk_size=100_000, max_events=None):
 
     tree_name = "Evnts"
     expressions = [
-        "invts/Q2", "invts.xBj", "invts.y_D", "invts.W", "invts.tSpectator",
+        "invts.Q2", "invts.xBj", "invts.y_D", "invts.W", "invts.tSpectator",
         "invts.pDrest", "invts.alphaS",
         "lamb_scat"
     ]

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Cross-energy comparison of EG kinematics.
 
-This is a `mode: once` analysis — it consumes ALL energies in a single run
-and produces overlay plots. It does not get fanned out per energy.
+`mode: once` analysis — consumes ALL energies in a single run.
 
 Run standalone:
     python runner.py \
@@ -11,69 +10,56 @@ Run standalone:
 """
 from __future__ import annotations
 
-import importlib.util
+import argparse
 import sys
 from pathlib import Path
-from typing import Optional
-
-import typer
 
 runner_dir = Path(__file__).resolve().parent
-app = typer.Typer(add_completion=False, no_args_is_help=True)
+sys.path.insert(0, str(runner_dir))
 
 
-def _load_module():
-    """Import eg-beam-compare-analysis.py despite the dash in its filename."""
-    src = runner_dir / "eg-beam-compare-analysis.py"
-    spec = importlib.util.spec_from_file_location("eg_beam_compare", str(src))
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)  # type: ignore[union-attr]
-    return mod
-
-
-def _resolve_files(eg_dir: Path, energies: list[str]) -> dict[str, str]:
-    """Resolve {energy: filepath} for each requested energy."""
-    out: dict[str, str] = {}
+def resolve_files(eg_dir: Path, energies: list[str]) -> dict[str, str]:
+    found: dict[str, str] = {}
     for e in energies:
         e_num, p_num = e.split("x")
         pattern = f"k_lambda_crossing_*-{e_num}.0on{p_num}.0_*.root"
         matches = sorted(eg_dir.glob(pattern))
         if matches:
-            out[e] = str(matches[0])
+            found[e] = str(matches[0])
         else:
             print(f"[runner] WARN: no EG file for {e} in {eg_dir}", file=sys.stderr)
-    return out
+    return found
 
 
-@app.command()
-def run(
-    eg_dir: Path = typer.Option(...),
-    outdir: Path = typer.Option(...),
-    energies: str = typer.Option(
-        "5x41,10x100,10x130,18x275",
-        help="Comma-separated energies to overlay.",
-    ),
-    chunk_size: int = typer.Option(100_000, "--chunk-size"),
-    max_events: Optional[int] = typer.Option(None, "--max-events"),
-):
-    outdir.mkdir(parents=True, exist_ok=True)
-    energy_list = [e.strip() for e in energies.split(",") if e.strip()]
-    files = _resolve_files(eg_dir, energy_list)
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--eg-dir", type=Path, required=True)
+    parser.add_argument("--outdir", type=Path, required=True)
+    parser.add_argument("--energies", default="5x41,10x100,10x130,18x275",
+                        help="Comma-separated energies to overlay.")
+    parser.add_argument("--chunk-size", type=int, default=100_000)
+    parser.add_argument("--max-events", type=int, default=None)
+    args = parser.parse_args()
+
+    args.outdir.mkdir(parents=True, exist_ok=True)
+    energies = [e.strip() for e in args.energies.split(",") if e.strip()]
+    files = resolve_files(args.eg_dir, energies)
     if not files:
-        raise typer.Exit(code=1)
+        sys.exit(1)
 
-    mod = _load_module()
+    import eg_beam_compare_analysis as analysis  # deferred (pulls numpy/uproot)
+
     hists_by_energy: dict[str, dict] = {}
     for energy, path in files.items():
         print(f"[runner] processing {energy}: {path}", flush=True)
-        hists_by_energy[energy] = mod.process_file(
+        hists_by_energy[energy] = analysis.process_file(  # type: ignore[name-defined]
             filename=path,
-            chunk_size=chunk_size,
-            max_events=max_events,
+            chunk_size=args.chunk_size,
+            max_events=args.max_events,
         )
-    mod.make_all_comparison_plots(hists_by_energy, outdir=str(outdir))
-    print(f"[runner] done -> {outdir}")
+    analysis.make_all_comparison_plots(hists_by_energy, outdir=str(args.outdir))  # type: ignore[name-defined]
+    print(f"[runner] done -> {args.outdir}")
 
 
 if __name__ == "__main__":
-    app()
+    main()

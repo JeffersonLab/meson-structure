@@ -135,10 +135,12 @@ dd4hep_dir: "${base_dir}/dd4hep/${energy}"
 
 ## Install
 
+The **top-level launcher** (host-side) needs:
+
 ```bash
 pip install submitit omegaconf typer
 ```
 
-The campaign container is expected to provide ROOT + edm4hep stack for
-`use_container: true` analyses. Pure-host analyses use whatever Python you
-launch with.
+Per-folder `runner.py` files use **stdlib only** (argparse + subprocess) so
+they work inside any container Python without extra deps. Each runner shells
+out to the analysis script which has its own deps (uproot, ROOT, etc.).
