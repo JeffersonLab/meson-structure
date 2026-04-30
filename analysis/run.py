@@ -98,23 +98,21 @@ def _run_one_analysis(
     sbatch_defaults = dict(campaign.get("sbatch_defaults") or {})
     sbatch = {**sbatch_defaults, **dict(meta.sbatch)}
 
-    pending = []
+    submitted_jobs = []
     for selected_energy in energies:
         params = resolve_params(campaign, meta, selected_energy, out_root, overrides)
         argv = build_argv(folder, meta, campaign, params, repo_root)
         job_name = f"{meta.name}_{selected_energy}" if selected_energy else meta.name
-        job = submit(argv, mode=mode, log_dir=log_dir, job_name=job_name,
-                     sbatch=sbatch, cwd=folder)
-        if job is not None:
-            typer.echo(f"submitted: {job_name}  job_id={getattr(job, 'job_id', '?')}")
-            pending.append(job)
+        result = submit(argv, mode=mode, log_dir=log_dir, job_name=job_name,
+                        sbatch=sbatch, cwd=folder)
+        if mode == "slurm" and result is not None:
+            typer.echo(f"submitted: {job_name}  job_id={getattr(result, 'job_id', '?')}")
+            submitted_jobs.append((job_name, result))
 
-    if mode == "local":
-        for job in pending:
-            try:
-                job.result()
-            except Exception as exc:
-                typer.echo(f"[error] {job}: {exc}", err=True)
+    if mode == "slurm" and submitted_jobs:
+        typer.echo(f"\n{len(submitted_jobs)} SLURM job(s) submitted. "
+                   f"Check status with `squeue -u $USER` or watch the log dir:")
+        typer.echo(f"  {log_dir}")
 
 
 @app.command("list")

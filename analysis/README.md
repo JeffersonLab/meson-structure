@@ -129,9 +129,12 @@ dd4hep_dir: "${base_dir}/dd4hep/${energy}"
 
 | `--mode`   | Backend                                | Use case                  |
 |------------|----------------------------------------|---------------------------|
-| `local`    | `submitit.LocalExecutor`               | laptop, interactive farm  |
+| `local`    | plain `subprocess.run`, sequential, no walltime, streams to terminal | laptop, ifarm interactive |
 | `slurm`    | `submitit.AutoExecutor` cluster=slurm  | batch on JLab farm        |
 | `dry-run`  | print only                              | preview commands          |
+
+`local` runs energies one after another, blocking the terminal. Hit Ctrl-C to abort.
+`slurm` returns immediately after submission; check `squeue -u $USER`.
 
 ## Install
 
