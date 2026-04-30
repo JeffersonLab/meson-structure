@@ -1,149 +1,83 @@
-# Analysis launcher
+# Analysis launcher — system requirements
 
-Small dispatcher for running campaign analyses locally, on the JLab interactive
-farm, or via SLURM. Backend: [submitit](https://github.com/facebookincubator/submitit).
+User-facing tutorial: [docs/analysis.md](../docs/analysis.md). This file
+records the requirements and design decisions the launcher must satisfy.
 
-It does **one** thing: take a per-folder `runner.py` + `meta.yaml`, resolve
-inputs from `campaign.yaml`, and submit. No DAG, no input/output tracking, no
-Snakefile.
+## Requirements
+
+1. **Different people write different analyses.** The launcher does not
+   force a uniform script CLI. Each folder owns its invocation.
+2. **The "DAG" is upstream.** Analyses are an `analyses × energies` grid.
+   No dependency graph between analyses, no input/output tracking.
+3. **One unified way to launch** — laptop, ifarm interactive, JLab SLURM —
+   without changing the analysis code. Switch backends with `--mode`.
+4. **Per-folder mini-runner + global runner.** Each analysis ships its own
+   small runner, debuggable directly. The global runner discovers and
+   dispatches.
+5. **Easy debug knobs.** Custom flags / fewer files / one energy must be a
+   one-flag tweak, not a config edit.
+6. **No Snakemake-style ceremony.** `rule all: [f"out/..." for ...]` is not
+   acceptable for "test-run with custom flag". No DAG-build wait.
+7. **Scratch and personal folders coexist.** Folders without an explicit
+   opt-in are ignored. Not every analysis is pipeline-ready.
+8. **Container support per analysis.** Some analyses need ROOT / edm4hep
+   inside singularity; some need host Python. Per-folder declaration.
+9. **Runners must work inside the campaign container.** Container Python
+   has no `typer` / `omegaconf` / `numpy` at startup.
+10. **Pip-installable, easy on farm nodes.** No JVM (rules out Nextflow),
+    no server component (rules out Prefect), no Java daemon.
+11. **Campaign config decoupled from `full-sim-pipeline/`.** Pipeline-stage
+    flags don't bleed into analyses.
+12. **Snakemake → no.** Slow DAG, flag soup, fights us on dev/debug.
+13. **Custom DSL → no.** Don't reinvent Snakemake.
+
+## Decisions
+
+| Choice | Why |
+|---|---|
+| **Backend: [submitit](https://github.com/facebookincubator/submitit) for SLURM, plain `subprocess.run` for local** | Pip-installable, native SLURM, zero ceremony. `LocalExecutor` was tried and dropped: enforced walltime + silent parallelism on the login node. |
+| **Per-folder `runner.py` + `meta.yaml` opt-in contract** | Authors keep autonomy; launcher stays minimal. Folders without both files are ignored. |
+| **`runner.py` is stdlib-only at import time** | Same code runs on host and inside container. Heavy imports go inside `main()`. |
+| **`runner.py` shells out to the analysis script** | Author's CLI / language stays free (Python, ROOT macro, C++). Launcher doesn't import or understand it. |
+| **`meta.yaml` declares `inputs:` mapping kwarg → campaign key** | One indirection, no templating language. OmegaConf interpolates `${energy}`, `${energy_num}`, `${proton_num}`. |
+| **Container wrap is whole-runner** | Matches the pre-existing pipeline pattern (`50_create_analysis_jobs.py`). One place handles `singularity exec -B ... <container>`. |
+| **`--set key=value` for CLI overrides** | Repeatable, unambiguous, no `--` magic. |
+| **`mode: per-energy` vs `once`** | Most analyses fan out per energy; cross-energy comparisons run once. No DAG required to express this. |
+| **`analysis/campaign.yaml` is the only config** | Independent of `full-sim-pipeline/config-campaign-*.yaml`. One file to edit per campaign. |
+| **Top-level `analysis/run.py` keeps Typer; runners use argparse** | Top-level is host-only; runners must work in container. |
+
+## Non-goals
+
+- Incremental rebuilds / "skip if output exists". Authors handle re-runs.
+- File-level dependency tracking. The campaign DAG already ran.
+- Workflow visualization, retries, monitoring dashboards.
+- Sharing rules with EIC-wide Snakemake pipelines (lingua-franca argument
+  was weighed and rejected — daily UX won).
 
 ## Layout
 
 ```
 analysis/
-    campaign.yaml             # paths, energies, container — edit to your setup
-    run.py                    # top-level CLI: list / run / run-all
-    launcher/                 # library (config, dispatch, discovery)
-        config.py
-        dispatch.py
-        discover.py
-    eg-kinematics/
-        runner.py             # standalone Typer CLI
-        meta.yaml             # mode, inputs, sbatch hints
-        eg-kinematics.py      # original analysis script (untouched)
-    eg-beams-compare/         # mode: once (cross-energy)
-    edm4hep_lambda/           # use_container: true (ROOT macros)
-    csv_mc_dis_analysis/
-    csv_mcpart_lambda/
-    multicalo-lambda/
-    ...                       # folders without runner.py+meta.yaml are ignored
+    campaign.yaml         # paths, energies, container — edit per campaign
+    run.py                # CLI: list / run / run-all
+    launcher/             # config, dispatch, discovery
+    <name>/
+        runner.py         # stdlib-only, standalone-runnable
+        meta.yaml         # mode, inputs, sbatch hints
+        ...               # actual analysis code
 ```
-
-## Daily commands
-
-```bash
-# what's registered?
-python analysis/run.py list
-
-# debug one analysis, one energy, locally
-python analysis/run.py run eg-kinematics --energy 10x100
-
-# fan out across all campaign energies, locally (sequential)
-python analysis/run.py run eg-kinematics
-
-# submit to SLURM, one job per energy
-python analysis/run.py run eg-kinematics --mode slurm
-
-# preview, do nothing
-python analysis/run.py run eg-kinematics --mode slurm --dry-run
-
-# override runner kwargs (repeatable)
-python analysis/run.py run eg-kinematics --energy 10x100 \
-    --set max_events=5000 --set chunk_size=50000
-
-# everything
-python analysis/run.py run-all --mode slurm
-python analysis/run.py run-all --mode slurm --only eg-kinematics,csv_mc_dis_analysis
-
-# `python -m analysis ...` works too
-```
-
-## Debug a folder directly (no top-level runner)
-
-Each `runner.py` is a standalone Typer CLI. Useful when iterating on a single
-analysis on the farm:
-
-```bash
-cd analysis/eg-kinematics
-python runner.py \
-    --energy 10x100 \
-    --eg-dir /work/eic/users/romanov/eg-orig-kaon-lambda-2025-08 \
-    --outdir /tmp/test --max-events 5000
-```
-
-Same code path the launcher uses → if it works here, SLURM works.
-
-## Adding a new analysis
-
-1. Create `analysis/<name>/runner.py` — a Typer app whose default command takes
-   `--energy`, `--outdir`, plus whatever campaign inputs you need
-   (`--csv-dir`, `--edm4hep-dir`, ...).
-2. Create `analysis/<name>/meta.yaml`:
-
-   ```yaml
-   mode: per-energy           # or `once` for cross-energy analyses
-   use_container: true        # set false for pure-Python (uproot/uv) analyses
-   inputs:
-     csv_dir: csv_dd4hep_dir  # runner kwarg name -> campaign.yaml key
-   sbatch:
-     time: "04:00:00"
-     mem_gb: 5
-   ```
-
-3. The launcher discovers it automatically.
-
-## How parameters reach the runner
-
-Resolution order (last wins):
-
-1. `meta.extra_params` — static defaults declared in `meta.yaml`.
-2. `meta.inputs` — runner kwarg ← `campaign.yaml` key, with `${energy}` interpolated.
-3. Derived: `--energy <e>`, `--outdir <output_root>/<name>/<energy>`.
-4. CLI overrides: `--set key=value`.
-
-The runner is invoked as:
-
-```
-python <folder>/runner.py [<command>] --key value --flag ...
-```
-
-Bools become `--flag` (true) or are omitted (false). `None` is omitted.
-If `meta.use_container: true`, the whole `python ...` call is wrapped in
-`singularity exec -B ... <container> ...`.
-
-## `campaign.yaml`
-
-Single source of truth for the launcher. Independent of `full-sim-pipeline/`
-configs by design (decouples analyses from pipeline-stage flags).
-
-Per-energy paths use OmegaConf interpolation:
-
-```yaml
-dd4hep_dir: "${base_dir}/dd4hep/${energy}"
-```
-
-`${energy}` resolves at submit time. `${energy_num}` (electron) and
-`${proton_num}` (proton) are also available.
-
-## Modes
-
-| `--mode`   | Backend                                | Use case                  |
-|------------|----------------------------------------|---------------------------|
-| `local`    | plain `subprocess.run`, sequential, no walltime, streams to terminal | laptop, ifarm interactive |
-| `slurm`    | `submitit.AutoExecutor` cluster=slurm  | batch on JLab farm        |
-| `dry-run`  | print only                              | preview commands          |
-
-`local` runs energies one after another, blocking the terminal. Hit Ctrl-C to abort.
-`slurm` returns immediately after submission; check `squeue -u $USER`.
 
 ## Install
 
-The **top-level launcher** (host-side) needs:
+The repo uses `uv` + `pyproject.toml` at the root. Dependencies (`submitit`,
+`omegaconf`, `typer`, plus the analysis stack: `uproot`, `awkward`, `hist`,
+`matplotlib`, ...) are declared there.
 
 ```bash
-pip install submitit omegaconf typer
+pip install --user uv          # if you don't have uv
+uv sync                        # creates/updates .venv from pyproject.toml
+uv run python analysis/run.py list
 ```
 
-Per-folder `runner.py` files use **stdlib only** (argparse + subprocess) so
-they work inside any container Python without extra deps. Each runner shells
-out to the analysis script which has its own deps (uproot, ROOT, etc.).
+Per-folder runners are stdlib-only at import time, so they also work inside
+the campaign container without extra deps.
