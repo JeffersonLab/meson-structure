@@ -10,11 +10,11 @@
 #   ${proton_num}  e.g. "100"
 
 # --- Where the campaign lives ---------------------------------------------
-base_dir: "/work/eic3/users/romanov/meson-structure-2026-04-check"
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-05"
 
 # --- Output of the analysis launcher --------------------------------------
 # Each analysis writes to {analysis_output}/{analysis_name}/{energy}/
-analysis_output: "${base_dir}/ana"
+analysis_output: "${base_dir}/analysis"
 
 # --- Energies the campaign covers -----------------------------------------
 energies:
@@ -41,10 +41,10 @@ bind_dirs:
 eg_dir: "/work/eic/users/romanov/eg-orig-kaon-lambda-2025-08"
 
 # DD4HEP outputs (per-energy)
-dd4hep_dir: "${base_dir}/dd4hep_26-04_notv2/${energy}"
+dd4hep_dir: "${base_dir}/dd4hep_saveall/${energy}"
 
 # CSV from DD4HEP truth (per-energy)
-csv_dd4hep_dir: "${base_dir}/csv_dd4hep/${energy}"
+csv_dd4hep_dir: "${base_dir}/csv_dd4hep_saveall/${energy}"
 
 # eicrecon outputs (per-energy)
 eicrecon_dir: "${base_dir}/reco/${energy}"
