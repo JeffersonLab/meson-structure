@@ -152,18 +152,18 @@ def process_file(filename, chunk_size=100_000, max_events=None):
     hists = create_histograms()
 
     tree_name = "Evnts"
-    expressions = [
-        "invts.Q2", "invts.xBj", "invts.y_D", "invts.W", "invts.tSpectator",
-        "invts.pDrest", "invts.alphaS",
-        "lamb_scat"
+    # filter_name matches branch names literally; struct subfields use slash.
+    branches_wanted = [
+        "invts/Q2", "invts/xBj", "invts/y_D", "invts/W", "invts/tSpectator",
+        "invts/pDrest", "invts/alphaS",
+        "lamb_scat",
     ]
 
     events_processed = 0
     root_tree = uproot.open(f"{filename}:{tree_name}")
-    print(root_tree.keys())
     for chunk in root_tree.iterate(
-            expressions=expressions,
-            step_size=chunk_size
+            filter_name=branches_wanted,
+            step_size=chunk_size,
     ):
         fill_histograms(hists, chunk)
 
