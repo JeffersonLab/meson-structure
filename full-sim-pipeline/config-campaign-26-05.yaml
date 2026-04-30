@@ -48,7 +48,7 @@ csv_dd4hep_saveall_input: "${dd4hep_saveall_output}"
 csv_dd4hep_saveall_output: "${base_dir}/csv_dd4hep_saveall/${energy}"
 
 # Reconstruction jobs
-eicrecon_input: "${dd4hep_output}"
+eicrecon_input: "${dd4hep_saveall_output}"
 eicrecon_output: "${base_dir}/reco/${energy}"
 
 
