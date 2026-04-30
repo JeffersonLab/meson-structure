@@ -1,0 +1,10 @@
+# Cross-energy overlay. Runs once, NOT per-energy.
+mode: once
+use_container: false
+
+inputs:
+  eg_dir: eg_dir
+
+sbatch:
+  time: "02:00:00"
+  mem_gb: 6

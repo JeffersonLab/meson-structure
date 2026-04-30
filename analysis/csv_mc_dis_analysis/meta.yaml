@@ -1,0 +1,9 @@
+mode: per-energy
+use_container: false
+
+inputs:
+  csv_dir: csv_dd4hep_dir
+
+sbatch:
+  time: "02:00:00"
+  mem_gb: 4

@@ -1,0 +1,16 @@
+mode: per-energy
+
+# multicalo reads ROOT/edm4eic via uproot — host Python with the right deps
+# is fine. Flip to true if you need the EIC stack at some point.
+use_container: false
+
+inputs:
+  inputs: eicrecon_dir
+
+extra_params:
+  nfiles: 1
+  task: all
+
+sbatch:
+  time: "06:00:00"
+  mem_gb: 8
