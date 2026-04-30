@@ -1,0 +1,64 @@
+# Top-level campaign config consumed by `analysis/run.py`.
+#
+# This file is INDEPENDENT of `full-sim-pipeline/config-campaign-*.yaml` —
+# the analysis launcher reads only this file. Edit it to point at your data.
+#
+# OmegaConf interpolation is supported. The launcher injects three
+# pseudo-variables when resolving paths for a per-energy analysis:
+#   ${energy}      e.g. "10x100"
+#   ${energy_num}  e.g. "10"
+#   ${proton_num}  e.g. "100"
+
+# --- Where the campaign lives ---------------------------------------------
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-04-check"
+
+# --- Output of the analysis launcher --------------------------------------
+# Each analysis writes to {analysis_output}/{analysis_name}/{energy}/
+analysis_output: "${base_dir}/ana"
+
+# --- Energies the campaign covers -----------------------------------------
+energies:
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# --- Container --------------------------------------------------------------
+container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-04-25.sif"
+
+# Bind dirs passed to `singularity exec -B host:host`. The launcher always
+# also binds the repo root so analysis code is visible in the container.
+bind_dirs:
+  - "${base_dir}"
+
+# --- Per-step input/output paths the analyses can refer to in meta.yaml ----
+# Each analysis declares which of these it needs in `meta.yaml -> inputs:`.
+# Paths use ${energy} interpolation when relevant.
+
+# Event-generator (HEPMC-converted ROOT) — raw EG, NOT per-energy as a dir;
+# files are named by energy:
+#   {eg_dir}/k_lambda_crossing_*on{proton_num}.0_*.root
+eg_dir: "/work/eic/users/romanov/eg-orig-kaon-lambda-2025-08"
+
+# DD4HEP outputs (per-energy)
+dd4hep_dir: "${base_dir}/dd4hep_26-04_notv2/${energy}"
+
+# CSV from DD4HEP truth (per-energy)
+csv_dd4hep_dir: "${base_dir}/csv_dd4hep/${energy}"
+
+# eicrecon outputs (per-energy)
+eicrecon_dir: "${base_dir}/reco/${energy}"
+
+# CSV from eicrecon (per-energy)
+csv_reco_dir: "${base_dir}/csv_reco/${energy}"
+
+# Convenience alias used by edm4hep_lambda
+edm4hep_dir: "${dd4hep_dir}"
+
+# --- SLURM defaults (each analysis can override in its meta.yaml) ----------
+sbatch_defaults:
+  account: "eic"
+  partition: "production"
+  time: "04:00:00"
+  mem_gb: 5
+  cpus_per_task: 1

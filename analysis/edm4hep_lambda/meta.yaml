@@ -1,0 +1,15 @@
+# ROOT macros (mcpart_lambda.cxx + acceptance.cxx) over per-energy edm4hep files.
+# Needs the EIC stack: enable container.
+mode: per-energy
+use_container: true
+
+inputs:
+  edm4hep_dir: edm4hep_dir
+
+extra_params:
+  n_events: 5000
+
+sbatch:
+  time: "06:00:00"
+  mem_gb: 6
+  cpus_per_task: 1
