@@ -1,0 +1,56 @@
+# Simplified Configuration for Meson Structure Pipeline
+
+# Base directory
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-05"
+
+
+# These are directories besides base_dir that will be bound inside the container
+bind_dirs: [
+  "${base_dir}",
+]
+
+# Container
+#container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:26.03.1-stable"
+container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-04-25.sif"
+#container: "/work/eic3/users/romanov/meson-structure-work/eicrecon_ff_multicalo.sif"
+#container: "/work/eic3/users/romanov/meson-structure-work/eic-full-epictv.sif"
+
+# Scripts location
+scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Test mode - set to true to test without actually submitting jobs
+dry_run: false
+
+# Energies to process
+energies: 
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Number of events per job
+event_count: 5000
+
+# DD4Hep jobs
+# afterburner_output is input here
+dd4hep_input:  "${base_dir}/afterburner/${energy}-priority"
+dd4hep_output: "${base_dir}/dd4hep/${energy}"
+
+# saves all MC particles independen of the tracking volume
+dd4hep_saveall_input:  "${base_dir}/afterburner/${energy}-priority"
+dd4hep_saveall_output: "${base_dir}/dd4hep_saveall/${energy}"
+
+# Convert DD4Hep output to CSV for analysis
+csv_dd4hep_input: "${dd4hep_output}"
+csv_dd4hep_output: "${base_dir}/csv_dd4hep/${energy}"
+
+csv_dd4hep_saveall_input: "${dd4hep_saveall_output}"
+csv_dd4hep_saveall_output: "${base_dir}/csv_dd4hep_saveall/${energy}"
+
+# Reconstruction jobs
+eicrecon_input: "${dd4hep_output}"
+eicrecon_output: "${base_dir}/reco/${energy}"
+
+
+csv_eicrecon_input: "${eicrecon_output}"
+csv_eicrecon_output: "${base_dir}/csv_reco/${energy}"
