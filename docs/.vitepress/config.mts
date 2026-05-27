@@ -50,6 +50,7 @@ export default withMermaid({
                     { text: 'Data Access', link: '/data' },
                     { text: 'CSV Data', link: '/data-csv' },
                     { text: 'Campaigns', link: '/campaigns' },
+                    { text: 'Backgrounds', link: '/background' },
                 ]
             },
             {
