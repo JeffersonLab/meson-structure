@@ -6,45 +6,57 @@
 The meson structure data is available from the following locations:
 
 **LATEST PROCESSED FILES**  
-*(last update of April 2026)*
+*(last update of May 2026 — [campaign 2026-05](https://jeffersonlab.github.io/meson-structure/campaign-2026-05/campaign-2026-05.html))*
 
-> (!) Currently there is disturbance with data because of 
-> https://github.com/eic/epic/issues/1069
+Campaign 2026-05 is the first full production run after the
+[#1069](https://github.com/eic/epic/issues/1069) /
+[#1081](https://github.com/eic/epic/pull/1081) fixes were folded in. It includes
+both the regular `dd4hep` flavor (fixed tracking volume) and a `dd4hep_saveall`
+flavor that keeps **all** MCParticles. EICrecon reconstruction is run on top of
+the `saveall` flavor.
 
-While data is being regenerated (
-  [see campaign 26-04](https://jeffersonlab.github.io/meson-structure/campaign-2026-04/campaign-2026-04.html))
+> There is an important distinction. Issue #1069 showed that
+> even with the tracking volume not all MCParticle daughters are
+> saved even if they reach calorimeter sensitives. The `_saveall`
+> flavor keeps all MCParticles and their connections to hits.
+>
+> (!!!) ALL ACCEPTANCE STUDIES MUST BE DONE USING "_saveall" DATA.
 
-There are 2 small data samples available at JLab ifarm or XRootD. 
+Reconstruction-based analyses can use `reco` / `csv_reco` directly.
 
-There is important distinction. Issue #1069 showed that
-even with tracking volume not all MCParticle daughters are
-saved even if they get to calorimeter sensitives. We run 
-special "_saveall" flavor of data with epic DD4Hep which 
-save all MCParticles and their connections to hits, etc. 
-
-> I.E. (!!!) ALL ACCEPTANCE STUDIES MUST BE DONE USING "_saveall" DATA
-
-All reconstruction based analysis should be fine. 
-
+On JLab ifarm:
 
 ```bash
-/work/eic3/users/romanov/meson-structure-2026-04-check
+/work/eic3/users/romanov/meson-structure-2026-05
 ```
 
 On XRootD (open for universities and public)
 
 ```bash
 xrdfs root://dtn-eic.jlab.org
-ls /work/eic3/users/romanov/meson-structure-2026-04-check
+ls /work/eic3/users/romanov/meson-structure-2026-05
 ```
 
 Subdirectories
-- afterburner - eg + beam effects
-- csv_dd4hep - dd4hep output based CSVs for accepance analysis
-- csv_reco - reconstruction based CSVs
-- dd4hep - EDM4Hep simulated data. New tracking volume (#1069) 
-- reco - EICrecon reconstructed data (of dd4hep)
-- dd4hep_saveall - EDM4Hep simulated data. All MCParticles saved for acceptance perfomance studies
+- afterburner        - eg + beam effects
+- dd4hep             - EDM4Hep simulated data, fixed tracking volume (#1069)
+- dd4hep_saveall     - EDM4Hep simulated data, all MCParticles saved (acceptance studies)
+- reco               - EICrecon reconstructed data (built on `dd4hep_saveall`)
+- csv_dd4hep         - CSVs from `dd4hep` (acceptance, fixed volume)
+- csv_dd4hep_saveall - CSVs from `dd4hep_saveall` (acceptance, all particles)
+- csv_reco           - reconstruction-based CSVs
+
+### Previous: 2026-04 investigation
+
+The 2026-04 dataset is a small investigation sample tied to issues
+[#1069](https://github.com/eic/epic/issues/1069) /
+[#1081](https://github.com/eic/epic/pull/1081) — DD4hep + afterburner only, no
+reconstruction. See
+[campaign 2026-04](https://jeffersonlab.github.io/meson-structure/campaign-2026-04/campaign-2026-04.html).
+
+```bash
+/work/eic3/users/romanov/meson-structure-2026-04-check
+```
 
 
 Older (and not valid in terms of issue \#1069 data:)

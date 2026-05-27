@@ -5,6 +5,20 @@ This page documents the meson structure simulation campaigns.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
+## Campaign 2026-05
+
+[Campaign 2026-05 Link](./campaign-2026-05/campaign-2026-05.md)
+
+Overview:
+- First full production run after the
+  [#1069](https://github.com/eic/epic/issues/1069) /
+  [#1081](https://github.com/eic/epic/pull/1081) fixes.
+- Produces both `dd4hep` (fixed tracking volume) and `dd4hep_saveall`
+  (all MCParticles) flavors.
+- EICrecon reconstruction is run on top of the `dd4hep_saveall` flavor.
+- Energies: 5x41, 10x100, 10x130, 18x275 GeV; 5000 events/job.
+
+
 ## Campaign 2026-04
 
 [Campaign 2026-04 Link](./campaign-2026-04/campaign-2026-04.md)

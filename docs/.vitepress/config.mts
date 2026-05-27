@@ -53,6 +53,12 @@ export default withMermaid({
                 ]
             },
             {
+                text: 'Campaign 2026-05',
+                link: '/campaign-2026-05/campaign-2026-05',
+                items: [
+                ]
+            },
+            {
                 text: 'Campaign 2026-04',
                 link: '/campaign-2026-04/campaign-2026-04',
                 items: [
