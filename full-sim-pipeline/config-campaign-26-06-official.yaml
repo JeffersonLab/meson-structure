@@ -1,0 +1,47 @@
+# Configuration for Meson Structure Pipeline — June 2026 campaign
+# Variant: -official  (existing/official EIC container, default tracking volume)
+#
+# npsim is run with the standard EIC tracking-volume handler
+#   --part.userParticleHandler="Geant4TVUserParticleHandler"
+# via 20_create_npsim_jobs.py. This is the production baseline that the other
+# three 2026-06 variants (-saveall, -background, -stv) are compared against.
+#
+# All four 2026-06 variants share one base_dir: they read the same afterburned
+# signal under ${base_dir}/afterburner/${energy}-priority and write to their
+# own dd4hep-<suffix> subdirectory.
+
+# Base directory (shared across all 2026-06 variants)
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
+
+# These are directories besides base_dir that will be bound inside the container
+bind_dirs: [
+  "${base_dir}",
+]
+
+# Container — official EIC image from cvmfs (nightly)
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+
+# Scripts location
+scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Test mode - set to true to test without actually submitting jobs
+dry_run: false
+
+# Energies to process
+energies:
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Number of events per job
+event_count: 5000
+
+# DD4Hep jobs (official: default Geant4TVUserParticleHandler tracking volume).
+# The shared afterburner output is the input here.
+dd4hep_input:  "${base_dir}/afterburner/${energy}-priority"
+dd4hep_output: "${base_dir}/dd4hep-official/${energy}"
+
+# Convert DD4Hep output to CSV for analysis
+csv_dd4hep_input:  "${dd4hep_output}"
+csv_dd4hep_output: "${base_dir}/csv_dd4hep-official/${energy}"

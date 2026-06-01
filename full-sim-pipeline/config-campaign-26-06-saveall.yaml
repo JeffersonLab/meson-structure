@@ -1,0 +1,54 @@
+# Configuration for Meson Structure Pipeline — June 2026 campaign
+# Variant: -saveall  (all MCParticles saved, no tracking-volume filter)
+#
+# npsim is run with the EIC custom particle handler disabled
+#   --part.userParticleHandler=""
+# via 21_create_npsim_saveall_jobs.py, so every MCParticle is kept regardless
+# of the tracking volume. This is the flavor used for acceptance / MC-truth
+# performance studies and as the input to EICrecon (matching campaign 2026-05).
+#
+# Shares the 2026-06 base_dir and the same afterburned signal as the other
+# variants.
+
+# Base directory (shared across all 2026-06 variants)
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
+
+# These are directories besides base_dir that will be bound inside the container
+bind_dirs: [
+  "${base_dir}",
+]
+
+# Container — official EIC image from cvmfs (nightly)
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+
+# Scripts location
+scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Test mode - set to true to test without actually submitting jobs
+dry_run: false
+
+# Energies to process
+energies:
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Number of events per job
+event_count: 5000
+
+# DD4Hep jobs (saveall: --part.userParticleHandler="" keeps all MCParticles).
+# The shared afterburner output is the input here.
+dd4hep_saveall_input:  "${base_dir}/afterburner/${energy}-priority"
+dd4hep_saveall_output: "${base_dir}/dd4hep-saveall/${energy}"
+
+# Convert DD4Hep output to CSV for analysis
+csv_dd4hep_saveall_input:  "${dd4hep_saveall_output}"
+csv_dd4hep_saveall_output: "${base_dir}/csv_dd4hep-saveall/${energy}"
+
+# Reconstruction jobs run on the saveall flavor
+eicrecon_input:  "${dd4hep_saveall_output}"
+eicrecon_output: "${base_dir}/reco-saveall/${energy}"
+
+csv_eicrecon_input:  "${eicrecon_output}"
+csv_eicrecon_output: "${base_dir}/csv_reco-saveall/${energy}"

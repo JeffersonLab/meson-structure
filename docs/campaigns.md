@@ -5,6 +5,20 @@ This page documents the meson structure simulation campaigns.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
+## Campaign 2026-06
+
+[Campaign 2026-06 Link](./campaign-2026-06/campaign-2026-06.md)
+
+Overview:
+- Runs the same afterburned signal through four parallel DD4hep variants for
+  direct comparison: `-official` (default tracking volume), `-saveall` (all
+  MCParticles), `-background` (official ePIC background-mixed), and `-stv`
+  (new smart tracking volume, `Geant4TVEicParticleHandler`).
+- Non-STV variants use the official cvmfs `eic_xl:nightly`; `-stv` uses
+  `eicdev/eic-full:latest` (custom `smart-tracking-volume` npsim branch).
+- Energies: 5x41, 10x100, 10x130, 18x275 GeV; 5000 events/job.
+
+
 ## Campaign 2026-05
 
 [Campaign 2026-05 Link](./campaign-2026-05/campaign-2026-05.md)

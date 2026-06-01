@@ -1,0 +1,51 @@
+# Configuration for Meson Structure Pipeline — June 2026 campaign
+# Variant: -stv  (new "smart tracking volume" particle handler)
+#
+# npsim is run with the EIC smart-tracking-volume handler
+#   --part.userParticleHandler=Geant4TVEicParticleHandler
+# via 23_create_npsim_stv_jobs.py. That handler is provided by the custom
+# `smart-tracking-volume` branch of npsim that ships inside the
+# eicdev/eic-full:latest image (see `container` below) — it is NOT available in
+# the stock cvmfs eic_xl image used by the other 2026-06 variants.
+#
+# Shares the 2026-06 base_dir and the same afterburned signal as the other
+# variants, so the only difference vs. -official is the handler + container.
+
+# Base directory (shared across all 2026-06 variants)
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
+
+# These are directories besides base_dir that will be bound inside the container
+bind_dirs: [
+  "${base_dir}",
+]
+
+# Container — eicdev/eic-full:latest, which carries the custom
+# `smart-tracking-volume` npsim branch (Geant4TVEicParticleHandler).
+# TODO: set this to the actual .sif you build/pull from eicdev/eic-full:latest.
+container: "/work/eic3/users/romanov/meson-structure-work/eic-full-stv.sif"
+
+# Scripts location
+scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Test mode - set to true to test without actually submitting jobs
+dry_run: false
+
+# Energies to process
+energies:
+  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Number of events per job
+event_count: 5000
+
+# DD4Hep jobs (stv: --part.userParticleHandler=Geant4TVEicParticleHandler).
+# The shared afterburner output is the input here.
+dd4hep_stv_input:  "${base_dir}/afterburner/${energy}-priority"
+dd4hep_stv_output: "${base_dir}/dd4hep-stv/${energy}"
+
+# Convert DD4Hep output to CSV for analysis (reuses 40_create_csv_dd4hep_jobs.py,
+# which reads csv_dd4hep_input/output, pointed at the stv output here).
+csv_dd4hep_input:  "${dd4hep_stv_output}"
+csv_dd4hep_output: "${base_dir}/csv_dd4hep-stv/${energy}"

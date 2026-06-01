@@ -28,7 +28,7 @@ def create_container_script_template():
     if [ -f "/opt/detector/epic-main/bin/thisepic.sh" ]; then
         source /opt/detector/epic-main/bin/thisepic.sh
     fi
-    /usr/bin/time -v npsim --part.userParticleHandler="Geant4TVUserParticleHandler" --compactFile=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml --runType run --inputFiles {input_file} --outputFile {output_file} --numberOfEvents 5000 2>&1
+    /usr/bin/time -v npsim --part.userParticleHandler="Geant4TVUserParticleHandler" --compactFile=$DETECTOR_PATH/epic_craterlake_{beam_config}.xml --runType run --inputFiles {input_file} --outputFile {output_file} --numberOfEvents {events} 2>&1
     
     echo ""
     echo "=========================================================================="

@@ -1,0 +1,93 @@
+# Configuration for Meson Structure Pipeline — June 2026 campaign
+# Variant: -background  (signal mixed with the official ePIC background cocktails)
+#
+# The signal goes through the afterburner the same way as the other variants,
+# then 11_create_background_jobs.py mixes in the official ePIC background
+# cocktails using SignalBackgroundMerger (one signal per 2 us timeframe), and
+# 22_create_npsim_background_jobs.py runs npsim on the merged hepmc3.tree.root
+# with the correct --physics.alternativeStable/DecayStatuses flags.
+#
+# See docs/background.md for the full picture (status offsets, merger command,
+# npsim status-offset flags). Shares the 2026-06 base_dir.
+
+# Base directory (shared across all 2026-06 variants)
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
+
+# These are directories besides base_dir that will be bound inside the container
+bind_dirs: [
+  "${base_dir}",
+]
+
+# Container — official EIC image from cvmfs (nightly)
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+
+# Scripts location
+scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
+
+# Directory holding the official ePIC background-cocktail JSONs (one per
+# beam-energy / vacuum-condition combination). The submodule
+#   meson-structure/eic_official_campaign_info
+# tracks https://github.com/eic/simulation_campaign_datasets.
+background_config_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/eic_official_campaign_info/config_data"
+
+# Test mode - set to true to test without actually submitting jobs
+dry_run: false
+
+# Energies to process
+energies:
+#  - "5x41"
+  - "10x100"
+  - "10x130"
+  - "18x275"
+
+# Per-energy choice of the background cocktail JSON. Each entry is a filename
+# inside ${background_config_dir}. The list of available cocktails is in
+# https://github.com/eic/simulation_campaign_datasets/tree/main/config_data
+#
+# Note: GoldCoating files only exist for 10x100, 10x130, 10x275. For 18x275
+# only the vacuum cocktail is published officially. If you need an "hgas"
+# variant (with proton beam-gas as a fifth source, status=6000), substitute
+# the file starting with "synrad_egasbrems_egascoulomb_egastouschek_hgas_...".
+background_configs:
+  "10x100": "synrad_egasbrems_egascoulomb_egastouschek_10GeVx100GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
+  "10x130": "synrad_egasbrems_egascoulomb_egastouschek_10GeVx130GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
+  "18x275": "synrad_egasbrems_egascoulomb_egastouschek_18GeVx275GeV_vacuum_10000Ahr_machineruntime_50s.json"
+
+# Number of events (= 2 us timeframes / signal events per job).
+# For the merger this is the number of slices to generate; for npsim it is the
+# number of merged frames to step through.
+event_count: 5000
+
+# ---------------------------------------------------------------------------
+# Pipeline stage I/O
+# ---------------------------------------------------------------------------
+# The flow for this (background) variant is:
+#
+#   01/02: convert upstream signal ROOT -> .hepmc
+#   10:    afterburner            -> ${base_dir}/afterburner/${energy}-priority/*.afterburner.hepmc
+#   11:    SignalBackgroundMerger -> ${bg_merger_output}/*.bg.hepmc3.tree.root
+#   22:    npsim (with status     -> ${dd4hep_saveall_output}/*.edm4hep.root
+#            offset flags)
+#   30:    eicrecon               -> ${eicrecon_output}/*.edm4eic.root
+# ---------------------------------------------------------------------------
+
+# Signal-background merger (reads the shared afterburner output)
+bg_merger_input:  "${base_dir}/afterburner/${energy}-priority"
+bg_merger_output: "${base_dir}/bg_merged/${energy}"
+
+# DD4Hep jobs on the merged input.
+# For the background variant the input is the merger output, NOT the raw
+# afterburner output — that's the whole point of stage 22.
+dd4hep_saveall_input:  "${bg_merger_output}"
+dd4hep_saveall_output: "${base_dir}/dd4hep-background/${energy}"
+
+# Convert DD4Hep output to CSV for analysis
+csv_dd4hep_saveall_input:  "${dd4hep_saveall_output}"
+csv_dd4hep_saveall_output: "${base_dir}/csv_dd4hep-background/${energy}"
+
+# Reconstruction jobs
+eicrecon_input:  "${dd4hep_saveall_output}"
+eicrecon_output: "${base_dir}/reco-background/${energy}"
+
+csv_eicrecon_input:  "${eicrecon_output}"
+csv_eicrecon_output: "${base_dir}/csv_reco-background/${energy}"
