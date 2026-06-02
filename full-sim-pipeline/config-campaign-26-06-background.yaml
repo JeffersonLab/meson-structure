@@ -19,7 +19,8 @@ bind_dirs: [
 ]
 
 # Container — official EIC image from cvmfs (nightly)
-container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+# container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
+container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-06-01.sif"
 
 # Scripts location
 scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
@@ -49,9 +50,9 @@ energies:
 # variant (with proton beam-gas as a fifth source, status=6000), substitute
 # the file starting with "synrad_egasbrems_egascoulomb_egastouschek_hgas_...".
 background_configs:
-  "10x100": "synrad_egasbrems_egascoulomb_egastouschek_10GeVx100GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
-  "10x130": "synrad_egasbrems_egascoulomb_egastouschek_10GeVx130GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
-  "18x275": "synrad_egasbrems_egascoulomb_egastouschek_18GeVx275GeV_vacuum_10000Ahr_machineruntime_50s.json"
+  "10x100": "synrad_egasbrems_egascoulomb_egastouschek_hgas_10GeVx100GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
+  "10x130": "synrad_egasbrems_egascoulomb_egastouschek_hgas_10GeVx130GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
+  "18x275": "synrad_egasbrems_egascoulomb_egastouschek_hgas_10GeVx275GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
 
 # Number of events (= 2 us timeframes / signal events per job).
 # For the merger this is the number of slices to generate; for npsim it is the
