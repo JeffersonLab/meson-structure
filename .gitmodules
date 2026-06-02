@@ -1,4 +1,4 @@
 [submodule "eic_official_campaign_info"]
 	path = eic_official_campaign_info
-	url = git@github.com:eic/simulation_campaign_datasets.git
+	url = https://github.com/eic/simulation_campaign_datasets.git
 	branch = main
