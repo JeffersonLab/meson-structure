@@ -150,6 +150,7 @@ def create_container_script_template():
     echo
 
     mkdir -p $(dirname {output_file})
+    cd $(dirname {output_file})
 
     if [ -f "/opt/detector/epic-main/bin/thisepic.sh" ]; then
         source /opt/detector/epic-main/bin/thisepic.sh
