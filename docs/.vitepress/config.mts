@@ -1,4 +1,4 @@
-import markdownItKatex from 'markdown-it-katex';
+import markdownItKatex from '@traptitech/markdown-it-katex';
 import { withMermaid } from "vitepress-plugin-mermaid";
 import lightbox from "vitepress-plugin-lightbox"
 
