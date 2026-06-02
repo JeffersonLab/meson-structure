@@ -16,7 +16,17 @@ base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
 # These are directories besides base_dir that will be bound inside the container
 bind_dirs: [
   "${base_dir}",
+  # The official background cocktails live locally under /volatile on JLab
+  # workers; bind the tree so the merger can read them directly instead of
+  # streaming over XRootD (see strip_xrootd_prefix below).
+  "/volatile/eic/EPIC/EVGEN/BACKGROUNDS",
 ]
+
+# Rewrite the cocktail's root://dtn-eic.jlab.org//volatile/... URLs to local
+# /volatile/... paths before passing them to SignalBackgroundMerger. Avoids the
+# XRootD "unable to make temporary file" errors when the files are mounted
+# locally. Requires the matching bind_dirs entry above.
+strip_xrootd_prefix: true
 
 # Container — official EIC image from cvmfs (nightly)
 container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"

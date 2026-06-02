@@ -95,12 +95,21 @@ SignalBackgroundMerger \
     --signalFile  <afterburned signal>.hepmc3.tree.root \
     --signalFreq  0 \
     --signalStatus 0 \
-    --bgFile <synrad_url>   3324000 0.0 2000 \
-    --bgFile <egas_url>      316.94 0.0 3000 \
-    --bgFile <coulomb_url>     0.86 0.0 4000 \
-    --bgFile <touschek_url>    0.55 0.0 5000 \
+    --bgFile <synrad_url>   3324000 0 2000 \
+    --bgFile <egas_url>      316.94 0 3000 \
+    --bgFile <coulomb_url>     0.86 0 4000 \
+    --bgFile <touschek_url>    0.55 0 5000 \
     --outputFile  merged.hepmc3.tree.root
 ```
+
+::: warning skip and status MUST be integers
+The 4 values after `--bgFile` are `file freq skip status`. The merger only
+keeps `skip`/`status` attached to the file if they pass its `is_pure_integer`
+check (digits only). Passing `skip` as `0.0` makes the parser stop at 2 values
+and treat `0.0` as the *next* background filename → `file 0.0 does not exist`.
+Always emit `skip` and `status` as plain integers (`0`, not `0.0`). `freq` may
+be fractional. This is why `11_create_background_jobs.py` casts both to `int`.
+:::
 
 `--signalFreq 0` is the special "one signal per slice" mode. Setting it to a
 nonzero events/ns value would make signals Poisson-sampled too, which is the

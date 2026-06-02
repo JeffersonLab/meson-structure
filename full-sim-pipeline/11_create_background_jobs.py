@@ -26,6 +26,7 @@ flags — 22 re-reads it (it does NOT depend on this script having run first).
 import hashlib
 import json
 import os
+import re
 import textwrap
 
 from job_creator import (
@@ -73,13 +74,38 @@ def load_bg_cocktail(config, energy):
     return entries
 
 
-def build_bg_args(entries):
-    """Build the `--bgFile <file> <freq> <skip> <status>` argument string."""
+def to_local_path(url, strip_xrootd):
+    """Optionally turn `root://host//abs/path` into a local `/abs/path`.
+
+    The official cocktail JSONs reference the background sources by XRootD URL
+    (root://dtn-eic.jlab.org//volatile/...). On a worker that already has those
+    files on a mounted filesystem (e.g. JLab /volatile), streaming over XRootD
+    is both slower and prone to `unable to make temporary file` errors, so we
+    strip the `root://host/` prefix down to the absolute local path. The
+    directory must then be bind-mounted into the container (see bind_dirs).
+    """
+    if strip_xrootd:
+        return re.sub(r"^root://[^/]+/+", "/", url)
+    return url
+
+
+def build_bg_args(entries, strip_xrootd=False):
+    """Build the `--bgFile <file> <freq> <skip> <status>` argument string.
+
+    IMPORTANT: SignalBackgroundMerger's parser only groups the 3rd/4th values
+    (skip, status) into the same --bgFile when they pass its `is_pure_integer`
+    test (digits only). The cocktail JSON stores skip as a float (0.0), so if we
+    emit it verbatim the merger sees a non-integer, falls back to 2 values
+    (file, freq), and then treats `0.0` as the *next* background filename —
+    failing with `file 0.0 does not exist`. Casting skip AND status to int
+    keeps all four values on one --bgFile. (freq may stay fractional; the
+    merger always parses it with stod.)
+    """
     parts = []
     for e in entries:
-        # SignalBackgroundMerger takes 4 positional values after --bgFile.
+        file = to_local_path(str(e["file"]), strip_xrootd)
         parts.append(
-            f"--bgFile {e['file']} {e['freq']} {e['skip']} {int(e['status'])}"
+            f"--bgFile {file} {e['freq']} {int(e['skip'])} {int(e['status'])}"
         )
     # Backslash-newline so the rendered container script stays readable.
     return " \\\n        ".join(parts)
@@ -165,7 +191,8 @@ def process_energy(config, energy, config_path=None):
     if input_files is None:
         return None
 
-    bg_args_str = build_bg_args(bg_entries)
+    strip_xrootd = bool(config.get("strip_xrootd_prefix", False))
+    bg_args_str = build_bg_args(bg_entries, strip_xrootd=strip_xrootd)
     bg_cocktail_path = os.path.join(
         str(config.background_config_dir),
         str(config.background_configs[energy]),
