@@ -21,8 +21,7 @@ bind_dirs: [
 
 # Container — eicdev/eic-full:latest, which carries the custom
 # `smart-tracking-volume` npsim branch (Geant4TVEicParticleHandler).
-# TODO: set this to the actual .sif you build/pull from eicdev/eic-full:latest.
-container: "/work/eic3/users/romanov/meson-structure-work/eic-full-stv.sif"
+container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-06-01.sif"
 
 # Scripts location
 scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"
