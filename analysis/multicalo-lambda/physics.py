@@ -15,6 +15,12 @@ def direct_energy_window(beam: str) -> tuple[float, float]:
         return 20.0, 41.0
     if beam == "10x100":
         return 50.0, 100.0
+    if beam == "10x130":
+        # Interpolated between 10x100 (50, 100) and 18x275 (130, 275). The upper
+        # bound is the proton beam energy (130). The lower bound is a linear
+        # interpolation of the lower bounds against proton energy:
+        #   50 + (130 - 100) / (275 - 100) * (130 - 50) ~= 63.7  -> 64.
+        return 64.0, 130.0
     if beam == "18x275":
         return 130.0, 275.0
     raise ValueError(f"Unknown beam config: {beam}")

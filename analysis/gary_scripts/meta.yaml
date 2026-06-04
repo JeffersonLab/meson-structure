@@ -1,0 +1,18 @@
+# Gary Penman's RAD/ePIC KLambda processing (ROOT C++ macros).
+#
+# ProcessMCMatchedKLambda.C is built on the header-only RAD + epic-rad
+# frameworks (deps/rad, deps/epic-rad submodules, pinned to v1.0.0 per
+# gary_scripts/README.md). Needs the full EIC stack (ROOT + edm4eic
+# dictionaries), so run inside the campaign container.
+mode: per-energy
+use_container: true
+
+# runner kwarg <- campaign.yaml key: reconstructed edm4eic files per energy.
+inputs:
+  reco_dir: eicrecon_dir
+
+# The macro calls ROOT::EnableImplicitMT(8); give it the threads.
+sbatch:
+  time: "06:00:00"
+  mem_gb: 8
+  cpus_per_task: 8

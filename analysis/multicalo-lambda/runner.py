@@ -8,6 +8,7 @@ Run standalone:
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -54,8 +55,15 @@ def main() -> None:
     if args.gen_dir is not None:
         cmd += ["--gen-dir", str(args.gen_dir)]
 
+    # The studies save figures with fig.savefig() and never open a display, but
+    # matplotlib still auto-selects an interactive backend (e.g. TkAgg) at import
+    # time, which aborts on a headless SLURM/container node with no X/Tcl. Force a
+    # non-interactive backend unless the caller already chose one.
+    env = dict(os.environ)
+    env.setdefault("MPLBACKEND", "Agg")
+
     print(f"[runner] {' '.join(cmd)}", flush=True)
-    subprocess.run(cmd, check=True, cwd=runner_dir)
+    subprocess.run(cmd, check=True, cwd=runner_dir, env=env)
 
 
 if __name__ == "__main__":

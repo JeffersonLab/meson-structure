@@ -85,7 +85,10 @@ def plot_angle_distrib(
     apply_mpl_style()
     outdir = ensure_outdir(outdir)
 
-    fig, axes = plt.subplots(3, 2, figsize=(10, 7.5), sharex=False, sharey=False)
+    # Grid sizes to the number of energies (was hardcoded to 3 rows). squeeze=False
+    # keeps `axes` 2-D so axes[row, col] indexing works for any energy count.
+    fig, axes = plt.subplots(len(energies), 2, figsize=(10, 2.5 * len(energies)),
+                             sharex=False, sharey=False, squeeze=False)
 
     for row, beam in enumerate(energies):
         _, cos_true, sinphi_true = read_lambda_geant4(beam=beam, nfiles=nfiles, root_base_dir=root_base_dir, suffix=suffix, c=c)

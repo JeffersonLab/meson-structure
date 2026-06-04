@@ -6,6 +6,9 @@ use_container: false
 
 inputs:
   inputs: eicrecon_dir
+  # Event-generator files (flat dir, files named by energy) for the kaon-SF
+  # cross-section normalisation in studies_kaon_sf.build_sigma_map_xb_q2.
+  gen_dir: eg_dir
 
 extra_params:
   nfiles: 1

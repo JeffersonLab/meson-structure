@@ -27,7 +27,7 @@
 
 #include "ePICFileStreamer.h"
 
-void ProcessMCMatchedKLambda(std::vector<std::string> infiles={"/w/work5/home/garyp/eic/meson-structure-2025-08/18x275/k_lambda_18x275_5000evt_00*.edm4eic.root"}, std::string outfile="/w/work5/home/garyp/rad_trees/MCMatched_KLambda_18x275.root"){
+void ProcessMCMatchedKLambda(std::vector<std::string> infiles={}, std::string outfile="/w/work5/home/garyp/rad_trees/MCMatched_KLambda_18x275.root"){
   
   //cteq pdf calculator for F2N
   //initcteqpdf();
@@ -38,7 +38,11 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infiles={"/w/work5/home/ga
   //outfile="tempout.root";
   
   gBenchmark->Start("df total");
-  infiles = rad::files::GetXRootDFiles("dtn-eic.jlab.org/","/volatile/eic/romanov/meson-structure-2025-08/reco/18x275/","edm4eic.root",-1);
+  // [meson-structure] Only fall back to remote XRootD discovery when the caller
+  // supplied no input files. The analysis launcher (analysis/run.py) passes a
+  // concrete file list, which must take precedence over this default.
+  if(infiles.empty())
+    infiles = rad::files::GetXRootDFiles("dtn-eic.jlab.org/","/volatile/eic/romanov/meson-structure-2025-08/reco/18x275/","edm4eic.root",-1);
   for(auto file : infiles)
     std::cout << file << std::endl;
   rad::config::ePICReaction epic{"events",infiles};
