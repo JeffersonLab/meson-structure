@@ -1,10 +1,10 @@
 [submodule "eic_official_campaign_info"]
-	path = eic_official_campaign_info
+	path = submodules/eic_official_campaign_info
 	url = https://github.com/eic/simulation_campaign_datasets.git
 	branch = main
 [submodule "deps/rad"]
-	path = deps/rad
+	path = submodules/rad
 	url = https://github.com/Garypenman/rad.git
 [submodule "deps/epic-rad"]
-	path = deps/epic-rad
+	path = submodules/epic-rad
 	url = https://github.com/Garypenman/epic-rad.git

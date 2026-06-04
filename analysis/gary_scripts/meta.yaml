@@ -1,7 +1,7 @@
 # Gary Penman's RAD/ePIC KLambda processing (ROOT C++ macros).
 #
 # ProcessMCMatchedKLambda.C is built on the header-only RAD + epic-rad
-# frameworks (deps/rad, deps/epic-rad submodules, pinned to v1.0.0 per
+# frameworks (submodules/rad, submodules/epic-rad submodules, pinned to v1.0.0 per
 # gary_scripts/README.md). Needs the full EIC stack (ROOT + edm4eic
 # dictionaries), so run inside the campaign container.
 mode: per-energy

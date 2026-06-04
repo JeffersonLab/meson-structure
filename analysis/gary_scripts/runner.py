@@ -7,8 +7,8 @@ Runs the ROOT macro `ProcessMCMatchedKLambda.C` over the reconstructed
 
 The macro is built on the RAD / epic-rad header-only frameworks, added to
 this repo as git submodules:
-    deps/rad        (https://github.com/Garypenman/rad      @ v1.0.0)
-    deps/epic-rad   (https://github.com/Garypenman/epic-rad @ v1.0.0)
+    submodules/rad        (https://github.com/Garypenman/rad      @ v1.0.0)
+    submodules/epic-rad   (https://github.com/Garypenman/epic-rad @ v1.0.0)
 Both `include/` dirs are prepended to ROOT_INCLUDE_PATH so the macro's
 `#include "ePICReaction.h"` etc. resolve at run time.
 
@@ -34,8 +34,8 @@ from pathlib import Path
 runner_dir = Path(__file__).resolve().parent
 repo_root = runner_dir.parents[1]  # analysis/gary_scripts -> <repo root>
 
-RAD_INCLUDE = repo_root / "deps" / "rad" / "include"
-EPICRAD_INCLUDE = repo_root / "deps" / "epic-rad" / "include"
+RAD_INCLUDE = repo_root / "submodules" / "rad" / "include"
+EPICRAD_INCLUDE = repo_root / "submodules" / "epic-rad" / "include"
 
 MACRO = "ProcessMCMatchedKLambda.C"
 
@@ -65,7 +65,7 @@ def main() -> None:
     if not RAD_INCLUDE.is_dir() or not EPICRAD_INCLUDE.is_dir():
         sys.exit(
             "RAD headers not found. Initialise the submodules:\n"
-            "    git submodule update --init deps/rad deps/epic-rad\n"
+            "    git submodule update --init submodules/rad submodules/epic-rad\n"
             f"  expected: {RAD_INCLUDE}\n            {EPICRAD_INCLUDE}"
         )
 

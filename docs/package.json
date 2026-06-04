@@ -43,6 +43,6 @@
   },
   "dependencies": {
     "katex": "^0.16.22",
-    "markdown-it-katex": "^2.0.3"
+    "@traptitech/markdown-it-katex": "^3.6.0"
   }
 }
