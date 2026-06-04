@@ -41,9 +41,7 @@ def create_container_script_template():
 
 def process_energy(config, energy, config_path=None):
     """Build a JobCreator for one beam energy."""
-    input_files = find_inputs_or_skip(
-        config.dd4hep_output, '*.edm4hep.root', energy, config.eicrecon_output
-    )
+    input_files = find_inputs_or_skip(config.eicrecon_input, '*.edm4hep.root', energy, config.eicrecon_output)
     if input_files is None:
         return None
 
