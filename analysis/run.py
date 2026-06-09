@@ -24,6 +24,11 @@ Examples:
     # everything at once
     python analysis/run.py run-all --mode slurm
     python analysis/run.py run-all --mode slurm --only eg-kinematics,csv_mc_dis_analysis
+
+    # use a different campaign/config (its own base_dir + analysis_output,
+    # so inputs and results live in their own directories)
+    python analysis/run.py run-all --config /path/to/my_custom.yaml
+    python analysis/run.py run eg-kinematics -c my_custom.yaml
 """
 from __future__ import annotations
 
@@ -117,7 +122,10 @@ def _run_one_analysis(
 
 @app.command("list")
 def list_cmd(
-    campaign: Optional[Path] = typer.Option(None, "--campaign", "-c"),
+    campaign: Optional[Path] = typer.Option(
+        None, "--config", "--campaign", "-c",
+        help="Campaign/config YAML (default: analysis/campaign.yaml).",
+    ),
 ):
     """List analyses that have a runner.py + meta.yaml."""
     names = discover_analyses(analysis_dir)
@@ -144,7 +152,10 @@ def run_cmd(
     ),
     mode: str = typer.Option("local", "--mode", "-m", help="local | slurm | dry-run"),
     dry_run: bool = typer.Option(False, "--dry-run", help="Alias for --mode dry-run."),
-    campaign: Optional[Path] = typer.Option(None, "--campaign", "-c"),
+    campaign: Optional[Path] = typer.Option(
+        None, "--config", "--campaign", "-c",
+        help="Campaign/config YAML (default: analysis/campaign.yaml).",
+    ),
     output_root: Optional[Path] = typer.Option(None, "--output-root", "-o"),
     set_args: list[str] = typer.Option(
         None, "--set",
@@ -168,7 +179,10 @@ def run_cmd(
 def run_all_cmd(
     mode: str = typer.Option("local", "--mode", "-m"),
     dry_run: bool = typer.Option(False, "--dry-run"),
-    campaign: Optional[Path] = typer.Option(None, "--campaign", "-c"),
+    campaign: Optional[Path] = typer.Option(
+        None, "--config", "--campaign", "-c",
+        help="Campaign/config YAML (default: analysis/campaign.yaml).",
+    ),
     output_root: Optional[Path] = typer.Option(None, "--output-root", "-o"),
     only: Optional[str] = typer.Option(None, "--only",
                                         help="Comma-separated subset to run."),
