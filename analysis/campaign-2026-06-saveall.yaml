@@ -10,11 +10,11 @@
 #   ${proton_num}  e.g. "100"
 
 # --- Where the campaign lives ---------------------------------------------
-base_dir: "/work/eic3/users/romanov/meson-structure-2026-05"
+base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
 
 # --- Output of the analysis launcher --------------------------------------
 # Each analysis writes to {analysis_output}/{analysis_name}/{energy}/
-analysis_output: "${base_dir}/analysis"
+analysis_output: "${base_dir}/analysis-saveall"
 
 # --- Energies the campaign covers -----------------------------------------
 energies:
@@ -24,7 +24,7 @@ energies:
   - "18x275"
 
 # --- Container --------------------------------------------------------------
-container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-04-25.sif"
+container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-06-01.sif"
 
 # Bind dirs passed to `singularity exec -B host:host`. The launcher always
 # also binds the repo root so analysis code is visible in the container.
@@ -47,10 +47,10 @@ dd4hep_dir: "${base_dir}/dd4hep_saveall/${energy}"
 csv_dd4hep_dir: "${base_dir}/csv_dd4hep_saveall/${energy}"
 
 # eicrecon outputs (per-energy)
-eicrecon_dir: "${base_dir}/reco/${energy}"
+eicrecon_dir: "${base_dir}/reco_saveall/${energy}"
 
 # CSV from eicrecon (per-energy)
-csv_reco_dir: "${base_dir}/csv_reco/${energy}"
+csv_reco_dir: "${base_dir}/csv_reco_saveall/${energy}"
 
 # Convenience alias used by edm4hep_lambda
 edm4hep_dir: "${dd4hep_dir}"
