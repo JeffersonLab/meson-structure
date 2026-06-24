@@ -52,12 +52,10 @@ def run_macro(macro: str, args: Sequence[MacroArg], cwd: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--energy", required=True)
-    parser.add_argument("--edm4hep-dir", type=Path, required=True,
-                        help="Dir with *.edm4hep.root for this energy.")
+    parser.add_argument("--edm4hep-dir", type=Path, required=True, help="Dir with *.edm4hep.root for this energy.")
     parser.add_argument("--outdir", type=Path, required=True)
-    parser.add_argument("--n-events", type=int, default=5000)
-    parser.add_argument("--only", default="all",
-                        choices=["all", "mcpart_lambda", "acceptance"])
+    parser.add_argument("--n-events", type=int, default=20000)
+    parser.add_argument("--only", default="all", choices=["all", "mcpart_lambda", "acceptance"])
     args = parser.parse_args()
 
     args.outdir.mkdir(parents=True, exist_ok=True)
