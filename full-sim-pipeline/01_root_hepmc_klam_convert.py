@@ -5,7 +5,7 @@ convert_to_hepmc3.py
 Reads 'Evnts' TTree from one or more large ROOT files (k-lambda events),
 and converts them to HepMC3 format (ASCII output). Each output file can
 contain at most --events-per-file events, so large samples are split
-across multiple files, e.g. output_001.hepmc, output_002.hepmc, etc.
+across multiple files, e.g. output_0001.hepmc, output_0002.hepmc, etc.
 
 Features:
     - Chunked reading (uproot.iterate) to handle large files.
@@ -13,29 +13,35 @@ Features:
       * One GenVertex at (0,0,0,0).
       * Two incoming beam particles: (Proton, Electron).
       * Three outgoing final-state particles: (Scattered electron, Kaon, Lambda).
-      * DIS invariants from 'invts' stored as DoubleAttributes with "dis_" prefix.
+      * DIS invariants from 'invts' stored as event attributes with "dis_" prefix.
     - PDG codes guessed: Proton=2212, Electron=11, K+=321, Lambda=3122.
       Adjust if needed.
 
+This version uses the scikit-hep 'pyhepmc' bindings instead of the official
+pyHepMC3 bindings. Key differences:
+    - 'import pyhepmc' replaces 'from pyHepMC3 import HepMC3 as hm'.
+    - GenEvent uses the 'event_number' property instead of set_event_number().
+    - Attributes are set through the dict-like 'attributes' view with native
+      Python values (no DoubleAttribute wrapper needed).
+    - The writer comes from pyhepmc.io.WriterAscii.
+
 Usage Example:
-  python root_hepmc_converter.py \
+  uv run 01_root_hepmc_klam_convert.py \
       --input-files file_5x41.root file_10x100.root \
       --chunk-size 5000 \
       --events 100000 \
       --output-prefix out_hepmc \
       --events-per-file 20000
 
-Make sure to install uproot, awkward, and a proper HepMC3 w/ Python support:
-  pip install uproot awkward
-  # Then build/install HepMC3 from https://gitlab.cern.ch/hepmc/HepMC3
+Install dependencies:
+  pip install uproot awkward pyhepmc
+  # pyhepmc bundles HepMC3, so nothing else needs to be built or installed.
 """
 
 import argparse
-import os
+import pyhepmc
 import uproot
-import awkward as ak
-from pyHepMC3 import HepMC3 as hm
-from pyHepMC3 import std as std
+import awkward as ak  # noqa: F401  (kept for parity / downstream use)
 
 # PDG codes
 PDG_PROTON = 2212
@@ -43,11 +49,12 @@ PDG_ELECTRON = 11
 PDG_KAON_PLUS = 321
 PDG_LAMBDA = 3122
 
+
 class SplitHepMC3Writer:
     """
     A small helper class that writes GenEvents to multiple ASCII files,
     each file containing up to 'events_per_file' events.
-    Filenames are prefixed by 'prefix_' and have an index like _001, _002, ...
+    Filenames are prefixed by 'prefix_' and have an index like _0001, _0002, ...
     """
     def __init__(self, prefix: str, events_per_file: int):
         self.prefix = prefix
@@ -61,9 +68,9 @@ class SplitHepMC3Writer:
         filename = f"{self.prefix}_{self.current_file_idx:04d}.hepmc"
         print(f"Opening new output file: {filename}")
         self.current_file_idx += 1
-        return hm.WriterAscii(filename)
+        return pyhepmc.io.WriterAscii(filename)
 
-    def write_event(self, event: hm.GenEvent):
+    def write_event(self, event: pyhepmc.GenEvent):
         # Check if the next event would exceed the limit
         if (self.events_in_current_file >= self.events_per_file) or not self.current_writer:
             self._next_file()
@@ -120,18 +127,17 @@ def make_gen_event(event_number: int, invts_entry, p_inc, e_inc, e_scat, k_out, 
     :param p_inc, e_inc, e_scat, k_out, lamb_out:
                         each is an awkward record with structure
                         { "fP": { "fX","fY","fZ" }, "fE" }
-    :return: HepMC3 GenEvent
+    :return: pyhepmc GenEvent
     """
-    event = hm.GenEvent()
-    event.set_event_number(event_number)
+    event = pyhepmc.GenEvent(pyhepmc.Units.GEV, pyhepmc.Units.MM)
+    event.event_number = event_number
 
     # Create a single GenVertex at (0,0,0,0).
-    vertex = hm.GenVertex(hm.FourVector(0, 0, 0, 0))
-    event.add_vertex(vertex)
+    vertex = pyhepmc.GenVertex(pyhepmc.FourVector(0, 0, 0, 0))
 
     # 1) Incoming (beam) proton
-    proton_in = hm.GenParticle(
-        hm.FourVector(
+    proton_in = pyhepmc.GenParticle(
+        pyhepmc.FourVector(
             p_inc["fP"]["fX"],
             p_inc["fP"]["fY"],
             p_inc["fP"]["fZ"],
@@ -143,8 +149,8 @@ def make_gen_event(event_number: int, invts_entry, p_inc, e_inc, e_scat, k_out, 
     vertex.add_particle_in(proton_in)
 
     # 2) Incoming (beam) electron
-    electron_in = hm.GenParticle(
-        hm.FourVector(
+    electron_in = pyhepmc.GenParticle(
+        pyhepmc.FourVector(
             e_inc["fP"]["fX"],
             e_inc["fP"]["fY"],
             e_inc["fP"]["fZ"],
@@ -156,8 +162,8 @@ def make_gen_event(event_number: int, invts_entry, p_inc, e_inc, e_scat, k_out, 
     vertex.add_particle_in(electron_in)
 
     # 3) Outgoing scattered electron
-    electron_out = hm.GenParticle(
-        hm.FourVector(
+    electron_out = pyhepmc.GenParticle(
+        pyhepmc.FourVector(
             e_scat["fP"]["fX"],
             e_scat["fP"]["fY"],
             e_scat["fP"]["fZ"],
@@ -169,8 +175,8 @@ def make_gen_event(event_number: int, invts_entry, p_inc, e_inc, e_scat, k_out, 
     vertex.add_particle_out(electron_out)
 
     # 4) Outgoing kaon
-    kaon_out = hm.GenParticle(
-        hm.FourVector(
+    kaon_out = pyhepmc.GenParticle(
+        pyhepmc.FourVector(
             k_out["fP"]["fX"],
             k_out["fP"]["fY"],
             k_out["fP"]["fZ"],
@@ -182,8 +188,8 @@ def make_gen_event(event_number: int, invts_entry, p_inc, e_inc, e_scat, k_out, 
     vertex.add_particle_out(kaon_out)
 
     # 5) Outgoing lambda
-    lambda_out = hm.GenParticle(
-        hm.FourVector(
+    lambda_out = pyhepmc.GenParticle(
+        pyhepmc.FourVector(
             lamb_out["fP"]["fX"],
             lamb_out["fP"]["fY"],
             lamb_out["fP"]["fZ"],
@@ -194,11 +200,13 @@ def make_gen_event(event_number: int, invts_entry, p_inc, e_inc, e_scat, k_out, 
     )
     vertex.add_particle_out(lambda_out)
 
-    # Attach 'invts' struct fields as attributes
+    event.add_vertex(vertex)
+
+    # Attach 'invts' struct fields as event attributes
     for field_name in invts_entry.fields:
         val = invts_entry[field_name]
         attr_key = "dis_" + field_name.lower()  # e.g. "dis_q2" for Q2
-        event.add_attribute(attr_key, hm.DoubleAttribute(float(val)))
+        event.attributes[attr_key] = float(val)
 
     return event
 
@@ -240,11 +248,11 @@ def main():
                 if args.events and (event_counter >= args.events):
                     break
 
-                invts_entry   = invts_array[i]
-                p_inc_entry   = p_inc_array[i]
-                e_inc_entry   = e_inc_array[i]
-                e_scat_entry  = e_scat_array[i]
-                k_out_entry   = k_array[i]
+                invts_entry    = invts_array[i]
+                p_inc_entry    = p_inc_array[i]
+                e_inc_entry    = e_inc_array[i]
+                e_scat_entry   = e_scat_array[i]
+                k_out_entry    = k_array[i]
                 lamb_out_entry = lamb_scat_arr[i]
 
                 gen_evt = make_gen_event(
