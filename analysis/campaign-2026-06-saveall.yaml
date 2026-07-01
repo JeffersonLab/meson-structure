@@ -14,7 +14,7 @@ base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
 
 # --- Output of the analysis launcher --------------------------------------
 # Each analysis writes to {analysis_output}/{analysis_name}/{energy}/
-analysis_output: "${base_dir}/analysis-saveall"
+analysis_output: "${base_dir}/analysis-st"
 
 # --- Energies the campaign covers -----------------------------------------
 energies:

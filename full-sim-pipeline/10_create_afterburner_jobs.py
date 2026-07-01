@@ -37,7 +37,7 @@ def create_container_script_template():
 def process_energy(config, energy, config_path=None):
     """Build a JobCreator for one beam energy."""
     input_files = find_inputs_or_skip(
-        config.afterburner_source, '*.hepmc', energy, config.afterburner_output
+        config.afterburner_input, '*.hepmc', energy, config.afterburner_output
     )
     if input_files is None:
         return None
@@ -50,11 +50,26 @@ def process_energy(config, energy, config_path=None):
         events=config.event_count,
         container=config['container'],
     )
+    
+
+    def update_params(params):
+        """Update the parameters for the container script."""
+        flag = ""
+        if "10x130" in params['input_file']:
+            flag = "--preset=ip6_ep_130x10"
+        if "5x41" in params['input_file']:
+            flag = "--preset=ip6_hidiv_41x5" 
+        if "9x100" in params['input_file']:
+            flag = "--preset=ip6_hidiv_100x10" 
+        if "9x130" in params['input_file']:
+            flag = "--preset=ip6_ep_130x10" 
+        if "9x275" in params['input_file']:
+            flag = "--preset=ip6_hidiv_275x9"  
+        
+        return {**params, 'afterburn_preset_flag': flag}
+    
+    runner.container_script_params_updater = update_params
     runner.container_script_template = create_container_script_template()
-    runner.container_script_params_updater = lambda params: {
-        **params,
-        'afterburn_preset_flag': "--preset=ip6_ep_130x10" if "10x130" in params['basename'] else ""
-    }
     runner.run()
     return runner
 

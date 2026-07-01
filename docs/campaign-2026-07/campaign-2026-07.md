@@ -43,6 +43,13 @@ Commands log
 /w/eic-scshelf2104/users/romanov/meson-structure-2026-07/eg-split/9x275
 
 uv run 01_root_hepmc_klam_convert.py \
+      --input-files /w/eic-scshelf2104/users/romanov/meson-structure-2026-07/eg-original-2026-06/k_lambda_crossing_0.000-5.0on41.0_x0.0001-1.0000_q1.0-500.0.root \
+      --chunk-size 1000 \
+      --events 10000000 \
+      --output-prefix /w/eic-scshelf2104/users/romanov/meson-structure-2026-07/eg-split/5x41/msf_ev1000 \
+      --events-per-file 1000
+
+uv run 01_root_hepmc_klam_convert.py \
       --input-files /w/eic-scshelf2104/users/romanov/meson-structure-2026-07/eg-original-2026-06/k_lambda_crossing_0.000-9.0on100.0_x0.0001-1.0000_q1.0-500.0.root \
       --chunk-size 1000 \
       --events 10000000 \

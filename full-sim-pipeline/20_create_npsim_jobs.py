@@ -42,14 +42,14 @@ def create_container_script_template():
 def process_energy(config, energy, config_path=None):
     """Build a JobCreator for one beam energy."""
     input_files = find_inputs_or_skip(
-        config.dd4hep_input, '*.hepmc', energy, config.dd4hep_output
+        config.dd4hep_input, '*.hepmc3.tree.root', energy, config.dd4hep_output
     )
     if input_files is None:
         return None
 
     runner = JobCreator(
         input_files=input_files,
-        output_file_name_func=exension_replacer('.afterburner.hepmc', '.edm4hep.root'),
+        output_file_name_func=exension_replacer('.hepmc3.tree.root', '.edm4hep.root'),
         output_dir=config.dd4hep_output,
         bind_dirs=config.bind_dirs,
         events=config.event_count,
