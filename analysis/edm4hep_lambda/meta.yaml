@@ -7,7 +7,7 @@ inputs:
   edm4hep_dir: edm4hep_dir
 
 extra_params:
-  n_events: 5000
+  n_events: 50000
 
 sbatch:
   time: "06:00:00"

@@ -14,7 +14,7 @@ base_dir: "/work/eic3/users/romanov/meson-structure-2026-06"
 
 # --- Output of the analysis launcher --------------------------------------
 # Each analysis writes to {analysis_output}/{analysis_name}/{energy}/
-analysis_output: "${base_dir}/analysis-saveall"
+analysis_output: "${base_dir}/analysis-stv"
 
 # --- Energies the campaign covers -----------------------------------------
 energies:
@@ -41,16 +41,16 @@ bind_dirs:
 eg_dir: "/work/eic/users/romanov/eg-orig-kaon-lambda-2025-08"
 
 # DD4HEP outputs (per-energy)
-dd4hep_dir: "${base_dir}/dd4hep-saveall/${energy}"
+dd4hep_dir: "${base_dir}/dd4hep-stv/${energy}"
 
 # CSV from DD4HEP truth (per-energy)
-csv_dd4hep_dir: "${base_dir}/csv-dd4hep-saveall/${energy}"
+csv_dd4hep_dir: "${base_dir}/csv-dd4hep-stv/${energy}"
 
 # eicrecon outputs (per-energy)
-eicrecon_dir: "${base_dir}/reco-saveall/${energy}"
+eicrecon_dir: "${base_dir}/reco-stv/${energy}"
 
 # CSV from eicrecon (per-energy)
-csv_reco_dir: "${base_dir}/csv-reco-saveall/${energy}"
+csv_reco_dir: "${base_dir}/csv-reco-stv/${energy}"
 
 # Convenience alias used by edm4hep_lambda
 edm4hep_dir: "${dd4hep_dir}"
@@ -59,6 +59,6 @@ edm4hep_dir: "${dd4hep_dir}"
 sbatch_defaults:
   account: "eic"
   partition: "production"
-  time: "04:00:00"
+  time: "11:00:00"
   mem_gb: 5
   cpus_per_task: 1

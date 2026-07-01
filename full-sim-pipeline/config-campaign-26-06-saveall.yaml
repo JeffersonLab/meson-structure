@@ -20,7 +20,8 @@ bind_dirs: [
 
 # Container — official EIC image from cvmfs (nightly)
 #container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
-container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-06-01.sif"
+#container: "/work/eic3/users/romanov/meson-structure-work/eicdev-eic-full-2026-06-01.sif"
+container: "/cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly"
 
 # Scripts location
 scripts_dir: "/work/eic3/users/romanov/meson-structure-work/meson-structure/full-sim-pipeline"

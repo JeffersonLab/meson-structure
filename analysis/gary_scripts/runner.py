@@ -51,15 +51,11 @@ def build_root_include_path(env: dict[str, str]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--energy", required=True,
-                        help="Beam energy tag, e.g. 18x275 (output naming).")
-    parser.add_argument("--reco-dir", type=Path, required=True,
-                        help="Directory with reconstructed *.edm4eic.root files.")
+    parser.add_argument("--energy", required=True, help="Beam energy tag, e.g. 18x275 (output naming).")
+    parser.add_argument("--reco-dir", type=Path, required=True, help="Directory with reconstructed *.edm4eic.root files.")
     parser.add_argument("--outdir", type=Path, required=True)
-    parser.add_argument("--glob", dest="glob_pattern", default="*.edm4eic.root",
-                        help="Glob for reco files inside --reco-dir.")
-    parser.add_argument("--max-files", type=int, default=None,
-                        help="Limit number of input files (debug).")
+    parser.add_argument("--glob", dest="glob_pattern", default="*.edm4eic.root", help="Glob for reco files inside --reco-dir.")
+    parser.add_argument("--max-files", type=int, default=None, help="Limit number of input files (debug).")
     args = parser.parse_args()
 
     if not RAD_INCLUDE.is_dir() or not EPICRAD_INCLUDE.is_dir():
@@ -90,8 +86,7 @@ def main() -> None:
     print(f"[runner] energy={args.energy}  files={len(files)}  out={outfile}", flush=True)
     print(f"[runner] ROOT_INCLUDE_PATH={env['ROOT_INCLUDE_PATH']}", flush=True)
     print(f"[runner] cwd={runner_dir}", flush=True)
-    print(f"[runner] root -x -l -b -q '{invocation[:120]}{'...' if len(invocation) > 120 else ''}'",
-          flush=True)
+    print(f"[runner] root -x -l -b -q '{invocation[:120]}{'...' if len(invocation) > 120 else ''}'", flush=True)
     proc = subprocess.run(cmd, cwd=str(runner_dir), env=env)
     if proc.returncode != 0:
         sys.exit(proc.returncode)

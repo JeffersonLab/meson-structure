@@ -27,5 +27,6 @@ dependencies = [
     "scikit-learn",
     "duckdb",
     "typer",
-    "submitit"
+    "submitit",
+    "pyhepmc>=2.16.1",
 ]
