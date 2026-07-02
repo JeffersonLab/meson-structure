@@ -5,11 +5,11 @@ import numpy as np
 import awkward as ak
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
-from config import PhysicsConstants, Paths, DEFAULT_CONST, DEFAULT_PATHS
+import uproot
+from config import PhysicsConstants, Paths, CONST, PATHS
 from utils import read_lambda_geant4, read_lambda_eicrecon, read_lambda_afterburner, iter_reco_files
 from physics import direct_energy_window, E_to_L, L_to_E, proton_kinematics_for_beam, xk_from_xb_xl
-from plotting import apply_mpl_style, ensure_outdir, savefig
+from plotting import apply_mpl_style, ensure_outdir, savefig, get_color, get_style
 
 
 def plot_lambda_spectra(
@@ -21,7 +21,7 @@ def plot_lambda_spectra(
     suffix: str,
     outdir: Path,
     afterburner_pattern: str,
-    c: PhysicsConstants = DEFAULT_CONST,
+    c: PhysicsConstants = CONST,
     logy: bool = True,
 ) -> Path:
     apply_mpl_style()
@@ -41,23 +41,31 @@ def plot_lambda_spectra(
 
     fig, ax = plt.subplots(figsize=(5, 5))
 
-    if E_reco.size:
-        ax.hist(
-            E_reco, bins=bins, range=(0, xmax),
-            histtype="step", linewidth=2.0,
-            label=f"Reco ({E_reco.size:.1e})",
-        )
     if E_geant4.size:
         ax.hist(
             E_geant4, bins=bins, range=(0, xmax),
             histtype="step",
+            color=get_color("geant4"),
             label=rf"Geant4 ({n_geant4_label:.1e})",
+            **get_style("geant4"),
         )
+
     if E_after.size:
         ax.hist(
             E_after, bins=bins, range=(0, xmax),
-            histtype="step", linestyle="--",
+            histtype="step",
+            color=get_color("afterburner"),
             label="Afterburner",
+            **get_style("afterburner"),
+        )
+
+    if E_reco.size:
+        ax.hist(
+            E_reco, bins=bins, range=(0, xmax),
+            histtype="step",
+            color=get_color("reco"),
+            label=f"Reco ({E_reco.size:.1e})",
+            **get_style("reco"),
         )
 
     ax.set_xlabel("Energy (GeV)")
@@ -80,7 +88,7 @@ def plot_angle_distrib(
     outdir: Path,
     afterburner_pattern: str,
     energies: tuple[str, ...] = ("5x41", "10x100", "18x275"),
-    c: PhysicsConstants = DEFAULT_CONST,
+    c: PhysicsConstants = CONST,
 ) -> Path:
     apply_mpl_style()
     outdir = ensure_outdir(outdir)
@@ -93,12 +101,17 @@ def plot_angle_distrib(
         _, cos_after, sinphi_after = read_lambda_afterburner(beam=beam, nfiles=nfiles, pattern=afterburner_pattern, pid=c.pid_lambda)
 
         ax = axes[row, 0]
+
         if cos_true.size:
-            ax.hist(cos_true, bins=bins, range=(-1, 1), histtype="step", label="Geant4")
+            ax.hist(cos_true, bins=bins, range=(-1, 1), histtype="step",
+                    color=get_color("geant4"), label="Geant4", **get_style("geant4"))
         if cos_reco.size:
-            ax.hist(cos_reco, bins=bins, range=(-1, 1), histtype="step", linewidth=2.5, label="Reco")
+            ax.hist(cos_reco, bins=bins, range=(-1, 1), histtype="step",
+                    color=get_color("reco"), label="Reco", **get_style("reco"))
         if cos_after.size:
-            ax.hist(cos_after, bins=bins, range=(-1, 1), histtype="step", linestyle="--", label="Afterburner")
+            ax.hist(cos_after, bins=bins, range=(-1, 1), histtype="step",
+                    color=get_color("afterburner"), label="Afterburner", **get_style("afterburner"))
+
         ax.set_xlabel(r"$\cos\theta_\Lambda$")
         ax.set_ylabel("Counts")
         ax.set_yscale("log")
@@ -106,17 +119,21 @@ def plot_angle_distrib(
         ax.legend(frameon=False)
 
         ax = axes[row, 1]
+
         if sinphi_true.size:
-            ax.hist(sinphi_true, bins=bins, range=(-1, 1), histtype="step", label="Geant4")
+            ax.hist(sinphi_true, bins=bins, range=(-1, 1), histtype="step",
+                    color=get_color("geant4"), label="Geant4", **get_style("geant4"))
         if sinphi_reco.size:
-            ax.hist(sinphi_reco, bins=bins, range=(-1, 1), histtype="step", linewidth=2.5, label="Reco")
+            ax.hist(sinphi_reco, bins=bins, range=(-1, 1), histtype="step",
+                    color=get_color("reco"), label="Reco", **get_style("reco"))
         if sinphi_after.size:
-            ax.hist(sinphi_after, bins=bins, range=(-1, 1), histtype="step", linestyle="--", label="Afterburner")
+            ax.hist(sinphi_after, bins=bins, range=(-1, 1), histtype="step",
+                    color=get_color("afterburner"), label="Afterburner", **get_style("afterburner"))
         ax.set_xlabel(r"$\sin\phi_\Lambda$")
         ax.set_ylabel("Counts")
         ax.set_yscale("log")
         ax.set_title(beam)
-        ax.legend(frameon=False)
+        #ax.legend(frameon=False)
 
     fig.tight_layout()
     out = outdir / f"angledistrib_lambda_cos_sinphi_{suffix}.png"
@@ -129,8 +146,9 @@ def efficiency_vs_energy(
     bins: int,
     root_base_dir: Path,
     suffix: str,
-    c: PhysicsConstants = DEFAULT_CONST,
+    c: PhysicsConstants = CONST,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+
     Emin, Emax = direct_energy_window(beam)
     E_truth, _, _ = read_lambda_geant4(beam, nfiles=nfiles, root_base_dir=root_base_dir, suffix=suffix, c=c)
     E_reco, _, _ = read_lambda_eicrecon(beam, nfiles=nfiles, root_base_dir=root_base_dir, suffix=suffix)
@@ -167,8 +185,9 @@ def plot_efficiencies(
     outdir: Path,
     with_beta: bool,
     tag: str,
-    c: PhysicsConstants = DEFAULT_CONST,
+    c: PhysicsConstants = CONST,
 ) -> Path:
+
     apply_mpl_style()
     outdir = ensure_outdir(outdir)
 
@@ -184,25 +203,55 @@ def plot_efficiencies(
 
     scale = (100.0 / c.beta) if with_beta else 100.0
 
-    ax.errorbar(c5, scale * e5, yerr=scale * s5, fmt="s", markersize=4, linewidth=1, label="5x41 (new)")
-    ax.errorbar(c5o, scale * e5o, yerr=scale * s5o, fmt="x", markersize=4, linewidth=1, label="5x41 (ZDC only)")
+    ax.errorbar(
+        c5, scale * e5, yerr=scale * s5,
+        fmt="s", markersize=4, linewidth=1,
+        color="green", ecolor="green",
+        label="5x41 (new)"
+    )
 
-    ax.errorbar(c10, scale * e10, yerr=scale * s10, fmt="s", markersize=4, linewidth=1, label="10x100 (new)")
-    ax.errorbar(c10o, scale * e10o, yerr=scale * s10o, fmt="x", markersize=4, linewidth=1, label="10x100 (ZDC only)")
+    ax.errorbar(
+        c5o, scale * e5o, yerr=scale * s5o,
+        fmt="x", markersize=4, linewidth=1,
+        color="green", ecolor="green",
+        label="5x41 (ZDC only)"
+    )
 
-    ax.errorbar(c18, scale * e18, yerr=scale * s18, fmt="s", markersize=4, linewidth=1, label="18x275 (new)")
-    ax.errorbar(c18o, scale * e18o, yerr=scale * s18o, fmt="x", markersize=4, linewidth=1, label="18x275 (ZDC only)")
+    ax.errorbar(
+        c10, scale * e10, yerr=scale * s10,
+        fmt="s", markersize=4, linewidth=1,
+        color="blue", ecolor="blue",
+        label="10x100 (new)"
+    )
+
+    ax.errorbar(
+        c10o, scale * e10o, yerr=scale * s10o,
+        fmt="x", markersize=4, linewidth=1,
+        color="blue", ecolor="blue",
+        label="10x100 (ZDC only)"
+    )
+
+    ax.errorbar(
+        c18, scale * e18, yerr=scale * s18,
+        fmt="s", markersize=4, linewidth=1,
+        color="red", ecolor="red",
+        label="18x275 (new)"
+    )
+
+    ax.errorbar(
+        c18o, scale * e18o, yerr=scale * s18o,
+        fmt="x", markersize=4, linewidth=1,
+        color="red", ecolor="red",
+        label="18x275 (ZDC only)"
+    )
 
     ax.set_xlabel(r"$\Lambda^0$ energy: $E_\Lambda$ (GeV)")
     ax.set_ylabel(r"Reconstruction efficiency $\epsilon(E_\Lambda)$ (%)")
-
     secax = ax.secondary_xaxis("top", functions=(lambda x: E_to_L(x, c), lambda x: L_to_E(x, c)))
     secax.set_xticks([5, 10, 15, 20])
     secax.set_xlabel(r"Average decay vertex: $\langle z \rangle_\Lambda$ (m)")
-
-    ax.legend(frameon=False)
+    ax.legend(frameon=False, loc="upper left")
     fig.tight_layout()
-
     outname = f"epsilon_vs_energy_{tag}" + ("_beta" if with_beta else "") + ".png"
     return savefig(fig, outdir / outname, dpi=300)
 
@@ -225,13 +274,17 @@ def plot_nlambda_vs_kinematics_all(
     t_bins: int = 50,
     t_range: tuple[float, float] | None = None,
     tmax: float | None = None,
-    c: PhysicsConstants = DEFAULT_CONST,
+    c: PhysicsConstants = CONST,
+    kinmethod: str = 'Truth'
 ) -> None:
     apply_mpl_style()
     outdir = ensure_outdir(outdir)
 
-    xB_branch = "InclusiveKinematicsTruth.x"
-    Q2_branch = "InclusiveKinematicsTruth.Q2"
+    if kinmethod not in ('Truth', 'Electron', 'JB', 'Sigma', 'DA', 'ML'):
+        raise ValueError(f"Invalid kinmethod: {kinmethod}. Choose Truth, Electron, JB, Sigma, DA, or ML.")
+
+    xB_branch = f"InclusiveKinematics{kinmethod}.x"
+    Q2_branch = f"InclusiveKinematics{kinmethod}.Q2"
     lamE_branch = "ReconstructedFarForwardLambdas.energy"
     lampx_branch = "ReconstructedFarForwardLambdas.momentum.x"
     lampy_branch = "ReconstructedFarForwardLambdas.momentum.y"
@@ -355,7 +408,7 @@ def plot_nlambda_vs_kinematics_all(
     ax.set_ylabel(y_label)
     ax.set_title(rf"$\Lambda$ yield vs $(x_B,Q^2)$ at {beam}")
     fig.tight_layout()
-    savefig(fig, outdir / f"kinematics_xB_Q2_{beam}_{tag}.png", dpi=300)
+    savefig(fig, outdir / f"kinematics{kinmethod}_xB_Q2_{beam}_{tag}.png", dpi=300)
 
     if has_cand:
         Q2k_plot, mk = q2_transform(Q2_cand)
@@ -376,4 +429,4 @@ def plot_nlambda_vs_kinematics_all(
         ax.set_ylabel(y_label)
         ax.set_title(rf"$\Lambda$ candidates vs $(x_K,Q^2)$ at {beam}" + extra)
         fig.tight_layout()
-        savefig(fig, outdir / f"kinematics_xK_Q2_{beam}_{tag}.png", dpi=300)
+        savefig(fig, outdir / f"kinematics{kinmethod}_xK_Q2_{beam}_{tag}.png", dpi=300)

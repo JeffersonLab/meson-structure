@@ -7,11 +7,11 @@ Meson Structure Analysis
 
 ## Λ-reconstruction and Kaon Structure Function Studies
 
-The branch ***analysis/multi-calo-lambda*** of the **meson-structure** repository provides a lightweight and user-friendly Python framework to:
+The folder ***analysis/multi-calo-lambda*** of the **meson-structure** repository provides a lightweight and user-friendly Python framework to:
 
 - Read reconstructed Λ candidates from EICrecon outputs,  
 - Compare reconstructed vs Geant4 and afterburner angles and spectra,
-- Produce kinematic maps,  
+- Produce kinematic maps (trhuth, electron method, JB method),  
 - Propagate statistical uncertainties to the kaon structure function*.
 
 \* The error propagation is based on the assumption that the kaon structure function is proportional to the number of $\Lambda^0$ hyperons produced by the Sullivan process, $F_k\propto N_\Lambda$. This number is related to the reconstruction efficiency $\varepsilon$, the cross-section $\sigma$, and the EIC luminosity $L$, as $N_\Lambda=\varepsilon\times \sigma \times L $. Assuming Poisson statistics, the relative error is estimated as 
@@ -82,7 +82,6 @@ Examples:
 
 ### TO DO LIST
 
-- [physics] Include the experimental kinematics reconstruction (e-, JB) from EICrecon.
-- [physics] Attach the uncertainties to Kaon SF models to see if discriminating.
-- [physics] Include other sources of error than purely statistical  ones (e.g. $\Delta\sigma$ from event generator)
-- [ESR] Include Zenobo figures plot format (https://zenodo.org/records/16615455) 
+- [physics] Event generator sensitivity studies
+- [physics] Background contamination studies
+- [ESR] Include Zenodo figures plot format (https://zenodo.org/records/16615455) 
