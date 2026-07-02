@@ -68,7 +68,7 @@ def _parse_overrides(set_args: list[str]) -> dict[str, str]:
 def _campaign_or_default(campaign: Optional[Path]) -> Path:
     if campaign is not None:
         return campaign
-    default = analysis_dir / "campaign.yaml"
+    default = analysis_dir / "analysis.yaml"
     if not default.is_file():
         raise typer.BadParameter(f"no --campaign given and {default} does not exist")
     return default
