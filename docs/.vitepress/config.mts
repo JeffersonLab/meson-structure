@@ -54,29 +54,11 @@ export default withMermaid({
                 ]
             },
             {
-                text: 'Campaign 2026-06',
-                link: '/campaign-2026-06/campaign-2026-06',
+                // Only the current campaign is shown here; older campaigns stay
+                // reachable via the Campaigns page (/campaigns).
+                text: 'Campaign 2026-07',
+                link: '/campaign-2026-07/campaign-2026-07',
                 items: [
-                ]
-            },
-            {
-                text: 'Campaign 2026-05',
-                link: '/campaign-2026-05/campaign-2026-05',
-                items: [
-                ]
-            },
-            {
-                text: 'Campaign 2026-04',
-                link: '/campaign-2026-04/campaign-2026-04',
-                items: [
-                    {text: "Tracking volume", link: '/campaign-2026-04/tracking-volume'},
-                ]
-            },
-            {
-                text: 'Campaign 2025-10',
-                link: '/campaign-2025-10/campaign-2025-10',
-                items: [
-                    
                 ]
             },
 
@@ -96,7 +78,7 @@ export default withMermaid({
                 link: '/tutorials',
                 items: [
                     { text: 'Resources', link: '/learning'},
-                    { text: 'Tutorials', link: '/tutorials:'},
+                    { text: 'Tutorials', link: '/tutorials/'},
                     { text: '&nbsp;&nbsp;&nbsp;&nbsp;Python CSV', link: '/tutorials/py-csv' },
                     { text: '&nbsp;&nbsp;&nbsp;&nbsp;Python EDM4EIC', link: '/tutorials/py-edm4eic-uproot' },
                     { text: '&nbsp;&nbsp;&nbsp;&nbsp;C++ EDM4EIC', link: '/tutorials/cpp-edm4eic' },
@@ -108,7 +90,7 @@ export default withMermaid({
                 items: [
                     { text: 'Publications', link: '/publications' },
                     { text: 'Dynamic plots', link: '/eg-dynamic-plots' },
-                    { text: 'Decay plots', link: '/plots_decays' },
+                    { text: 'Decay plots', link: '/plots' },
                     { text: 'Manage website', link: '/manage-website' },
                 ]
             }

@@ -5,6 +5,20 @@ This page documents the meson structure simulation campaigns.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
+## Campaign 2026-07
+
+[Campaign 2026-07 Link](./campaign-2026-07/campaign-2026-07.md)
+
+Overview:
+- Introduces the new `9xN` energy scheme for the EIC early-science program:
+  5x41, 9x100, 9x130, 9x275 GeV.
+- Single-flavor production: one afterburned signal → DD4hep → EICrecon, with CSV
+  tables from both the DD4hep and reco outputs (no `-official`/`-saveall`/
+  `-background`/`-stv` split).
+- 1000 events per file (~1000 files per energy).
+- Uses the official cvmfs `eic_xl:26.06-stable` image.
+
+
 ## Campaign 2026-06
 
 [Campaign 2026-06 Link](./campaign-2026-06/campaign-2026-06.md)

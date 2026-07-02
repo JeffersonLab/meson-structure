@@ -33,11 +33,13 @@ def build_argv(
     argv.extend(_kwargs_to_flags(params))
 
     if not meta.use_container:
-        return argv
+        # Host mode: launch the runner with the SAME interpreter running the
+        # launcher (e.g. a project venv), not whatever "python" is on PATH.
+        return [sys.executable, *argv[1:]]
 
     container = meta.container or campaign.get("container")
     if not container:
-        return argv
+        return [sys.executable, *argv[1:]]
 
     bind_dirs = list(campaign.get("bind_dirs", [])) + [str(repo_root)]
     # De-duplicate while preserving order.
