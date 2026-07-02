@@ -1,0 +1,40 @@
+# Local campaign config for running analyses against the files downloaded to
+# /data/msf (2026-07 reco sample). Used with:
+#   python analysis/run.py run multicalo-lambda -e 9x275 -c campaign-local-msf.yaml
+#
+# This file is independent of the farm campaign configs; it just points the
+# launcher at the local /data/msf tree.
+
+base_dir: "/data/msf"
+
+# Each analysis writes to {analysis_output}/{analysis_name}/{energy}/
+analysis_output: "/data/msf/analysis-out"
+
+# Energies present locally (2026-07 sample). Only 9x275 has files downloaded.
+energies:
+  - "5x41"
+  - "9x100"
+  - "9x130"
+  - "9x275"
+
+# Run analyses inside the EIC-stack image via Docker (no CVMFS/apptainer here).
+# The launcher substitutes its `singularity exec` wrapper with `docker run`.
+container_runtime: "docker"
+container: "eicweb/eic_xl:nightly"
+bind_dirs:
+  - "/data/msf"
+
+# --- Per-step input/output paths analyses refer to in meta.yaml -----------
+# reco (eicrecon) files, one dir per energy:
+#   /data/msf/<energy>/msf_ev1000_*.edm4eic.root
+eicrecon_dir: "${base_dir}/${energy}"
+
+# Generator dir (only used by the relerr task; not needed for kin/spectra).
+eg_dir: "${base_dir}/eg"
+
+sbatch_defaults:
+  account: "eic"
+  partition: "production"
+  time: "06:00:00"
+  mem_gb: 8
+  cpus_per_task: 1

@@ -1,6 +1,7 @@
 """Build runner argv lists and dispatch them locally or via submitit (slurm)."""
 from __future__ import annotations
 
+import os
 import shlex
 import subprocess
 import sys
@@ -17,7 +18,14 @@ def build_argv(
     params: dict[str, Any],
     repo_root: Path,
 ) -> list[str]:
-    """Construct argv that runs the analysis (host or singularity-wrapped)."""
+    """Construct argv that runs the analysis (host or container-wrapped).
+
+    The container runtime is selected by `campaign.container_runtime`:
+      - "singularity" / "apptainer" (default): `singularity exec -B ... <sif>`
+      - "docker": `docker run --rm -v ... <image>` — same EIC stack image, for
+        hosts without CVMFS/apptainer. The container is bind-mounted at the same
+        absolute paths so runner scripts using absolute paths work unchanged.
+    """
     runner_path = analysis_dir / meta.entry
     argv: list[str] = ["python", str(runner_path)]
     if meta.command:
@@ -32,13 +40,34 @@ def build_argv(
         return argv
 
     bind_dirs = list(campaign.get("bind_dirs", [])) + [str(repo_root)]
-    bind_args: list[str] = []
+    # De-duplicate while preserving order.
+    binds: list[str] = []
     seen: set[str] = set()
     for path in bind_dirs:
         path = str(path)
         if path and path not in seen:
-            bind_args.extend(["-B", f"{path}:{path}"])
+            binds.append(path)
             seen.add(path)
+
+    runtime = str(campaign.get("container_runtime", "singularity")).lower()
+
+    if runtime == "docker":
+        docker: list[str] = [
+            "docker", "run", "--rm",
+            "--user", f"{os.getuid()}:{os.getgid()}",
+            "-e", "HOME=/tmp",
+            "-e", "MPLCONFIGDIR=/tmp/mpl",
+            "-e", "MPLBACKEND=Agg",
+        ]
+        for path in binds:
+            docker.extend(["-v", f"{path}:{path}"])
+        docker.extend(["-w", str(analysis_dir), str(container), *argv])
+        return docker
+
+    # Default: singularity/apptainer.
+    bind_args: list[str] = []
+    for path in binds:
+        bind_args.extend(["-B", f"{path}:{path}"])
     return ["singularity", "exec", *bind_args, str(container), *argv]
 
 

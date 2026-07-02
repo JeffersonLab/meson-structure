@@ -18,7 +18,7 @@ class Paths:
 
 @dataclass(frozen=True)
 class PhysicsConstants:
-    energies: Sequence[str] = ("5x41", "10x100", "10x130", "18x275")
+    energies: Sequence[str] = ("5x41", "9x100", "9x130", "9x275")
     events_per_chunk: int = 5000
     m_lambda_gev: float = 1.11568
     ctau_lambda_m: float = 0.0789
