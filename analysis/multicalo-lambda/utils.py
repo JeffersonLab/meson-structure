@@ -7,12 +7,39 @@ import uproot
 from config import PhysicsConstants, Paths, DEFAULT_CONST, DEFAULT_PATHS
 
 
+# Reco Lambda collection has been renamed across campaigns. Try the historical
+# name first, then the current one.
+_RECO_LAMBDA_NAMES = ("ReconstructedFarForwardLambdas", "ReconstructedLambdas")
+
+
+def resolve_lambda_prefix(tree) -> str:
+    """Return the reco-Lambda collection name that actually exists in `tree`."""
+    keys = list(tree.keys())
+    for name in _RECO_LAMBDA_NAMES:
+        if any(k == name or k.startswith(name + ".") for k in keys):
+            return name
+    return _RECO_LAMBDA_NAMES[-1]
+
+
 def iter_reco_files(beam: str, nfiles: int, root_base_dir: Path, suffix: str) -> Iterable[Path]:
-    for i in range(1, nfiles + 1):
-        fpath = root_base_dir / f"k_lambda_{beam}_5000evt_{i:03d}_{suffix}.root"
-        if not fpath.exists() or fpath.stat().st_size == 0:
-            continue
-        yield fpath
+    root_base_dir = Path(root_base_dir)
+
+    # Legacy naming: k_lambda_{beam}_5000evt_{NNN}_{suffix}.root
+    legacy = [
+        root_base_dir / f"k_lambda_{beam}_5000evt_{i:03d}_{suffix}.root"
+        for i in range(1, nfiles + 1)
+    ]
+    legacy = [p for p in legacy if p.exists() and p.stat().st_size > 0]
+    if legacy:
+        yield from legacy
+        return
+
+    # Fallback: campaign-agnostic discovery of the reco ROOT files that live in
+    # this directory (e.g. msf_ev1000_NNNN.edm4eic.root). Take the first nfiles.
+    if not root_base_dir.is_dir():
+        return
+    found = sorted(p for p in root_base_dir.glob("*.root") if p.stat().st_size > 0)
+    yield from found[:nfiles]
 
 
 def read_lambda_eicrecon(
@@ -24,11 +51,6 @@ def read_lambda_eicrecon(
     """
     Returns: E [GeV], cos(theta), sin(phi)
     """
-    e_branch = "ReconstructedFarForwardLambdas.energy"
-    px_branch = "ReconstructedFarForwardLambdas.momentum.x"
-    py_branch = "ReconstructedFarForwardLambdas.momentum.y"
-    pz_branch = "ReconstructedFarForwardLambdas.momentum.z"
-
     E_list: list[np.ndarray] = []
     cos_list: list[np.ndarray] = []
     sinphi_list: list[np.ndarray] = []
@@ -37,6 +59,11 @@ def read_lambda_eicrecon(
         try:
             with uproot.open(fpath) as f:
                 tree = f["events"]
+                prefix = resolve_lambda_prefix(tree)
+                e_branch = f"{prefix}.energy"
+                px_branch = f"{prefix}.momentum.x"
+                py_branch = f"{prefix}.momentum.y"
+                pz_branch = f"{prefix}.momentum.z"
                 arr = tree.arrays([e_branch, px_branch, py_branch, pz_branch], how=dict)
 
                 E = ak.to_numpy(ak.flatten(arr[e_branch]))

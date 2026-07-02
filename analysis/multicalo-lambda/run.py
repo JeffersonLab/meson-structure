@@ -43,6 +43,11 @@ def main() -> None:
 
     after_pattern = DEFAULT_PATHS.afterburner_pattern
 
+    # The launcher invokes this runner once per energy with an energy-specific
+    # input directory (--inputs .../<energy>). So every per-energy task below
+    # operates on the single requested beam, not the whole campaign list.
+    beams = (beam,)
+
     # 1) angles
     if args.task in ("angles", "all"):
         out = plot_angle_distrib(
@@ -52,13 +57,13 @@ def main() -> None:
             suffix=suffix,
             outdir=outputs,
             afterburner_pattern=after_pattern,
-            energies=tuple(DEFAULT_CONST.energies),
+            energies=beams,
         )
         print("Saved:", out)
 
     # 2) spectra
     if args.task in ("spectra", "all"):
-        for b in DEFAULT_CONST.energies:
+        for b in beams:
             xmax = float(b.split("x")[-1]) * 2.0
             out = plot_lambda_spectra(
                 beam=b,
@@ -93,7 +98,7 @@ def main() -> None:
 
     # 4) kinematics
     if args.task in ("kin", "all"):
-        for b in DEFAULT_CONST.energies:
+        for b in beams:
             plot_nlambda_vs_kinematics_all(
                 beam=b,
                 nfiles=nfiles,
@@ -115,7 +120,7 @@ def main() -> None:
 
     # 5) relerr kaon SF
     if args.task in ("relerr", "all"):
-        for b in DEFAULT_CONST.energies:
+        for b in beams:
             plot_relerr_kaon_sf_xK_Q2(
                 beam=b,
                 nfiles=nfiles,

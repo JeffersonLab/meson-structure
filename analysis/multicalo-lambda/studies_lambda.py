@@ -3,11 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 import numpy as np
 import awkward as ak
+import uproot
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 from config import PhysicsConstants, Paths, DEFAULT_CONST, DEFAULT_PATHS
-from utils import read_lambda_geant4, read_lambda_eicrecon, read_lambda_afterburner, iter_reco_files
+from utils import read_lambda_geant4, read_lambda_eicrecon, read_lambda_afterburner, iter_reco_files, resolve_lambda_prefix
 from physics import direct_energy_window, E_to_L, L_to_E, proton_kinematics_for_beam, xk_from_xb_xl
 from plotting import apply_mpl_style, ensure_outdir, savefig
 
@@ -235,10 +236,6 @@ def plot_nlambda_vs_kinematics_all(
 
     xB_branch = "InclusiveKinematicsTruth.x"
     Q2_branch = "InclusiveKinematicsTruth.Q2"
-    lamE_branch = "ReconstructedFarForwardLambdas.energy"
-    lampx_branch = "ReconstructedFarForwardLambdas.momentum.x"
-    lampy_branch = "ReconstructedFarForwardLambdas.momentum.y"
-    lampz_branch = "ReconstructedFarForwardLambdas.momentum.z"
 
     pk = proton_kinematics_for_beam(beam, c=c)
     nhat = pk["nhat"]
@@ -252,6 +249,12 @@ def plot_nlambda_vs_kinematics_all(
         try:
             with uproot.open(fpath) as f:
                 tree = f["events"]
+
+                prefix = resolve_lambda_prefix(tree)
+                lamE_branch = f"{prefix}.energy"
+                lampx_branch = f"{prefix}.momentum.x"
+                lampy_branch = f"{prefix}.momentum.y"
+                lampz_branch = f"{prefix}.momentum.z"
 
                 xB_evt = ak.to_numpy(ak.flatten(tree[xB_branch].array(library="ak"))).astype(np.float64)
                 Q2_evt = ak.to_numpy(ak.flatten(tree[Q2_branch].array(library="ak"))).astype(np.float64)
