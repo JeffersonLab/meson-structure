@@ -64,7 +64,15 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infiles={}, std::string ou
   //epic.setParticleIndex("K",1,321);
   //Lambda^0_s
   epic.setParticleIndex("Lambda",2,3122);
-  epic_particles.MCMatchedZDCLambda("Lambda");
+  // [meson-structure] The 2026-07 reco campaign renamed the far-forward ZDC
+  // Lambda collection: ReconstructedFarForwardZDCLambdas -> ReconstructedLambdas.
+  // epic-rad's MCMatchedZDCLambda() hardcodes the old name, so call the generic
+  // (public) MCMatchedParticle() directly with the current collection. This is
+  // otherwise identical to MCMatchedZDCLambda (name="ZDClambda", alias="ZDC",
+  // M_Lambda, threshold=10).
+  //epic_particles.MCMatchedZDCLambda("Lambda");
+  epic_particles.MCMatchedParticle("ZDClambda", "Lambda", "ReconstructedLambdas",
+                                   "ZDC", rad::constant::M_Lambda(), 10);
   
   epic.Particles().Miss("missX",{rad::names::ScatEle().data(),"Lambda"});
   
