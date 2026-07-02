@@ -2,7 +2,8 @@ mode: per-energy
 use_container: false
 
 inputs:
-  csv_dir: csv_dd4hep_dir
+  # mcpart_lambda.csv tables are produced by the eicrecon CSV converter (csv_reco).
+  csv_dir: csv_reco_dir
 
 sbatch:
   time: "02:00:00"

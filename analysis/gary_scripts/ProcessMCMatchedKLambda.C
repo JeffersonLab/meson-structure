@@ -24,6 +24,7 @@
 #include <TBenchmark.h>
 #include <TCanvas.h>
 #include <TMath.h>
+#include <fstream>
 
 #include "ePICFileStreamer.h"
 
@@ -43,6 +44,23 @@ void ProcessMCMatchedKLambda(std::vector<std::string> infiles={}, std::string ou
   // concrete file list, which must take precedence over this default.
   if(infiles.empty())
     infiles = rad::files::GetXRootDFiles("dtn-eic.jlab.org/","/volatile/eic/romanov/meson-structure-2025-08/reco/18x275/","edm4eic.root",-1);
+  // [meson-structure] If a single ".txt" path is given, treat it as a file list
+  // (one ROOT path per line). The launcher writes this to avoid inlining ~1000
+  // paths into the macro-call string (which ROOT/cling cannot parse).
+  if(infiles.size()==1 && infiles[0].size()>4 &&
+     infiles[0].compare(infiles[0].size()-4,4,".txt")==0){
+    std::ifstream flist(infiles[0]);
+    std::vector<std::string> expanded;
+    std::string line;
+    while(std::getline(flist,line)){
+      while(!line.empty() && (line.back()=='\n'||line.back()=='\r'||
+                              line.back()==' '||line.back()=='\t')) line.pop_back();
+      if(!line.empty()) expanded.push_back(line);
+    }
+    std::cout << "[macro] loaded " << expanded.size()
+              << " input files from list " << infiles[0] << std::endl;
+    infiles = expanded;
+  }
   for(auto file : infiles)
     std::cout << file << std::endl;
   rad::config::ePICReaction epic{"events",infiles};

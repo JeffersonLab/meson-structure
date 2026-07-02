@@ -10,7 +10,6 @@ from pathlib import Path
 import os
 import sys
 import pandas as pd
-import duckdb
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -32,30 +31,18 @@ def read_acceptance_counts(path_acceptance: Path, cols_for_counts):
     return df_small, total
 
 def fetch_hits_with_duckdb(path_hits: Path, detector_name: str, z_cut: float):
-    """Use duckdb to select x,y,z for a single detector, applying a z < z_cut filter.
-       Works for parquet or csv by choosing the appropriate table function.
-    """
-    suffix = path_hits.suffix.lower()
-    con = duckdb.connect(database=":memory:")  # ephemeral connection
-    try:
-        if suffix in (".parquet", ".parq"):
-            # parquet_scan reads parquet files
-            sql = f"""
-                SELECT x, y, z
-                FROM parquet_scan('{path_hits}')
-                WHERE detector = '{detector_name}' AND z < {float(z_cut)}
-            """
-        else:
-            # read_csv_auto works for CSV; duckdb will auto-detect schema
-            sql = f"""
-                SELECT CAST(x AS DOUBLE) AS x, CAST(y AS DOUBLE) AS y, CAST(z AS DOUBLE) AS z
-                FROM read_csv_auto('{path_hits}')
-                WHERE detector = '{detector_name}' AND z < {float(z_cut)}
-            """
-        df = con.execute(sql).fetchdf()
-    finally:
-        con.close()
-    return df
+    """Select x,y,z for a single detector with z < z_cut, from a CSV/parquet hits
+    file. Uses pandas (no duckdb dependency, which may be absent on the farm)."""
+    suffix = Path(path_hits).suffix.lower()
+    cols = ["detector", "x", "y", "z"]
+    if suffix in (".parquet", ".parq"):
+        df = pd.read_parquet(path_hits, columns=cols)
+    else:
+        df = pd.read_csv(path_hits, usecols=cols)
+    for c in ("x", "y", "z"):
+        df[c] = pd.to_numeric(df[c], errors="coerce")
+    sel = df[(df["detector"] == detector_name) & (df["z"] < float(z_cut))]
+    return sel[["x", "y", "z"]].reset_index(drop=True)
 
 def make_and_save_hist2d(x, y, bins, out_path:Path, title, xlabel="x", ylabel="y", cmap="viridis"):
     """Make a 2D histogram plot and save it. Closes figure to free memory."""
@@ -166,10 +153,12 @@ def main() -> None:
 
     file_pairs = list(zip(args.files[0::2], args.files[1::2]))
 
+    outdir = Path(args.output)
     for acceptance_file, hits_file in file_pairs:
         print(f"Processing pair:\n  acceptance = {acceptance_file}\n  hits = {hits_file}")
-        # call your processing function here
-        # process_pair(acceptance_file, hits_file, args.output)
+        result = plot_and_tabulate(Path(acceptance_file), Path(hits_file), outdir)
+        for key, value in result.items():
+            print(f"  {key}: {value}")
 
 if __name__ == "__main__":
     main()

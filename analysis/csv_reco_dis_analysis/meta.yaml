@@ -1,0 +1,11 @@
+# Reco DIS plots from per-energy reco_dis.csv (csv_reco).
+mode: per-energy
+use_container: false
+
+inputs:
+  # reco_dis.csv tables are produced by the eicrecon CSV converter (csv_reco).
+  csv_dir: csv_reco_dir
+
+sbatch:
+  time: "03:00:00"
+  mem_gb: 6

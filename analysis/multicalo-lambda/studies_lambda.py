@@ -13,6 +13,16 @@ from physics import direct_energy_window, E_to_L, L_to_E, proton_kinematics_for_
 from plotting import apply_mpl_style, ensure_outdir, savefig
 
 
+def _safe_lognorm(Z):
+    """LogNorm scaled to the positive entries of ``Z``, or ``None`` (linear)
+    when there are none. Prevents matplotlib's "Invalid vmin or vmax" crash
+    when a 2D histogram has no positive bins (low statistics)."""
+    pos = np.asarray(Z)[np.asarray(Z) > 0]
+    if pos.size:
+        return mpl.colors.LogNorm(vmin=float(pos.min()), vmax=float(pos.max()))
+    return None
+
+
 def plot_lambda_spectra(
     beam: str,
     xmax: float,
@@ -352,7 +362,7 @@ def plot_nlambda_vs_kinematics_all(
     Z = Hxb.T
     if logz:
         Zm = np.ma.masked_where(Z <= 0, Z)
-        pcm = ax.pcolormesh(xe, ye, Zm, shading="auto", norm=mpl.colors.LogNorm(), cmap="coolwarm")
+        pcm = ax.pcolormesh(xe, ye, Zm, shading="auto", norm=_safe_lognorm(Z), cmap="coolwarm")
     else:
         pcm = ax.pcolormesh(xe, ye, Z, shading="auto", cmap="coolwarm")
     cbar = fig.colorbar(pcm, ax=ax)
@@ -372,7 +382,7 @@ def plot_nlambda_vs_kinematics_all(
         Z = Hxk.T
         if logz:
             Zm = np.ma.masked_where(Z <= 0, Z)
-            pcm = ax.pcolormesh(xe, ye, Zm, shading="auto", norm=mpl.colors.LogNorm(), cmap="coolwarm")
+            pcm = ax.pcolormesh(xe, ye, Zm, shading="auto", norm=_safe_lognorm(Z), cmap="coolwarm")
         else:
             pcm = ax.pcolormesh(xe, ye, Z, shading="auto", cmap="coolwarm")
         cbar = fig.colorbar(pcm, ax=ax)

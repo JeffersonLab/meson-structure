@@ -12,7 +12,9 @@ inputs:
   gen_dir: eg_dir
 
 extra_params:
-  nfiles: 1
+  # More than 1 file so the (xB,Q2) maps have enough Lambdas to be meaningful
+  # (raise further for production; tune vs. the 6h walltime below).
+  nfiles: 10
   task: all
 
 sbatch:

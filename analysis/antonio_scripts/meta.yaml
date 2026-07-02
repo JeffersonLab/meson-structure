@@ -1,0 +1,12 @@
+# Antonio's per-energy acceptance / reco-comparison plots.
+# Acceptance tables come from csv_dd4hep; reco_dis (for compare_reco) from csv_reco.
+mode: per-energy
+use_container: false
+
+inputs:
+  csv_dd4hep_dir: csv_dd4hep_dir
+  csv_reco_dir: csv_reco_dir
+
+sbatch:
+  time: "03:00:00"
+  mem_gb: 6

@@ -4,6 +4,9 @@ use_container: false
 
 inputs:
   eg_dir: eg_dir
+  # Overlay exactly the campaign's energies (comma-joined by the launcher),
+  # instead of the runner's old hardcoded 5x41,10x100,10x130,18x275 default.
+  energies: energies
 
 sbatch:
   time: "02:00:00"

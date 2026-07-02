@@ -1,8 +1,21 @@
 #!/usr/bin/env python3
+import argparse
 from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+
+def _read_cols(path: Path, cols):
+    """Read only `cols` from a CSV/parquet/feather acceptance file."""
+    path = Path(path)
+    suffix = path.suffix.lower()
+    if suffix in (".parquet", ".parq"):
+        return pd.read_parquet(path, columns=cols)
+    if suffix == ".feather":
+        return pd.read_feather(path, columns=cols)
+    return pd.read_csv(path, usecols=cols)
+
 
 def stats(path_acceptance: Path, outdir: Path):
     """Compute summary stats and write stats CSV to outdir."""
@@ -11,7 +24,7 @@ def stats(path_acceptance: Path, outdir: Path):
     prot_RP_hits = "prot_ForwardRomanPotHits"
     cols_for_counts = [pimin_B0_tracker_hits, prot_RP_hits]
 
-    df_small = pd.read_parquet(path_acceptance, columns=cols_for_counts)
+    df_small = _read_cols(path_acceptance, cols_for_counts)
     total = len(df_small)
 
     count_B0_tracker = int((df_small[pimin_B0_tracker_hits] == 1).sum())
@@ -46,10 +59,10 @@ def plot_vtx(path_acceptance: Path, outdir: Path):
         "pimin_B0TrackerHits", "prot_ForwardRomanPotHits"
     ]
 
-    df = pd.read_parquet(path_acceptance, columns=cols)
+    df = _read_cols(path_acceptance, cols)
 
-        
-    # 3/18/26: Comment out correlation data frame --> will plot vertex information across all events 
+
+    # 3/18/26: Comment out correlation data frame --> will plot vertex information across all events
     # mask for correlated events  
     detectors = [c for c in df.columns if c.startswith("pimin_")]
 
@@ -127,24 +140,26 @@ def plot_vtx(path_acceptance: Path, outdir: Path):
     return saved_paths
 
 def main():
-    base_dir = Path("/home/ajperillo19/SULI_JLAB_2026")
-    beams = ["5x41", "10x100", "10x130", "18x275"]
-    out_base = base_dir / "results"
+    parser = argparse.ArgumentParser(
+        description="Vertex/kinematics 2D plots from pi-/proton acceptance CSV "
+                    "(acceptance_ppim.csv), for events with a detector hit.")
+    parser.add_argument("files", nargs="+",
+                        help="Acceptance CSV/parquet file(s) (e.g. acceptance_ppim.csv).")
+    parser.add_argument("-o", "--output", default="results",
+                        help="Output directory for results.")
+    parser.add_argument("--beam", "-b", default=None,
+                        help="For compatibility. Is not used.")
+    args = parser.parse_args()
 
-    for beam in beams:
-        path_acceptance = base_dir / f"{beam}_acceptance.duckdb.parquet"
-        if not path_acceptance.exists():
-            print(f"Warning: {path_acceptance} not found, skipping")
-            continue
-
-        print(f"Processing beam: {beam}")
-        outdir = out_base / beam
-        df_stats, stats_path = stats(path_acceptance=path_acceptance, outdir=outdir)
+    outdir = Path(args.output)
+    for path in args.files:
+        path = Path(path)
+        print(f"Processing: {path}")
+        _, stats_path = stats(path_acceptance=path, outdir=outdir)
         print(f"  Wrote stats CSV to {stats_path}")
-
-        plot_paths = plot_vtx(path_acceptance=path_acceptance, outdir=outdir)
-        for p in plot_paths:
+        for p in plot_vtx(path_acceptance=path, outdir=outdir):
             print(f"  Saved plot: {p}")
+
 
 if __name__ == "__main__":
     main()

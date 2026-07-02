@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Optional
 
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import DictConfig, ListConfig, OmegaConf
 
 
 def load_campaign(campaign_path: Path) -> DictConfig:
@@ -70,7 +70,13 @@ def resolve_params(
     inputs = OmegaConf.to_container(meta.inputs, resolve=True) or {}
     for kwarg_name, campaign_key in inputs.items():
         if isinstance(campaign_key, str) and campaign_key in view:
-            params[kwarg_name] = str(view[campaign_key])
+            value = view[campaign_key]
+            # A campaign list (e.g. `energies`) is passed as a comma-joined
+            # string so `once` analyses can take `--energies a,b,c`.
+            if isinstance(value, (list, ListConfig)):
+                params[kwarg_name] = ",".join(str(x) for x in value)
+            else:
+                params[kwarg_name] = str(value)
         else:
             params[kwarg_name] = campaign_key
 

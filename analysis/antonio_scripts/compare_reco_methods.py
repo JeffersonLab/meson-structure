@@ -53,17 +53,15 @@ def process_and_mask(file):
 
     # ---------- load data ----------
 
-    suffix = file.lower()
-    if ".parquet" or ".parq" in (suffix):
+    suffix = str(file).lower()
+    if suffix.endswith((".parquet", ".parq")):
         df = pd.read_parquet(file)
-    elif ".feather" in (suffix):
+    elif suffix.endswith(".feather"):
         df = pd.read_feather(file)
-    elif ".csv" or ".txt" in (suffix):
-        # read only the columns we need (fast & memory friendly)
+    elif suffix.endswith((".csv", ".txt")):
         df = pd.read_csv(file)
     else:
-        raise ValueError(f"Unsupported acceptance file type: {suffix}")
-    df = pd.read_parquet(file, engine="pyarrow")
+        raise ValueError(f"Unsupported input file type: {suffix}")
     if df is None or df.empty:
         print("  -> concatenated dataframe empty or None")
 

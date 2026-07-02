@@ -44,14 +44,14 @@ eg_dir: "/work/eic/users/romanov/meson-structure-2026-07/eg-original-2026-06"
 # DD4HEP outputs (per-energy)
 dd4hep_dir: "${base_dir}/dd4hep/${energy}"
 
-# CSV from DD4HEP truth (per-energy)
-csv_dd4hep_dir: "${base_dir}/csv-dd4hep/${energy}"
+# CSV from DD4HEP truth (per-energy) — acceptance_*.csv tables live here
+csv_dd4hep_dir: "${base_dir}/csv_dd4hep/${energy}"
 
 # eicrecon outputs (per-energy)
 eicrecon_dir: "${base_dir}/reco/${energy}"
 
-# CSV from eicrecon (per-energy)
-csv_reco_dir: "${base_dir}/csv-reco/${energy}"
+# CSV from eicrecon (per-energy) — mc_dis / reco_dis / mcpart_lambda / reco_ff_lambda live here
+csv_reco_dir: "${base_dir}/csv_reco/${energy}"
 
 # Convenience alias used by edm4hep_lambda
 edm4hep_dir: "${dd4hep_dir}"

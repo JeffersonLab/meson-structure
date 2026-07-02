@@ -75,8 +75,15 @@ def main() -> None:
 
     outfile = args.outdir / f"MCMatched_KLambda_{args.energy}.root"
 
-    # Build the ROOT macro invocation: ProcessMCMatchedKLambda.C({"f1",...}, "out")
-    vec_literal = "{" + ", ".join(json.dumps(f) for f in files) + "}"
+    # Write the input file list to a text file and pass THAT to the macro, rather
+    # than inlining hundreds of paths into the `root -q '...'` argument. A ~1000
+    # file list is ~90 kB, which overflows ROOT/cling's macro-invocation parser
+    # ("macro ... not found in path"). The macro expands a single .txt argument.
+    filelist = args.outdir / f"inputs_{args.energy}.txt"
+    filelist.write_text("\n".join(files) + "\n")
+
+    # Build the ROOT macro invocation: ProcessMCMatchedKLambda.C({"list.txt"}, "out")
+    vec_literal = "{" + json.dumps(str(filelist)) + "}"
     invocation = f'{MACRO}({vec_literal}, {json.dumps(str(outfile))})'
 
     env = dict(os.environ)
