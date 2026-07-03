@@ -92,7 +92,7 @@ const std::vector<std::string> calorimeter_collections = {
     "EcalFarForwardZDCHits",
     "B0ECalHits",
     "EcalEndcapPHits",
-    "EcalEndcapPInsertHits",
+    // EcalEndcapPInsertHits removed: ECAL forward insert dropped from the geometry.
     "HcalFarForwardZDCHits",
     "HcalEndcapPInsertHits",
     "LFHCALHits"
@@ -178,7 +178,7 @@ void create_histograms() {
     h_calo_hits["EcalFarForwardZDCHits"]  = new TH1D("h_calo_EcalFarForwardZDCHits",  "EcalFarForwardZDCHits hits per event;N hits;Events",  200, 0,  800);
     h_calo_hits["B0ECalHits"]             = new TH1D("h_calo_B0ECalHits",             "B0ECalHits hits per event;N hits;Events",             100, 0,  200);
     h_calo_hits["EcalEndcapPHits"]        = new TH1D("h_calo_EcalEndcapPHits",        "EcalEndcapPHits hits per event;N hits;Events",        200, 0,  800);
-    h_calo_hits["EcalEndcapPInsertHits"]  = new TH1D("h_calo_EcalEndcapPInsertHits",  "EcalEndcapPInsertHits hits per event;N hits;Events",  100, 0,  200);
+    // EcalEndcapPInsertHits removed: ECAL forward insert dropped from the geometry.
     h_calo_hits["HcalFarForwardZDCHits"]  = new TH1D("h_calo_HcalFarForwardZDCHits",  "HcalFarForwardZDCHits hits per event;N hits;Events",  200, 0,  800);
     h_calo_hits["HcalEndcapPInsertHits"]  = new TH1D("h_calo_HcalEndcapPInsertHits",  "HcalEndcapPInsertHits hits per event;N hits;Events",  100, 0,  200);
     h_calo_hits["LFHCALHits"]             = new TH1D("h_calo_LFHCALHits",             "LFHCALHits hits per event;N hits;Events",             200, 0,  800);

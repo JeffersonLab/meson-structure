@@ -16,9 +16,13 @@ csv_convert_dir_default = os.path.join(os.path.dirname(this_dir), 'csv_convert')
 
 def create_container_script_template():
     """Create container job template for CSV conversion (simple & readable)."""
+    # NOTE: `set -u -o pipefail` but NOT `-e`. Each converter is independent: one
+    # crashing (a ROOT macro that throws) must not abort the others. `run_macro`
+    # isolates failures and deletes any empty output so it is retried next run
+    # instead of being skipped as "already exists".
     return textwrap.dedent("""\
     #!/bin/bash
-    set -euo pipefail
+    set -uo pipefail
 
     echo "= CSV CONVERSION ============================================================"
     echo "  Input: {input_file}"
@@ -27,42 +31,46 @@ def create_container_script_template():
 
     cd "{csv_convert_dir}"
 
-    if [ ! -f "{acceptance_ppim_output}.zip" ] || [ ! -f "{acceptance_ppim_pimin_hits_output}.zip" ] || [ ! -f "{acceptance_ppim_prot_hits_output}.zip" ]; then
-        echo "[RUN] ccsv_edm4hep_acceptance_ppim for {input_file}"
-        root -x -l -b -q csv_edm4hep_acceptance_ppim.cxx'("{input_file}","{acceptance_ppim_output}")'
-        echo "[ZIP] zipping files"
-        python3 -m zipfile -c "{acceptance_ppim_output}.zip" "{acceptance_ppim_output}"
-        python3 -m zipfile -c "{acceptance_ppim_pimin_hits_output}.zip" "{acceptance_ppim_pimin_hits_output}"
-        python3 -m zipfile -c "{acceptance_ppim_prot_hits_output}.zip" "{acceptance_ppim_prot_hits_output}"
-    else
-        echo "[SKIP] zipped files exists for {input_file}"
-    fi
+    rc=0
+
+    run_macro() {{
+      local label="$1" macro="$2" out="$3"
+      if [ ! -s "$out" ]; then
+        echo "[RUN] $label via $macro"
+        if ! root -x -l -b -q "$macro(\\"{input_file}\\",\\"$out\\")"; then
+          echo "[WARN] $label: macro returned non-zero"; rc=1
+        fi
+        if [ -f "$out" ] && [ ! -s "$out" ]; then
+          echo "[WARN] $label: produced empty $out -- removing"; rm -f "$out"; rc=1
+        fi
+      else
+        echo "[SKIP] $label ($out exists, non-empty)"
+      fi
+    }}
+
+    zip_if() {{
+      local f="$1"
+      if [ -s "$f" ] && [ ! -f "$f.zip" ]; then
+        echo "[ZIP] $f -> $f.zip"
+        python3 -m zipfile -c "$f.zip" "$f" || {{ echo "[WARN] zip $f failed"; rc=1; }}
+      fi
+    }}
+
+    # acceptance_ppim writes three CSVs (ppim + pimin_hits + prot_hits).
+    run_macro "acceptance_ppim" "csv_edm4hep_acceptance_ppim.cxx" "{acceptance_ppim_output}"
+    zip_if "{acceptance_ppim_output}"
+    zip_if "{acceptance_ppim_pimin_hits_output}"
+    zip_if "{acceptance_ppim_prot_hits_output}"
+
+    run_macro "acceptance_npi0" "csv_edm4hep_acceptance_npi0.cxx" "{acceptance_npi0_output}"
+    zip_if "{acceptance_npi0_output}"
+
+    run_macro "combinatorics_ppim" "csv_edm4hep_combinatorics_ppim.cxx" "{combinatorics_ppim_output}"
+    zip_if "{combinatorics_ppim_output}"
 
     echo "==========================================================================="
-
-    if [ ! -f "{acceptance_npi0_output}.zip" ]; then
-        echo "[RUN] csv_edm4hep_acceptance_npi0 for {input_file}"
-        root -x -l -b -q csv_edm4hep_acceptance_npi0.cxx'("{input_file}","{acceptance_npi0_output}")'
-        echo "[ZIP] zipping files"
-        python3 -m zipfile -c "{acceptance_npi0_output}.zip" "{acceptance_npi0_output}"
-    else
-        echo "[SKIP] zipped files exists for {input_file}"
-    fi
-
-    echo "==========================================================================="
-
-    if [ ! -f "{combinatorics_ppim_output}.zip" ]; then
-        echo "[RUN] csv_edm4hep_combinatorics_ppim for {input_file}"
-        root -x -l -b -q csv_edm4hep_combinatorics_ppim.cxx'("{input_file}","{combinatorics_ppim_output}")'
-        echo "[ZIP] zipping files"
-        python3 -m zipfile -c "{combinatorics_ppim_output}.zip" "{combinatorics_ppim_output}"
-    else
-        echo "[SKIP] zipped files exists for {input_file}"
-    fi
-
-
-    echo "==========================================================================="
-    echo "Done. Outputs in: {input_dir}"
+    echo "Done. Outputs in: {input_dir} (rc=$rc)"
+    exit $rc
     """)
 
 

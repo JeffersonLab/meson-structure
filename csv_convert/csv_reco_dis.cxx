@@ -275,7 +275,10 @@ void process_event(const podio::Frame& event, int evt_id) {
     /*---------------------------------------------------------------------------
       Process reconstructed far-forward Lambda
     ---------------------------------------------------------------------------*/
-    const auto& ffLambdas = event.get<edm4eic::ReconstructedParticleCollection>("ReconstructedFarForwardZDCLambdas");
+    // [meson-structure] 2026-07 reco renamed this collection
+    // ReconstructedFarForwardZDCLambdas -> ReconstructedLambdas. Reading the old
+    // name threw std::runtime_error and terminated the macro, leaving a 0-byte CSV.
+    const auto& ffLambdas = event.get<edm4eic::ReconstructedParticleCollection>("ReconstructedLambdas");
     TLorentzVector ff_lambda_vec = process_ff_lambda(ffLambdas);
 
     double ff_lambda_t_tb = 0.0;   // FF Lambda with true beam

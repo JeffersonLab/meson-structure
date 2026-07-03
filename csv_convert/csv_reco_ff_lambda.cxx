@@ -117,8 +117,10 @@ std::string make_reco_particle_header(const std::string& prefix) {
 //------------------------------------------------------------------------------
 void process_event(const podio::Frame& event, int evt_id) {
 
-    // Get the reconstructed far-forward lambdas collection
-    const auto& ffLambdas = event.get<ReconstructedParticleCollection>("ReconstructedFarForwardZDCLambdas");
+    // Get the reconstructed lambdas collection
+    // [meson-structure] 2026-07 reco renamed ReconstructedFarForwardZDCLambdas
+    // -> ReconstructedLambdas; the old name threw and produced a 0-byte CSV.
+    const auto& ffLambdas = event.get<ReconstructedParticleCollection>("ReconstructedLambdas");
 
     // Process each lambda in the collection
     for (const auto& lam : ffLambdas) {

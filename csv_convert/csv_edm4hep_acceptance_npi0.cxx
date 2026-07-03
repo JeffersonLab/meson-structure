@@ -21,6 +21,7 @@ R__LOAD_LIBRARY(libedm4eicDict)
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <algorithm>
 
 using namespace edm4hep;
 
@@ -53,8 +54,6 @@ struct DetectorStats {
     long gamtwo_b0_ecal = 0;
     long gamone_ecalp = 0;
     long gamtwo_ecalp = 0;
-    long gamone_ecalp_ins = 0;
-    long gamtwo_ecalp_ins = 0;
 
     // All 3 particle per detector
     long gam_neut_in_zdc = 0;
@@ -69,8 +68,6 @@ struct DetectorStats {
     long all3_gamtwo_b0_ecal = 0;
     long all3_gamone_ecalp = 0;
     long all3_gamtwo_ecalp = 0;
-    long all3_gamone_ecalp_ins = 0;
-    long all3_gamtwo_ecalp_ins = 0;
 
     // Decay channel statistics (matches lam_decay codes)
     long decay_not_decayed = 0;   // 0
@@ -172,43 +169,55 @@ struct DetectionFlags {
     bool gamone_EcalFarForwardZDCHits = false;
     bool gamone_B0ECalHits = false;
     bool gamone_EcalEndcapPHits = false;
-    bool gamone_EcalEndcapPInsertHits = false;
     // Gamma-two in ECALs
     bool gamtwo_EcalFarForwardZDCHits = false;
     bool gamtwo_B0ECalHits = false;
     bool gamtwo_EcalEndcapPHits = false;
-    bool gamtwo_EcalEndcapPInsertHits = false;
 };
+
+// [meson-structure] Some calorimeters present in older geometries are absent in
+// the 2026-07 detector (e.g. EcalEndcapPInsertHits). podio's get<>() throws for a
+// missing collection, which terminated the macro and left a 0-byte CSV. Return a
+// shared empty collection instead, so that detector simply registers no hits.
+static const edm4hep::SimCalorimeterHitCollection kEmptyCaloHits{};
+
+const edm4hep::SimCalorimeterHitCollection&
+get_calo_hits(const podio::Frame& event, const std::string& name) {
+    const auto avail = event.getAvailableCollections();
+    if (std::find(avail.begin(), avail.end(), name) != avail.end()) {
+        return event.get<edm4hep::SimCalorimeterHitCollection>(name);
+    }
+    return kEmptyCaloHits;
+}
 
 DetectionFlags process_calo_hits_npi0(const podio::Frame& event, const MCParticle& neut,
                             const MCParticle& gam1, const MCParticle& gam2) {
     DetectionFlags flags;
 
     // Check for gamma particles in various ECALs
-    const auto& zdc_ecal_hits = event.get<edm4hep::SimCalorimeterHitCollection>("EcalFarForwardZDCHits");
+    const auto& zdc_ecal_hits = get_calo_hits(event, "EcalFarForwardZDCHits");
     flags.gamone_EcalFarForwardZDCHits = has_particle_hits(zdc_ecal_hits, gam1, "EcalFarForwardZDC", "gamone");
     flags.gamtwo_EcalFarForwardZDCHits = has_particle_hits(zdc_ecal_hits, gam2, "EcalFarForwardZDC", "gamtwo");
 
-    const auto& b0_hits = event.get<edm4hep::SimCalorimeterHitCollection>("B0ECalHits");
+    const auto& b0_hits = get_calo_hits(event, "B0ECalHits");
     flags.gamone_B0ECalHits = has_particle_hits(b0_hits, gam1, "B0ECal", "gamone");
     flags.gamtwo_B0ECalHits = has_particle_hits(b0_hits, gam2, "B0ECal", "gamtwo");
 
-    const auto& ecalp_hits = event.get<edm4hep::SimCalorimeterHitCollection>("EcalEndcapPHits");
+    const auto& ecalp_hits = get_calo_hits(event, "EcalEndcapPHits");
     flags.gamone_EcalEndcapPHits = has_particle_hits(ecalp_hits, gam1, "EcalEndcapP", "gamone");
     flags.gamtwo_EcalEndcapPHits = has_particle_hits(ecalp_hits, gam2, "EcalEndcapP", "gamtwo");
 
-    const auto& ecalpins_hits = event.get<edm4hep::SimCalorimeterHitCollection>("EcalEndcapPInsertHits");
-    flags.gamone_EcalEndcapPInsertHits = has_particle_hits(ecalpins_hits, gam1, "EcalEndcapPInsert", "gamone");
-    flags.gamtwo_EcalEndcapPInsertHits = has_particle_hits(ecalpins_hits, gam2, "EcalEndcapPInsert", "gamtwo");
+    // [meson-structure] EcalEndcapPInsert (ECAL forward insert) was removed from
+    // the ePIC geometry; the collection no longer exists, so it is not read here.
 
     // Check for neutron in various HCALs
-    const auto& zdc_hcal_hits = event.get<edm4hep::SimCalorimeterHitCollection>("HcalFarForwardZDCHits");
+    const auto& zdc_hcal_hits = get_calo_hits(event, "HcalFarForwardZDCHits");
     flags.neut_HcalFarForwardZDCHits = has_particle_hits(zdc_hcal_hits, neut, "HcalFarForwardZDC", "NEUTRON");
 
-    const auto& pins_hcal_hits = event.get<edm4hep::SimCalorimeterHitCollection>("HcalEndcapPInsertHits");
+    const auto& pins_hcal_hits = get_calo_hits(event, "HcalEndcapPInsertHits");
     flags.neut_HcalEndcapPInsertHits = has_particle_hits(pins_hcal_hits, neut, "HcalEndcapPInsert", "NEUTRON");
 
-    const auto& lf_hcal_hits = event.get<edm4hep::SimCalorimeterHitCollection>("LFHCALHits");
+    const auto& lf_hcal_hits = get_calo_hits(event, "LFHCALHits");
     flags.neut_LFHCALHits = has_particle_hits(lf_hcal_hits, neut, "LFHCAL", "NEUTRON");
 
     // Check if neutron in any HCAL
@@ -216,8 +225,8 @@ DetectionFlags process_calo_hits_npi0(const podio::Frame& event, const MCParticl
     if (neut_in_any) stats.neut_in_any_hcal++;
 
     // Check if both gammas detected anywhere
-    bool gamone_detected = flags.gamone_EcalFarForwardZDCHits || flags.gamone_B0ECalHits || flags.gamone_EcalEndcapPHits || flags.gamone_EcalEndcapPInsertHits;
-    bool gamtwo_detected = flags.gamtwo_EcalFarForwardZDCHits || flags.gamtwo_B0ECalHits || flags.gamtwo_EcalEndcapPHits || flags.gamtwo_EcalEndcapPInsertHits;
+    bool gamone_detected = flags.gamone_EcalFarForwardZDCHits || flags.gamone_B0ECalHits || flags.gamone_EcalEndcapPHits;
+    bool gamtwo_detected = flags.gamtwo_EcalFarForwardZDCHits || flags.gamtwo_B0ECalHits || flags.gamtwo_EcalEndcapPHits;
 
     if (neut_in_any && gamone_detected && gamtwo_detected) {
         stats.neut_and_both_gammas++;
@@ -234,8 +243,6 @@ DetectionFlags process_calo_hits_npi0(const podio::Frame& event, const MCParticl
     if (flags.gamtwo_B0ECalHits) stats.gamtwo_b0_ecal++;
     if (flags.gamone_EcalEndcapPHits) stats.gamone_ecalp++;
     if (flags.gamtwo_EcalEndcapPHits) stats.gamtwo_ecalp++;
-    if (flags.gamone_EcalEndcapPInsertHits) stats.gamone_ecalp_ins++;
-    if (flags.gamtwo_EcalEndcapPInsertHits) stats.gamtwo_ecalp_ins++;
 
     // Check if all three particles detected
     if (neut_in_any && gamone_detected && gamtwo_detected) {
@@ -256,8 +263,6 @@ DetectionFlags process_calo_hits_npi0(const podio::Frame& event, const MCParticl
         if (flags.gamtwo_B0ECalHits) stats.all3_gamtwo_b0_ecal++;
         if (flags.gamone_EcalEndcapPHits) stats.all3_gamone_ecalp++;
         if (flags.gamtwo_EcalEndcapPHits) stats.all3_gamtwo_ecalp++;
-        if (flags.gamone_EcalEndcapPInsertHits) stats.all3_gamone_ecalp_ins++;
-        if (flags.gamtwo_EcalEndcapPInsertHits) stats.all3_gamtwo_ecalp_ins++;
     }
 
     return flags;
@@ -307,13 +312,11 @@ void print_stats() {
         fmt::print("  EcalFarForwardZDC: {}\n", stats.gamone_zdc_ecal);
         fmt::print("  B0ECal: {}\n", stats.gamone_b0_ecal);
         fmt::print("  EcalEndcapP: {}\n", stats.gamone_ecalp);
-        fmt::print("  EcalEndcapPInsert: {}\n", stats.gamone_ecalp_ins);
 
         fmt::print("Gamtwo detections:\n");
         fmt::print("  EcalFarForwardZDC: {}\n", stats.gamtwo_zdc_ecal);
         fmt::print("  B0ECal: {}\n", stats.gamtwo_b0_ecal);
         fmt::print("  EcalEndcapP: {}\n", stats.gamtwo_ecalp);
-        fmt::print("  EcalEndcapPInsert: {}\n", stats.gamtwo_ecalp_ins);
 
         if (stats.all_three_detected > 0) {
             fmt::print("\n--- Per-Detector Counts (All 3 Particles Detected) ---\n");
@@ -327,13 +330,11 @@ void print_stats() {
             fmt::print("  EcalFarForwardZDC: {}\n", stats.all3_gamone_zdc_ecal);
             fmt::print("  B0ECal: {}\n", stats.all3_gamone_b0_ecal);
             fmt::print("  EcalEndcapP: {}\n", stats.all3_gamone_ecalp);
-            fmt::print("  EcalEndcapPInsert: {}\n", stats.all3_gamone_ecalp_ins);
 
             fmt::print("Gamtwo detections:\n");
             fmt::print("  EcalFarForwardZDC: {}\n", stats.all3_gamtwo_zdc_ecal);
             fmt::print("  B0ECal: {}\n", stats.all3_gamtwo_b0_ecal);
             fmt::print("  EcalEndcapP: {}\n", stats.all3_gamtwo_ecalp);
-            fmt::print("  EcalEndcapPInsert: {}\n", stats.all3_gamtwo_ecalp_ins);
         }
     }
     fmt::print("=============================\n");
@@ -456,8 +457,7 @@ void process_event(const podio::Frame& event, int evt_id) {
                     << "neut_HcalFarForwardZDCHits,neut_HcalEndcapPInsertHits,neut_LFHCALHits,"
                     << "gamone_EcalFarForwardZDCHits,gamtwo_EcalFarForwardZDCHits,"
                     << "gamone_B0ECalHits,gamtwo_B0ECalHits,"
-                    << "gamone_EcalEndcapPHits,gamtwo_EcalEndcapPHits,"
-                    << "gamone_EcalEndcapPInsertHits,gamtwo_EcalEndcapPInsertHits"
+                    << "gamone_EcalEndcapPHits,gamtwo_EcalEndcapPHits"
                     << '\n';
             header_written = true;
         }
@@ -481,9 +481,7 @@ void process_event(const podio::Frame& event, int evt_id) {
                 << flags.gamone_B0ECalHits << ','
                 << flags.gamtwo_B0ECalHits << ','
                 << flags.gamone_EcalEndcapPHits << ','
-                << flags.gamtwo_EcalEndcapPHits << ','
-                << flags.gamone_EcalEndcapPInsertHits << ','
-                << flags.gamtwo_EcalEndcapPInsertHits
+                << flags.gamtwo_EcalEndcapPHits
                 << '\n';
 
         is_first_lambda = false;

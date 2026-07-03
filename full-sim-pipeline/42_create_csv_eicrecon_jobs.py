@@ -16,9 +16,13 @@ csv_convert_dir_default = os.path.join(os.path.dirname(this_dir), 'csv_convert')
 
 def create_container_script_template():
     """Create container job template for CSV conversion (simple & readable)."""
+    # NOTE: `set -u -o pipefail` but NOT `-e`. Each converter is independent: one
+    # crashing (e.g. a ROOT macro that throws) must not abort the others. The
+    # `convert` helper isolates failures and deletes any empty output so it is
+    # retried on the next run instead of being skipped as "already exists".
     return textwrap.dedent("""\
     #!/bin/bash
-    set -euo pipefail
+    set -uo pipefail
 
     echo "= CSV CONVERSION ============================================================"
     echo "  Input: {input_file}"
@@ -27,21 +31,32 @@ def create_container_script_template():
 
     cd "{csv_convert_dir}"
 
+    rc=0
+
     convert() {{
       local label="$1" macro="$2" out="$3"
 
-      if [ ! -f "$out" ]; then
+      # Regenerate when the CSV is missing OR empty (-s: exists and non-empty).
+      if [ ! -s "$out" ]; then
         echo "[RUN] $label via $macro"
-        root -x -l -b -q "$macro(\\"{input_file}\\",\\"$out\\")"
+        if ! root -x -l -b -q "$macro(\\"{input_file}\\",\\"$out\\")"; then
+          echo "[WARN] $label: macro returned non-zero"
+          rc=1
+        fi
+        # A crashed macro leaves a 0-byte file; drop it so it is not mistaken
+        # for a valid output (and gets retried next run) and is not zipped.
+        if [ -f "$out" ] && [ ! -s "$out" ]; then
+          echo "[WARN] $label: produced empty $out -- removing"
+          rm -f "$out"
+          rc=1
+        fi
       else
-        echo "[SKIP] $label CSV exists"
+        echo "[SKIP] $label CSV exists (non-empty)"
       fi
 
-      if [ -f "$out" ] && [ ! -f "$out.zip" ]; then
+      if [ -s "$out" ] && [ ! -f "$out.zip" ]; then
         echo "[ZIP] $out -> $out.zip"
-        python3 -m zipfile -c "$out.zip" "$out"
-      else
-        echo "[SKIP] $label zip exists or CSV missing"
+        python3 -m zipfile -c "$out.zip" "$out" || {{ echo "[WARN] $label: zip failed"; rc=1; }}
       fi
     }}
 
@@ -51,7 +66,8 @@ def create_container_script_template():
     convert "reco_ff_lambda" "csv_reco_ff_lambda.cxx" "{csv_reco_ff_lambda}"
 
     echo "==========================================================================="
-    echo "Done. Outputs in: {input_dir}"
+    echo "Done. Outputs in: {input_dir} (rc=$rc)"
+    exit $rc
     """)
 
 

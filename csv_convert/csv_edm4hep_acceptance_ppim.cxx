@@ -64,7 +64,7 @@ const std::vector<std::string> calorimeter_collections = {
     "EcalFarForwardZDCHits",
     "B0ECalHits",
     "EcalEndcapPHits",
-    "EcalEndcapPInsertHits",
+    // EcalEndcapPInsertHits removed: ECAL forward insert dropped from the geometry.
     "HcalFarForwardZDCHits",
     "HcalEndcapPInsertHits",
     "LFHCALHits"

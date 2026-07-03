@@ -110,6 +110,26 @@ struct Candidate {
 };
 
 //------------------------------------------------------------------------------
+// Write the CSV header once. Called right after the output file is opened so a
+// run that yields no combinatoric pairs still produces a valid header-only CSV
+// instead of a 0-byte file (which is indistinguishable from a crash).
+//------------------------------------------------------------------------------
+void write_header() {
+    if (header_written) return;
+    csv << "evt,is_true_lam,true_prot_id,true_pi_id,"
+        << make_particle_header("pi") << ","
+        << "pi_nhits_b0,"
+        << "pi_first_b0_x,pi_first_b0_y,pi_first_b0_z,"
+        << "pi_ecal_contrib,"
+        << "pi_first_ecal_x,pi_first_ecal_y,pi_first_ecal_z,"
+        << make_particle_header("prot") << ","
+        << "prot_nhits_rp,"
+        << "prot_first_rp_x,prot_first_rp_y,prot_first_rp_z"
+        << "\n";
+    header_written = true;
+}
+
+//------------------------------------------------------------------------------
 // event processing
 //------------------------------------------------------------------------------
 void process_event(const podio::Frame& event, int evt_id) {
@@ -228,22 +248,8 @@ void process_event(const podio::Frame& event, int evt_id) {
     } catch (...) {}
 
     // ---- Step 5 & 6: Write combinatoric pairs to CSV ------------------------
+    // Header is written up-front at file open (see write_header()).
     if (proton_candidates.empty() || pion_candidates.empty()) return;
-
-    // Write header on first output
-    if (!header_written) {
-        csv << "evt,is_true_lam,true_prot_id,true_pi_id,"
-            << make_particle_header("pi") << ","
-            << "pi_nhits_b0,"
-            << "pi_first_b0_x,pi_first_b0_y,pi_first_b0_z,"
-            << "pi_ecal_contrib,"
-            << "pi_first_ecal_x,pi_first_ecal_y,pi_first_ecal_z,"
-            << make_particle_header("prot") << ","
-            << "prot_nhits_rp,"
-            << "prot_first_rp_x,prot_first_rp_y,prot_first_rp_z"
-            << "\n";
-        header_written = true;
-    }
 
     // Each row is a (proton_candidate, pion_candidate) pair
     for (const auto& pc : proton_candidates) {
@@ -335,6 +341,7 @@ int main(int argc, char* argv[]) {
         fmt::print(stderr, "error: cannot open output file {}\n", out_name);
         return 1;
     }
+    write_header();
 
     for (auto& f : infiles) {
         process_file(f);
@@ -360,6 +367,7 @@ void csv_edm4hep_combinatorics_ppim(const char* infile, const char* outfile, int
         fmt::print(stderr, "error: cannot open output file {}\n", outfile);
         exit(1);
     }
+    write_header();
 
     events_limit = events;
     process_file(infile);
