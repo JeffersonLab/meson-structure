@@ -3,8 +3,8 @@
 This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruction
 
 ```
-📁 k_lambda_18x275_5000evt_100.edm4hep.root
-┣━━ 🌴 events (5000)
+📁 msf_5x41_1000evt_0740.edm4hep.root
+┣━━ 🌴 events (1000)
 ┃   ┣━━ 🌿 B0ECalHits vector<edm4hep::SimCalorimeterHitData>
 ┃   ┃   ┣━━ 🍃 B0ECalHits.cellID uint64_t[]
 ┃   ┃   ┣━━ 🍃 B0ECalHits.contributions_begin uint32_t[]
@@ -16,6 +16,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 B0ECalHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 B0ECalHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 B0ECalHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 B0ECalHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 B0ECalHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 B0ECalHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 B0ECalHitsContributions.stepPosition.z float[]
@@ -79,6 +80,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 EcalBarrelImagingHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 EcalBarrelImagingHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelImagingHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 EcalBarrelImagingHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelImagingHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelImagingHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelImagingHitsContributions.stepPosition.z float[]
@@ -94,6 +96,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 EcalBarrelScFiHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 EcalBarrelScFiHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelScFiHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 EcalBarrelScFiHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelScFiHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelScFiHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 EcalBarrelScFiHitsContributions.stepPosition.z float[]
@@ -109,6 +112,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 EcalEndcapNHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 EcalEndcapNHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapNHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 EcalEndcapNHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapNHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapNHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapNHitsContributions.stepPosition.z float[]
@@ -124,25 +128,11 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 EcalEndcapPHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 EcalEndcapPHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapPHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 EcalEndcapPHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapPHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapPHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 EcalEndcapPHitsContributions.stepPosition.z float[]
 ┃   ┃   ┗━━ 🍃 EcalEndcapPHitsContributions.time float[]
-┃   ┣━━ 🌿 EcalEndcapPInsertHits vector<edm4hep::SimCalorimeterHitData>
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHits.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHits.contributions_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHits.contributions_end uint32_t[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHits.energy float[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHits.position.x float[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHits.position.y float[]
-┃   ┃   ┗━━ 🍃 EcalEndcapPInsertHits.position.z float[]
-┃   ┣━━ 🌿 EcalEndcapPInsertHitsContributions vector<edm4hep::CaloHitContributionData>
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHitsContributions.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHitsContributions.energy float[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHitsContributions.stepPosition.x float[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHitsContributions.stepPosition.y float[]
-┃   ┃   ┣━━ 🍃 EcalEndcapPInsertHitsContributions.stepPosition.z float[]
-┃   ┃   ┗━━ 🍃 EcalEndcapPInsertHitsContributions.time float[]
 ┃   ┣━━ 🌿 EcalFarForwardZDCHits vector<edm4hep::SimCalorimeterHitData>
 ┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHits.cellID uint64_t[]
 ┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHits.contributions_begin uint32_t[]
@@ -154,6 +144,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 EcalFarForwardZDCHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 EcalFarForwardZDCHitsContributions.stepPosition.z float[]
@@ -169,13 +160,14 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 EcalLumiSpecHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 EcalLumiSpecHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 EcalLumiSpecHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 EcalLumiSpecHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 EcalLumiSpecHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 EcalLumiSpecHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 EcalLumiSpecHitsContributions.stepPosition.z float[]
 ┃   ┃   ┗━━ 🍃 EcalLumiSpecHitsContributions.time float[]
 ┃   ┣━━ 🌿 EventHeader vector<edm4hep::EventHeaderData>
-┃   ┃   ┣━━ 🍃 EventHeader.eventNumber int32_t[]
-┃   ┃   ┣━━ 🍃 EventHeader.runNumber int32_t[]
+┃   ┃   ┣━━ 🍃 EventHeader.eventNumber uint64_t[]
+┃   ┃   ┣━━ 🍃 EventHeader.runNumber uint32_t[]
 ┃   ┃   ┣━━ 🍃 EventHeader.timeStamp uint64_t[]
 ┃   ┃   ┣━━ 🍃 EventHeader.weight double[]
 ┃   ┃   ┣━━ 🍃 EventHeader.weights_begin uint32_t[]
@@ -235,6 +227,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 HcalBarrelHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 HcalBarrelHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 HcalBarrelHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 HcalBarrelHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 HcalBarrelHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 HcalBarrelHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 HcalBarrelHitsContributions.stepPosition.z float[]
@@ -250,6 +243,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 HcalEndcapNHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 HcalEndcapNHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapNHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 HcalEndcapNHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapNHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapNHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapNHitsContributions.stepPosition.z float[]
@@ -265,6 +259,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 HcalEndcapPInsertHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 HcalEndcapPInsertHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapPInsertHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 HcalEndcapPInsertHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapPInsertHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapPInsertHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 HcalEndcapPInsertHitsContributions.stepPosition.z float[]
@@ -280,6 +275,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 HcalFarForwardZDCHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 HcalFarForwardZDCHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 HcalFarForwardZDCHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 HcalFarForwardZDCHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 HcalFarForwardZDCHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 HcalFarForwardZDCHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 HcalFarForwardZDCHitsContributions.stepPosition.z float[]
@@ -295,6 +291,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 LFHCALHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 LFHCALHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 LFHCALHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 LFHCALHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 LFHCALHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 LFHCALHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 LFHCALHitsContributions.stepPosition.z float[]
@@ -310,6 +307,7 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 LumiDirectPCALHitsContributions vector<edm4hep::CaloHitContributionData>
 ┃   ┃   ┣━━ 🍃 LumiDirectPCALHitsContributions.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 LumiDirectPCALHitsContributions.energy float[]
+┃   ┃   ┣━━ 🍃 LumiDirectPCALHitsContributions.stepLength float[]
 ┃   ┃   ┣━━ 🍃 LumiDirectPCALHitsContributions.stepPosition.x float[]
 ┃   ┃   ┣━━ 🍃 LumiDirectPCALHitsContributions.stepPosition.y float[]
 ┃   ┃   ┣━━ 🍃 LumiDirectPCALHitsContributions.stepPosition.z float[]
@@ -329,14 +327,13 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 MCParticles vector<edm4hep::MCParticleData>
 ┃   ┃   ┣━━ 🍃 MCParticles.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.charge float[]
-┃   ┃   ┣━━ 🍃 MCParticles.colorFlow.a int32_t[]
-┃   ┃   ┣━━ 🍃 MCParticles.colorFlow.b int32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.daughters_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.daughters_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.endpoint.x double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.endpoint.y double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.endpoint.z double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.generatorStatus int32_t[]
+┃   ┃   ┣━━ 🍃 MCParticles.helicity int32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.mass double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.momentum.x double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.momentum.y double[]
@@ -347,9 +344,6 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┃   ┣━━ 🍃 MCParticles.parents_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.parents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 MCParticles.simulatorStatus int32_t[]
-┃   ┃   ┣━━ 🍃 MCParticles.spin.x float[]
-┃   ┃   ┣━━ 🍃 MCParticles.spin.y float[]
-┃   ┃   ┣━━ 🍃 MCParticles.spin.z float[]
 ┃   ┃   ┣━━ 🍃 MCParticles.time float[]
 ┃   ┃   ┣━━ 🍃 MCParticles.vertex.x double[]
 ┃   ┃   ┣━━ 🍃 MCParticles.vertex.y double[]
@@ -378,18 +372,18 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.position.z double[]
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelHits.quality int32_t[]
 ┃   ┃   ┗━━ 🍃 OuterMPGDBarrelHits.time float[]
-┃   ┣━━ 🌿 RICHEndcapNHits vector<edm4hep::SimTrackerHitData>
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.cellID uint64_t[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.eDep float[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.momentum.x float[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.momentum.y float[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.momentum.z float[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.pathLength float[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.position.x double[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.position.y double[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.position.z double[]
-┃   ┃   ┣━━ 🍃 RICHEndcapNHits.quality int32_t[]
-┃   ┃   ┗━━ 🍃 RICHEndcapNHits.time float[]
+┃   ┣━━ 🌿 PFRICHHits vector<edm4hep::SimTrackerHitData>
+┃   ┃   ┣━━ 🍃 PFRICHHits.cellID uint64_t[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.eDep float[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.momentum.x float[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.momentum.y float[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.momentum.z float[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.pathLength float[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.position.x double[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.position.y double[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.position.z double[]
+┃   ┃   ┣━━ 🍃 PFRICHHits.quality int32_t[]
+┃   ┃   ┗━━ 🍃 PFRICHHits.time float[]
 ┃   ┣━━ 🌿 SiBarrelHits vector<edm4hep::SimTrackerHitData>
 ┃   ┃   ┣━━ 🍃 SiBarrelHits.cellID uint64_t[]
 ┃   ┃   ┣━━ 🍃 SiBarrelHits.eDep float[]
@@ -504,12 +498,6 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 _EcalEndcapPHits_contributions vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _EcalEndcapPHits_contributions.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _EcalEndcapPHits_contributions.index int32_t[]
-┃   ┣━━ 🌿 _EcalEndcapPInsertHitsContributions_particle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _EcalEndcapPInsertHitsContributions_particle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _EcalEndcapPInsertHitsContributions_particle.index int32_t[]
-┃   ┣━━ 🌿 _EcalEndcapPInsertHits_contributions vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _EcalEndcapPInsertHits_contributions.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _EcalEndcapPInsertHits_contributions.index int32_t[]
 ┃   ┣━━ 🌿 _EcalFarForwardZDCHitsContributions_particle vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _EcalFarForwardZDCHitsContributions_particle.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _EcalFarForwardZDCHitsContributions_particle.index int32_t[]
@@ -583,9 +571,9 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┣━━ 🌿 _OuterMPGDBarrelHits_particle vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _OuterMPGDBarrelHits_particle.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _OuterMPGDBarrelHits_particle.index int32_t[]
-┃   ┣━━ 🌿 _RICHEndcapNHits_particle vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _RICHEndcapNHits_particle.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _RICHEndcapNHits_particle.index int32_t[]
+┃   ┣━━ 🌿 _PFRICHHits_particle vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _PFRICHHits_particle.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _PFRICHHits_particle.index int32_t[]
 ┃   ┣━━ 🌿 _SiBarrelHits_particle vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _SiBarrelHits_particle.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _SiBarrelHits_particle.index int32_t[]
@@ -634,38 +622,34 @@ This format is used for DD4HEP (Geant4) simulation outputs prior the reconstruct
 ┃   ┃   ┣━━ 🍁 major uint16_t
 ┃   ┃   ┣━━ 🍁 minor uint16_t
 ┃   ┃   ┗━━ 🍁 patch uint16_t
-┃   ┣━━ 🌿 events___CollectionTypeInfo vector<tuple<unsigned int,string,bool,unsigned int> >
-┃   ┃   ┣━━ 🍃 events___CollectionTypeInfo._0 uint32_t[]
-┃   ┃   ┣━━ 🍁 events___CollectionTypeInfo._1 std::string[]
-┃   ┃   ┣━━ 🍃 events___CollectionTypeInfo._2 bool[]
-┃   ┃   ┗━━ 🍃 events___CollectionTypeInfo._3 uint32_t[]
-┃   ┣━━ 🌿 events___idTable podio::CollectionIDTable
-┃   ┃   ┣━━ 🍃 m_collectionIDs std::vector<uint32_t>
-┃   ┃   ┗━━ 🍁 m_names std::vector<std::string>
-┃   ┣━━ 🌿 meta___CollectionTypeInfo vector<tuple<unsigned int,string,bool,unsigned int> >
-┃   ┃   ┣━━ 🍃 meta___CollectionTypeInfo._0 uint32_t[]
-┃   ┃   ┣━━ 🍁 meta___CollectionTypeInfo._1 std::string[]
-┃   ┃   ┣━━ 🍃 meta___CollectionTypeInfo._2 bool[]
-┃   ┃   ┗━━ 🍃 meta___CollectionTypeInfo._3 uint32_t[]
-┃   ┣━━ 🌿 meta___idTable podio::CollectionIDTable
-┃   ┃   ┣━━ 🍃 m_collectionIDs std::vector<uint32_t>
-┃   ┃   ┗━━ 🍁 m_names std::vector<std::string>
-┃   ┣━━ 🌿 metadata___CollectionTypeInfo vector<tuple<unsigned int,string,bool,unsigned int> >
-┃   ┃   ┣━━ 🍃 metadata___CollectionTypeInfo._0 uint32_t[]
-┃   ┃   ┣━━ 🍁 metadata___CollectionTypeInfo._1 std::string[]
-┃   ┃   ┣━━ 🍃 metadata___CollectionTypeInfo._2 bool[]
-┃   ┃   ┗━━ 🍃 metadata___CollectionTypeInfo._3 uint32_t[]
-┃   ┣━━ 🌿 metadata___idTable podio::CollectionIDTable
-┃   ┃   ┣━━ 🍃 m_collectionIDs std::vector<uint32_t>
-┃   ┃   ┗━━ 🍁 m_names std::vector<std::string>
-┃   ┣━━ 🌿 runs___CollectionTypeInfo vector<tuple<unsigned int,string,bool,unsigned int> >
-┃   ┃   ┣━━ 🍃 runs___CollectionTypeInfo._0 uint32_t[]
-┃   ┃   ┣━━ 🍁 runs___CollectionTypeInfo._1 std::string[]
-┃   ┃   ┣━━ 🍃 runs___CollectionTypeInfo._2 bool[]
-┃   ┃   ┗━━ 🍃 runs___CollectionTypeInfo._3 uint32_t[]
-┃   ┗━━ 🌿 runs___idTable podio::CollectionIDTable
-┃       ┣━━ 🍃 m_collectionIDs std::vector<uint32_t>
-┃       ┗━━ 🍁 m_names std::vector<std::string>
+┃   ┣━━ 🌿 events___CollectionTypeInfo vector<podio::root_utils::CollectionWriteInfo>
+┃   ┃   ┣━━ 🍃 events___CollectionTypeInfo.collectionID uint32_t[]
+┃   ┃   ┣━━ 🍁 events___CollectionTypeInfo.dataType std::string[]
+┃   ┃   ┣━━ 🍃 events___CollectionTypeInfo.isSubset bool[]
+┃   ┃   ┣━━ 🍁 events___CollectionTypeInfo.name std::string[]
+┃   ┃   ┣━━ 🍃 events___CollectionTypeInfo.schemaVersion uint32_t[]
+┃   ┃   ┗━━ 🍁 events___CollectionTypeInfo.storageType std::string[]
+┃   ┣━━ 🌿 meta___CollectionTypeInfo vector<podio::root_utils::CollectionWriteInfo>
+┃   ┃   ┣━━ 🍃 meta___CollectionTypeInfo.collectionID uint32_t[]
+┃   ┃   ┣━━ 🍁 meta___CollectionTypeInfo.dataType std::string[]
+┃   ┃   ┣━━ 🍃 meta___CollectionTypeInfo.isSubset bool[]
+┃   ┃   ┣━━ 🍁 meta___CollectionTypeInfo.name std::string[]
+┃   ┃   ┣━━ 🍃 meta___CollectionTypeInfo.schemaVersion uint32_t[]
+┃   ┃   ┗━━ 🍁 meta___CollectionTypeInfo.storageType std::string[]
+┃   ┣━━ 🌿 metadata___CollectionTypeInfo vector<podio::root_utils::CollectionWriteInfo>
+┃   ┃   ┣━━ 🍃 metadata___CollectionTypeInfo.collectionID uint32_t[]
+┃   ┃   ┣━━ 🍁 metadata___CollectionTypeInfo.dataType std::string[]
+┃   ┃   ┣━━ 🍃 metadata___CollectionTypeInfo.isSubset bool[]
+┃   ┃   ┣━━ 🍁 metadata___CollectionTypeInfo.name std::string[]
+┃   ┃   ┣━━ 🍃 metadata___CollectionTypeInfo.schemaVersion uint32_t[]
+┃   ┃   ┗━━ 🍁 metadata___CollectionTypeInfo.storageType std::string[]
+┃   ┗━━ 🌿 runs___CollectionTypeInfo vector<podio::root_utils::CollectionWriteInfo>
+┃       ┣━━ 🍃 runs___CollectionTypeInfo.collectionID uint32_t[]
+┃       ┣━━ 🍁 runs___CollectionTypeInfo.dataType std::string[]
+┃       ┣━━ 🍃 runs___CollectionTypeInfo.isSubset bool[]
+┃       ┣━━ 🍁 runs___CollectionTypeInfo.name std::string[]
+┃       ┣━━ 🍃 runs___CollectionTypeInfo.schemaVersion uint32_t[]
+┃       ┗━━ 🍁 runs___CollectionTypeInfo.storageType std::string[]
 ┗━━ 🌴 runs (1)
     ┣━━ 🍁 GPDoubleKeys std::vector<std::string>
     ┣━━ 🍁 GPDoubleValues std::vector<std::vector<double>>

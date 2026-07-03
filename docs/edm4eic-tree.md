@@ -15,6 +15,7 @@ This page, for convenience, has full tree structure. You can explore it yourself
 
 The next is printout of uproot-browser
 ```
+📁 msf_ev1000_0002.edm4eic.root
 ┣━━ 🌴 events (1000)
 ┃   ┣━━ 🌿 B0ECalClusterAssociations vector<edm4eic::MCRecoClusterParticleAssociationData>
 ┃   ┃   ┗━━ 🍃 B0ECalClusterAssociations.weight float[]
@@ -378,6 +379,37 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapRecHits.positionError.zz float[]
 ┃   ┃   ┣━━ 🍃 BackwardMPGDEndcapRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 BackwardMPGDEndcapRecHits.timeError float[]
+┃   ┣━━ 🌿 BarrelChargedCandidateParticlesAlpha vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.charge float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.energy float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.mass float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.momentum.x float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.momentum.y float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.momentum.z float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 BarrelChargedCandidateParticlesAlpha.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 BarrelChargedCandidateParticlesAlpha.type int32_t[]
 ┃   ┣━━ 🌿 CalorimeterTrackProjections vector<edm4eic::TrackSegmentData>
 ┃   ┃   ┣━━ 🍃 CalorimeterTrackProjections.length float[]
 ┃   ┃   ┣━━ 🍃 CalorimeterTrackProjections.lengthError float[]
@@ -1222,6 +1254,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 EcalEndcapNSplitMergeClusters.type int32_t[]
 ┃   ┣━━ 🌿 EcalEndcapNTrackClusterMatches vector<edm4eic::TrackClusterMatchData>
 ┃   ┃   ┗━━ 🍃 EcalEndcapNTrackClusterMatches.weight float[]
+┃   ┣━━ 🌿 EcalEndcapNTrackSplitMergeClusterMatches vector<edm4eic::TrackClusterMatchData>
+┃   ┃   ┗━━ 🍃 EcalEndcapNTrackSplitMergeClusterMatches.weight float[]
 ┃   ┣━━ 🌿 EcalEndcapNTruthClusterAssociations vector<edm4eic::MCRecoClusterParticleAssociationData>
 ┃   ┃   ┗━━ 🍃 EcalEndcapNTruthClusterAssociations.weight float[]
 ┃   ┣━━ 🌿 EcalEndcapNTruthClusterLinks vector<podio::LinkData>
@@ -1356,6 +1390,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 EcalEndcapPSplitMergeClusters.type int32_t[]
 ┃   ┣━━ 🌿 EcalEndcapPTrackClusterMatches vector<edm4eic::TrackClusterMatchData>
 ┃   ┃   ┗━━ 🍃 EcalEndcapPTrackClusterMatches.weight float[]
+┃   ┣━━ 🌿 EcalEndcapPTrackSplitMergeClusterMatches vector<edm4eic::TrackClusterMatchData>
+┃   ┃   ┗━━ 🍃 EcalEndcapPTrackSplitMergeClusterMatches.weight float[]
 ┃   ┣━━ 🌿 EcalEndcapPTruthClusterAssociations vector<edm4eic::MCRecoClusterParticleAssociationData>
 ┃   ┃   ┗━━ 🍃 EcalEndcapPTruthClusterAssociations.weight float[]
 ┃   ┣━━ 🌿 EcalEndcapPTruthClusterLinks vector<podio::LinkData>
@@ -1583,6 +1619,68 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 EcalLumiSpecTruthClusters.time float[]
 ┃   ┃   ┣━━ 🍃 EcalLumiSpecTruthClusters.timeError float[]
 ┃   ┃   ┗━━ 🍃 EcalLumiSpecTruthClusters.type int32_t[]
+┃   ┣━━ 🌿 EndcapNChargedCandidateParticlesAlpha vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.charge float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.energy float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.mass float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.momentum.x float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.momentum.y float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.momentum.z float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapNChargedCandidateParticlesAlpha.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 EndcapNChargedCandidateParticlesAlpha.type int32_t[]
+┃   ┣━━ 🌿 EndcapPChargedCandidateParticlesAlpha vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.charge float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.energy float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.mass float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.momentum.x float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.momentum.y float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.momentum.z float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 EndcapPChargedCandidateParticlesAlpha.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 EndcapPChargedCandidateParticlesAlpha.type int32_t[]
 ┃   ┣━━ 🌿 EventHeader vector<edm4hep::EventHeaderData>
 ┃   ┃   ┣━━ 🍃 EventHeader.eventNumber uint64_t[]
 ┃   ┃   ┣━━ 🍃 EventHeader.runNumber uint32_t[]
@@ -1818,99 +1916,36 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 GeneratedBreitFrameParticles.tracks_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 GeneratedBreitFrameParticles.tracks_end uint32_t[]
 ┃   ┃   ┗━━ 🍃 GeneratedBreitFrameParticles.type int32_t[]
-┃   ┣━━ 🌿 GeneratedCentauroJets vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.charge float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.covMatrix.zz float[]
+┃   ┣━━ 🌿 GeneratedCentauroJets vector<edm4eic::JetData>
+┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.area float[]
+┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.backgroundEnergyDensity float[]
+┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.constituents_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.constituents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.energy float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.mass float[]
 ┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.momentum.z float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedCentauroJets.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 GeneratedCentauroJets.type int32_t[]
-┃   ┣━━ 🌿 GeneratedChargedJets vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.charge float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.covMatrix.zz float[]
+┃   ┃   ┗━━ 🍃 GeneratedCentauroJets.type uint32_t[]
+┃   ┣━━ 🌿 GeneratedChargedJets vector<edm4eic::JetData>
+┃   ┃   ┣━━ 🍃 GeneratedChargedJets.area float[]
+┃   ┃   ┣━━ 🍃 GeneratedChargedJets.backgroundEnergyDensity float[]
+┃   ┃   ┣━━ 🍃 GeneratedChargedJets.constituents_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 GeneratedChargedJets.constituents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 GeneratedChargedJets.energy float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.mass float[]
 ┃   ┃   ┣━━ 🍃 GeneratedChargedJets.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 GeneratedChargedJets.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 GeneratedChargedJets.momentum.z float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedChargedJets.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 GeneratedChargedJets.type int32_t[]
-┃   ┣━━ 🌿 GeneratedJets vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 GeneratedJets.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.charge float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.covMatrix.zz float[]
+┃   ┃   ┗━━ 🍃 GeneratedChargedJets.type uint32_t[]
+┃   ┣━━ 🌿 GeneratedJets vector<edm4eic::JetData>
+┃   ┃   ┣━━ 🍃 GeneratedJets.area float[]
+┃   ┃   ┣━━ 🍃 GeneratedJets.backgroundEnergyDensity float[]
+┃   ┃   ┣━━ 🍃 GeneratedJets.constituents_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 GeneratedJets.constituents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 GeneratedJets.energy float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.mass float[]
 ┃   ┃   ┣━━ 🍃 GeneratedJets.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 GeneratedJets.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 GeneratedJets.momentum.z float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 GeneratedJets.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 GeneratedJets.type int32_t[]
+┃   ┃   ┗━━ 🍃 GeneratedJets.type uint32_t[]
 ┃   ┣━━ 🌿 GeneratedParticles vector<edm4eic::ReconstructedParticleData>
 ┃   ┃   ┣━━ 🍃 GeneratedParticles.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 GeneratedParticles.charge float[]
@@ -2062,6 +2097,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 HcalBarrelSplitMergeClusters.type int32_t[]
 ┃   ┣━━ 🌿 HcalBarrelTrackClusterMatches vector<edm4eic::TrackClusterMatchData>
 ┃   ┃   ┗━━ 🍃 HcalBarrelTrackClusterMatches.weight float[]
+┃   ┣━━ 🌿 HcalBarrelTrackSplitMergeClusterMatches vector<edm4eic::TrackClusterMatchData>
+┃   ┃   ┗━━ 🍃 HcalBarrelTrackSplitMergeClusterMatches.weight float[]
 ┃   ┣━━ 🌿 HcalBarrelTruthClusterAssociations vector<edm4eic::MCRecoClusterParticleAssociationData>
 ┃   ┃   ┗━━ 🍃 HcalBarrelTruthClusterAssociations.weight float[]
 ┃   ┣━━ 🌿 HcalBarrelTruthClusterLinks vector<podio::LinkData>
@@ -2213,6 +2250,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 HcalEndcapNSplitMergeClusters.type int32_t[]
 ┃   ┣━━ 🌿 HcalEndcapNTrackClusterMatches vector<edm4eic::TrackClusterMatchData>
 ┃   ┃   ┗━━ 🍃 HcalEndcapNTrackClusterMatches.weight float[]
+┃   ┣━━ 🌿 HcalEndcapNTrackSplitMergeClusterMatches vector<edm4eic::TrackClusterMatchData>
+┃   ┃   ┗━━ 🍃 HcalEndcapNTrackSplitMergeClusterMatches.weight float[]
 ┃   ┣━━ 🌿 HcalEndcapNTruthClusterAssociations vector<edm4eic::MCRecoClusterParticleAssociationData>
 ┃   ┃   ┗━━ 🍃 HcalEndcapNTruthClusterAssociations.weight float[]
 ┃   ┣━━ 🌿 HcalEndcapNTruthClusterLinks vector<podio::LinkData>
@@ -2616,6 +2655,8 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 LFHCALSplitMergeClusters.type int32_t[]
 ┃   ┣━━ 🌿 LFHCALTrackClusterMatches vector<edm4eic::TrackClusterMatchData>
 ┃   ┃   ┗━━ 🍃 LFHCALTrackClusterMatches.weight float[]
+┃   ┣━━ 🌿 LFHCALTrackSplitMergeClusterMatches vector<edm4eic::TrackClusterMatchData>
+┃   ┃   ┗━━ 🍃 LFHCALTrackSplitMergeClusterMatches.weight float[]
 ┃   ┣━━ 🌿 MCBeamElectrons_objIdx vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 MCBeamElectrons_objIdx.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 MCBeamElectrons_objIdx.index int32_t[]
@@ -2746,6 +2787,26 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelRecHits.positionError.zz float[]
 ┃   ┃   ┣━━ 🍃 OuterMPGDBarrelRecHits.time float[]
 ┃   ┃   ┗━━ 🍃 OuterMPGDBarrelRecHits.timeError float[]
+┃   ┣━━ 🌿 PrimaryVerticesAMVF vector<edm4eic::VertexData>
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.associatedParticles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.associatedParticles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.chi2 float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.ndf int32_t[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.position.t float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.position.x float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.position.y float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.position.z float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.tt float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.xt float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.xx float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.xy float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.xz float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.yt float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.yy float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.yz float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.zt float[]
+┃   ┃   ┣━━ 🍃 PrimaryVerticesAMVF.positionError.zz float[]
+┃   ┃   ┗━━ 🍃 PrimaryVerticesAMVF.type int32_t[]
 ┃   ┣━━ 🌿 PrimaryVertices_objIdx vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 PrimaryVertices_objIdx.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 PrimaryVertices_objIdx.index int32_t[]
@@ -2771,6 +2832,37 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 RICHEndcapNTruthSeededParticleIDs.parameters_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 RICHEndcapNTruthSeededParticleIDs.parameters_end uint32_t[]
 ┃   ┃   ┗━━ 🍃 RICHEndcapNTruthSeededParticleIDs.type int32_t[]
+┃   ┣━━ 🌿 ReconstructedB0EcalNeutrals vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.charge float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.mass float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.momentum.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedB0EcalNeutrals.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedB0EcalNeutrals.type int32_t[]
 ┃   ┣━━ 🌿 ReconstructedBreitFrameParticles vector<edm4eic::ReconstructedParticleData>
 ┃   ┃   ┣━━ 🍃 ReconstructedBreitFrameParticles.PDG int32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedBreitFrameParticles.charge float[]
@@ -2802,68 +2894,26 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 ReconstructedBreitFrameParticles.tracks_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedBreitFrameParticles.tracks_end uint32_t[]
 ┃   ┃   ┗━━ 🍃 ReconstructedBreitFrameParticles.type int32_t[]
-┃   ┣━━ 🌿 ReconstructedCentauroJets vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.charge float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.covMatrix.zz float[]
+┃   ┣━━ 🌿 ReconstructedCentauroJets vector<edm4eic::JetData>
+┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.area float[]
+┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.backgroundEnergyDensity float[]
+┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.constituents_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.constituents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.energy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.mass float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.momentum.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedCentauroJets.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 ReconstructedCentauroJets.type int32_t[]
-┃   ┣━━ 🌿 ReconstructedChargedJets vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.charge float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.covMatrix.zz float[]
+┃   ┃   ┗━━ 🍃 ReconstructedCentauroJets.type uint32_t[]
+┃   ┣━━ 🌿 ReconstructedChargedJets vector<edm4eic::JetData>
+┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.area float[]
+┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.backgroundEnergyDensity float[]
+┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.constituents_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.constituents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.energy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.mass float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.momentum.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedChargedJets.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 ReconstructedChargedJets.type int32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedChargedJets.type uint32_t[]
 ┃   ┣━━ 🌿 ReconstructedChargedParticleAssociations vector<edm4eic::MCRecoParticleAssociationData>
 ┃   ┃   ┗━━ 🍃 ReconstructedChargedParticleAssociations.weight float[]
 ┃   ┣━━ 🌿 ReconstructedChargedParticleLinks vector<podio::LinkData>
@@ -2937,133 +2987,219 @@ The next is printout of uproot-browser
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticles.tracks_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedChargedRealPIDParticles.tracks_end uint32_t[]
 ┃   ┃   ┗━━ 🍃 ReconstructedChargedRealPIDParticles.type int32_t[]
+┃   ┣━━ 🌿 ReconstructedEcalEndcapPNeutrals vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.charge float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.mass float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.momentum.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedEcalEndcapPNeutrals.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedEcalEndcapPNeutrals.type int32_t[]
 ┃   ┣━━ 🌿 ReconstructedElectrons_objIdx vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 ReconstructedElectrons_objIdx.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 ReconstructedElectrons_objIdx.index int32_t[]
-┃   ┣━━ 🌿 ReconstructedFarForwardZDCLambdaDecayProductsCM vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.charge float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.covMatrix.zz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.energy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.mass float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.momentum.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.momentum.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.momentum.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 ReconstructedFarForwardZDCLambdaDecayProductsCM.type int32_t[]
-┃   ┣━━ 🌿 ReconstructedFarForwardZDCLambdas vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.charge float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.covMatrix.zz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.energy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.mass float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.momentum.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.momentum.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.momentum.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCLambdas.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 ReconstructedFarForwardZDCLambdas.type int32_t[]
-┃   ┣━━ 🌿 ReconstructedFarForwardZDCNeutrals vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.charge float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.covMatrix.zz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.energy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.mass float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.momentum.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.momentum.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.momentum.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedFarForwardZDCNeutrals.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 ReconstructedFarForwardZDCNeutrals.type int32_t[]
-┃   ┣━━ 🌿 ReconstructedJets vector<edm4eic::ReconstructedParticleData>
-┃   ┃   ┣━━ 🍃 ReconstructedJets.PDG int32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.charge float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.clusters_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.clusters_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.tt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.xt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.xx float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.xy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.xz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.yt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.yy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.yz float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.zt float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.covMatrix.zz float[]
+┃   ┣━━ 🌿 ReconstructedHcalFarForwardZDCNeutrals vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.charge float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.mass float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.momentum.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedHcalFarForwardZDCNeutrals.type int32_t[]
+┃   ┣━━ 🌿 ReconstructedJets vector<edm4eic::JetData>
+┃   ┃   ┣━━ 🍃 ReconstructedJets.area float[]
+┃   ┃   ┣━━ 🍃 ReconstructedJets.backgroundEnergyDensity float[]
+┃   ┃   ┣━━ 🍃 ReconstructedJets.constituents_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedJets.constituents_end uint32_t[]
 ┃   ┃   ┣━━ 🍃 ReconstructedJets.energy float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.goodnessOfPID float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.mass float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedJets.momentum.x float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedJets.momentum.y float[]
 ┃   ┃   ┣━━ 🍃 ReconstructedJets.momentum.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.particleIDs_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.particleIDs_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.particles_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.particles_end uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.referencePoint.x float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.referencePoint.y float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.referencePoint.z float[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.tracks_begin uint32_t[]
-┃   ┃   ┣━━ 🍃 ReconstructedJets.tracks_end uint32_t[]
-┃   ┃   ┗━━ 🍃 ReconstructedJets.type int32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedJets.type uint32_t[]
+┃   ┣━━ 🌿 ReconstructedLFHCALNeutrals vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.charge float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.mass float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.momentum.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLFHCALNeutrals.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedLFHCALNeutrals.type int32_t[]
+┃   ┣━━ 🌿 ReconstructedLambdaDecayProductsCM vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.charge float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.mass float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.momentum.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdaDecayProductsCM.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedLambdaDecayProductsCM.type int32_t[]
+┃   ┣━━ 🌿 ReconstructedLambdas vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.charge float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.mass float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.momentum.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedLambdas.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedLambdas.type int32_t[]
+┃   ┣━━ 🌿 ReconstructedNeutralJets vector<edm4eic::JetData>
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.area float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.backgroundEnergyDensity float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.constituents_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.constituents_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralJets.momentum.z float[]
+┃   ┃   ┗━━ 🍃 ReconstructedNeutralJets.type uint32_t[]
+┃   ┣━━ 🌿 ReconstructedNeutralParticleAssociations vector<edm4eic::MCRecoParticleAssociationData>
+┃   ┃   ┗━━ 🍃 ReconstructedNeutralParticleAssociations.weight float[]
+┃   ┣━━ 🌿 ReconstructedNeutralParticleLinks vector<podio::LinkData>
+┃   ┃   ┗━━ 🍃 ReconstructedNeutralParticleLinks.weight float[]
+┃   ┣━━ 🌿 ReconstructedNeutralParticles vector<edm4eic::ReconstructedParticleData>
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.PDG int32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.charge float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.clusters_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.clusters_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.tt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.xt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.xx float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.xy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.xz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.yt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.yy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.yz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.zt float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.covMatrix.zz float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.energy float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.goodnessOfPID float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.mass float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.momentum.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.momentum.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.momentum.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.particleIDs_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.particleIDs_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.particles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.particles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.referencePoint.x float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.referencePoint.y float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.referencePoint.z float[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.tracks_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 ReconstructedNeutralParticles.tracks_end uint32_t[]
+┃   ┃   ┗━━ 🍃 ReconstructedNeutralParticles.type int32_t[]
 ┃   ┣━━ 🌿 ReconstructedParticleAssociations vector<edm4eic::MCRecoParticleAssociationData>
 ┃   ┃   ┗━━ 🍃 ReconstructedParticleAssociations.weight float[]
 ┃   ┣━━ 🌿 ReconstructedParticleLinks vector<podio::LinkData>
@@ -3140,6 +3276,26 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 ScatteredElectronsTruth_objIdx vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 ScatteredElectronsTruth_objIdx.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 ScatteredElectronsTruth_objIdx.index int32_t[]
+┃   ┣━━ 🌿 SecondaryVerticesAMVF vector<edm4eic::VertexData>
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.associatedParticles_begin uint32_t[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.associatedParticles_end uint32_t[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.chi2 float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.ndf int32_t[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.position.t float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.position.x float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.position.y float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.position.z float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.tt float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.xt float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.xx float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.xy float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.xz float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.yt float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.yy float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.yz float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.zt float[]
+┃   ┃   ┣━━ 🍃 SecondaryVerticesAMVF.positionError.zz float[]
+┃   ┃   ┗━━ 🍃 SecondaryVerticesAMVF.type int32_t[]
 ┃   ┣━━ 🌿 SecondaryVerticesHelix vector<edm4eic::VertexData>
 ┃   ┃   ┣━━ 🍃 SecondaryVerticesHelix.associatedParticles_begin uint32_t[]
 ┃   ┃   ┣━━ 🍃 SecondaryVerticesHelix.associatedParticles_end uint32_t[]
@@ -3882,6 +4038,24 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _BackwardMPGDEndcapRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _BackwardMPGDEndcapRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _BackwardMPGDEndcapRecHits_rawHit.index int32_t[]
+┃   ┣━━ 🌿 _BarrelChargedCandidateParticlesAlpha_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _BarrelChargedCandidateParticlesAlpha_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _BarrelChargedCandidateParticlesAlpha_clusters.index int32_t[]
+┃   ┣━━ 🌿 _BarrelChargedCandidateParticlesAlpha_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _BarrelChargedCandidateParticlesAlpha_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _BarrelChargedCandidateParticlesAlpha_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _BarrelChargedCandidateParticlesAlpha_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _BarrelChargedCandidateParticlesAlpha_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _BarrelChargedCandidateParticlesAlpha_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _BarrelChargedCandidateParticlesAlpha_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _BarrelChargedCandidateParticlesAlpha_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _BarrelChargedCandidateParticlesAlpha_particles.index int32_t[]
+┃   ┣━━ 🌿 _BarrelChargedCandidateParticlesAlpha_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _BarrelChargedCandidateParticlesAlpha_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _BarrelChargedCandidateParticlesAlpha_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _BarrelChargedCandidateParticlesAlpha_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _BarrelChargedCandidateParticlesAlpha_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _BarrelChargedCandidateParticlesAlpha_tracks.index int32_t[]
 ┃   ┣━━ 🌿 _CalorimeterTrackProjections_points vector<edm4eic::TrackPoint>
 ┃   ┃   ┣━━ 🍃 _CalorimeterTrackProjections_points.directionError.xx float[]
 ┃   ┃   ┣━━ 🍃 _CalorimeterTrackProjections_points.directionError.xy float[]
@@ -4509,6 +4683,12 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _EcalEndcapNTrackClusterMatches_track vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _EcalEndcapNTrackClusterMatches_track.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _EcalEndcapNTrackClusterMatches_track.index int32_t[]
+┃   ┣━━ 🌿 _EcalEndcapNTrackSplitMergeClusterMatches_cluster vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EcalEndcapNTrackSplitMergeClusterMatches_cluster.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EcalEndcapNTrackSplitMergeClusterMatches_cluster.index int32_t[]
+┃   ┣━━ 🌿 _EcalEndcapNTrackSplitMergeClusterMatches_track vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EcalEndcapNTrackSplitMergeClusterMatches_track.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EcalEndcapNTrackSplitMergeClusterMatches_track.index int32_t[]
 ┃   ┣━━ 🌿 _EcalEndcapNTruthClusterAssociations_rec vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _EcalEndcapNTruthClusterAssociations_rec.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _EcalEndcapNTruthClusterAssociations_rec.index int32_t[]
@@ -4590,6 +4770,12 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _EcalEndcapPTrackClusterMatches_track vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _EcalEndcapPTrackClusterMatches_track.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _EcalEndcapPTrackClusterMatches_track.index int32_t[]
+┃   ┣━━ 🌿 _EcalEndcapPTrackSplitMergeClusterMatches_cluster vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EcalEndcapPTrackSplitMergeClusterMatches_cluster.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EcalEndcapPTrackSplitMergeClusterMatches_cluster.index int32_t[]
+┃   ┣━━ 🌿 _EcalEndcapPTrackSplitMergeClusterMatches_track vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EcalEndcapPTrackSplitMergeClusterMatches_track.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EcalEndcapPTrackSplitMergeClusterMatches_track.index int32_t[]
 ┃   ┣━━ 🌿 _EcalEndcapPTruthClusterAssociations_rec vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _EcalEndcapPTruthClusterAssociations_rec.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _EcalEndcapPTruthClusterAssociations_rec.index int32_t[]
@@ -4716,6 +4902,42 @@ The next is printout of uproot-browser
 ┃   ┃   ┗━━ 🍃 _EcalLumiSpecTruthClusters_particleIDs.index int32_t[]
 ┃   ┣━━ 🍃 _EcalLumiSpecTruthClusters_shapeParameters std::vector<float>
 ┃   ┣━━ 🍃 _EcalLumiSpecTruthClusters_subdetectorEnergies std::vector<float>
+┃   ┣━━ 🌿 _EndcapNChargedCandidateParticlesAlpha_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_clusters.index int32_t[]
+┃   ┣━━ 🌿 _EndcapNChargedCandidateParticlesAlpha_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _EndcapNChargedCandidateParticlesAlpha_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _EndcapNChargedCandidateParticlesAlpha_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_particles.index int32_t[]
+┃   ┣━━ 🌿 _EndcapNChargedCandidateParticlesAlpha_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _EndcapNChargedCandidateParticlesAlpha_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapNChargedCandidateParticlesAlpha_tracks.index int32_t[]
+┃   ┣━━ 🌿 _EndcapPChargedCandidateParticlesAlpha_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_clusters.index int32_t[]
+┃   ┣━━ 🌿 _EndcapPChargedCandidateParticlesAlpha_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _EndcapPChargedCandidateParticlesAlpha_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _EndcapPChargedCandidateParticlesAlpha_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_particles.index int32_t[]
+┃   ┣━━ 🌿 _EndcapPChargedCandidateParticlesAlpha_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _EndcapPChargedCandidateParticlesAlpha_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _EndcapPChargedCandidateParticlesAlpha_tracks.index int32_t[]
 ┃   ┣━━ 🍃 _EventHeader_weights std::vector<double>
 ┃   ┣━━ 🌿 _ForwardMPGDEndcapHits_particle vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ForwardMPGDEndcapHits_particle.collectionID uint32_t[]
@@ -4843,60 +5065,15 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _GeneratedBreitFrameParticles_tracks vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _GeneratedBreitFrameParticles_tracks.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _GeneratedBreitFrameParticles_tracks.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedCentauroJets_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedCentauroJets_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedCentauroJets_clusters.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedCentauroJets_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedCentauroJets_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedCentauroJets_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedCentauroJets_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedCentauroJets_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedCentauroJets_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedCentauroJets_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedCentauroJets_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedCentauroJets_particles.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedCentauroJets_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedCentauroJets_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedCentauroJets_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedCentauroJets_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedCentauroJets_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedCentauroJets_tracks.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedChargedJets_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedChargedJets_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedChargedJets_clusters.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedChargedJets_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedChargedJets_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedChargedJets_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedChargedJets_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedChargedJets_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedChargedJets_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedChargedJets_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedChargedJets_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedChargedJets_particles.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedChargedJets_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedChargedJets_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedChargedJets_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedChargedJets_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedChargedJets_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedChargedJets_tracks.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedJets_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedJets_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedJets_clusters.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedJets_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedJets_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedJets_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedJets_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedJets_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedJets_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedJets_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedJets_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedJets_particles.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedJets_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedJets_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedJets_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _GeneratedJets_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _GeneratedJets_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _GeneratedJets_tracks.index int32_t[]
+┃   ┣━━ 🌿 _GeneratedCentauroJets_constituents vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _GeneratedCentauroJets_constituents.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _GeneratedCentauroJets_constituents.index int32_t[]
+┃   ┣━━ 🌿 _GeneratedChargedJets_constituents vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _GeneratedChargedJets_constituents.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _GeneratedChargedJets_constituents.index int32_t[]
+┃   ┣━━ 🌿 _GeneratedJets_constituents vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _GeneratedJets_constituents.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _GeneratedJets_constituents.index int32_t[]
 ┃   ┣━━ 🌿 _GeneratedParticles_clusters vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _GeneratedParticles_clusters.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _GeneratedParticles_clusters.index int32_t[]
@@ -4978,6 +5155,12 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _HcalBarrelTrackClusterMatches_track vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _HcalBarrelTrackClusterMatches_track.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _HcalBarrelTrackClusterMatches_track.index int32_t[]
+┃   ┣━━ 🌿 _HcalBarrelTrackSplitMergeClusterMatches_cluster vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _HcalBarrelTrackSplitMergeClusterMatches_cluster.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _HcalBarrelTrackSplitMergeClusterMatches_cluster.index int32_t[]
+┃   ┣━━ 🌿 _HcalBarrelTrackSplitMergeClusterMatches_track vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _HcalBarrelTrackSplitMergeClusterMatches_track.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _HcalBarrelTrackSplitMergeClusterMatches_track.index int32_t[]
 ┃   ┣━━ 🌿 _HcalBarrelTruthClusterAssociations_rec vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _HcalBarrelTruthClusterAssociations_rec.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _HcalBarrelTruthClusterAssociations_rec.index int32_t[]
@@ -5062,6 +5245,12 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _HcalEndcapNTrackClusterMatches_track vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _HcalEndcapNTrackClusterMatches_track.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _HcalEndcapNTrackClusterMatches_track.index int32_t[]
+┃   ┣━━ 🌿 _HcalEndcapNTrackSplitMergeClusterMatches_cluster vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _HcalEndcapNTrackSplitMergeClusterMatches_cluster.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _HcalEndcapNTrackSplitMergeClusterMatches_cluster.index int32_t[]
+┃   ┣━━ 🌿 _HcalEndcapNTrackSplitMergeClusterMatches_track vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _HcalEndcapNTrackSplitMergeClusterMatches_track.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _HcalEndcapNTrackSplitMergeClusterMatches_track.index int32_t[]
 ┃   ┣━━ 🌿 _HcalEndcapNTruthClusterAssociations_rec vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _HcalEndcapNTruthClusterAssociations_rec.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _HcalEndcapNTruthClusterAssociations_rec.index int32_t[]
@@ -5272,6 +5461,12 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _LFHCALTrackClusterMatches_track vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _LFHCALTrackClusterMatches_track.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _LFHCALTrackClusterMatches_track.index int32_t[]
+┃   ┣━━ 🌿 _LFHCALTrackSplitMergeClusterMatches_cluster vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _LFHCALTrackSplitMergeClusterMatches_cluster.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _LFHCALTrackSplitMergeClusterMatches_cluster.index int32_t[]
+┃   ┣━━ 🌿 _LFHCALTrackSplitMergeClusterMatches_track vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _LFHCALTrackSplitMergeClusterMatches_track.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _LFHCALTrackSplitMergeClusterMatches_track.index int32_t[]
 ┃   ┣━━ 🌿 _MCParticlesHeadOnFrameNoBeamFX_daughters vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _MCParticlesHeadOnFrameNoBeamFX_daughters.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _MCParticlesHeadOnFrameNoBeamFX_daughters.index int32_t[]
@@ -5320,6 +5515,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _OuterMPGDBarrelRecHits_rawHit vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _OuterMPGDBarrelRecHits_rawHit.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _OuterMPGDBarrelRecHits_rawHit.index int32_t[]
+┃   ┣━━ 🌿 _PrimaryVerticesAMVF_associatedParticles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _PrimaryVerticesAMVF_associatedParticles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _PrimaryVerticesAMVF_associatedParticles.index int32_t[]
 ┃   ┣━━ 🍃 _RICHEndcapNParticleIDs_parameters std::vector<float>
 ┃   ┣━━ 🌿 _RICHEndcapNParticleIDs_particle vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _RICHEndcapNParticleIDs_particle.collectionID uint32_t[]
@@ -5340,6 +5538,24 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _RICHEndcapNTruthSeededParticleIDs_particle vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _RICHEndcapNTruthSeededParticleIDs_particle.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _RICHEndcapNTruthSeededParticleIDs_particle.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedB0EcalNeutrals_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedB0EcalNeutrals_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedB0EcalNeutrals_clusters.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedB0EcalNeutrals_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedB0EcalNeutrals_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedB0EcalNeutrals_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedB0EcalNeutrals_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedB0EcalNeutrals_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedB0EcalNeutrals_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedB0EcalNeutrals_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedB0EcalNeutrals_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedB0EcalNeutrals_particles.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedB0EcalNeutrals_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedB0EcalNeutrals_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedB0EcalNeutrals_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedB0EcalNeutrals_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedB0EcalNeutrals_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedB0EcalNeutrals_tracks.index int32_t[]
 ┃   ┣━━ 🌿 _ReconstructedBreitFrameParticles_clusters vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedBreitFrameParticles_clusters.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedBreitFrameParticles_clusters.index int32_t[]
@@ -5358,42 +5574,12 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _ReconstructedBreitFrameParticles_tracks vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedBreitFrameParticles_tracks.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedBreitFrameParticles_tracks.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedCentauroJets_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedCentauroJets_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedCentauroJets_clusters.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedCentauroJets_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedCentauroJets_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedCentauroJets_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedCentauroJets_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedCentauroJets_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedCentauroJets_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedCentauroJets_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedCentauroJets_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedCentauroJets_particles.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedCentauroJets_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedCentauroJets_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedCentauroJets_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedCentauroJets_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedCentauroJets_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedCentauroJets_tracks.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedChargedJets_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedChargedJets_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedChargedJets_clusters.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedChargedJets_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedChargedJets_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedChargedJets_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedChargedJets_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedChargedJets_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedChargedJets_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedChargedJets_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedChargedJets_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedChargedJets_particles.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedChargedJets_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedChargedJets_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedChargedJets_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedChargedJets_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedChargedJets_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedChargedJets_tracks.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedCentauroJets_constituents vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedCentauroJets_constituents.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedCentauroJets_constituents.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedChargedJets_constituents vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedChargedJets_constituents.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedChargedJets_constituents.index int32_t[]
 ┃   ┣━━ 🌿 _ReconstructedChargedParticleAssociations_rec vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedChargedParticleAssociations_rec.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedChargedParticleAssociations_rec.index int32_t[]
@@ -5446,78 +5632,132 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _ReconstructedChargedRealPIDParticles_tracks vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedChargedRealPIDParticles_tracks.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedChargedRealPIDParticles_tracks.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdaDecayProductsCM_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_clusters.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_particles.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdaDecayProductsCM_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdaDecayProductsCM_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdaDecayProductsCM_tracks.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdas_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdas_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdas_clusters.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdas_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdas_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdas_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdas_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdas_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdas_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdas_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdas_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdas_particles.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdas_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdas_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdas_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCLambdas_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCLambdas_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCLambdas_tracks.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCNeutrals_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCNeutrals_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCNeutrals_clusters.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCNeutrals_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCNeutrals_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCNeutrals_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCNeutrals_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCNeutrals_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCNeutrals_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCNeutrals_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCNeutrals_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCNeutrals_particles.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCNeutrals_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCNeutrals_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCNeutrals_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedFarForwardZDCNeutrals_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedFarForwardZDCNeutrals_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedFarForwardZDCNeutrals_tracks.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedJets_clusters vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedJets_clusters.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedJets_clusters.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedJets_particleIDUsed vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedJets_particleIDUsed.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedJets_particleIDUsed.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedJets_particleIDs vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedJets_particleIDs.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedJets_particleIDs.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedJets_particles vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedJets_particles.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedJets_particles.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedJets_startVertex vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedJets_startVertex.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedJets_startVertex.index int32_t[]
-┃   ┣━━ 🌿 _ReconstructedJets_tracks vector<podio::ObjectID>
-┃   ┃   ┣━━ 🍃 _ReconstructedJets_tracks.collectionID uint32_t[]
-┃   ┃   ┗━━ 🍃 _ReconstructedJets_tracks.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedEcalEndcapPNeutrals_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedEcalEndcapPNeutrals_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedEcalEndcapPNeutrals_clusters.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedEcalEndcapPNeutrals_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedEcalEndcapPNeutrals_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedEcalEndcapPNeutrals_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedEcalEndcapPNeutrals_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedEcalEndcapPNeutrals_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedEcalEndcapPNeutrals_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedEcalEndcapPNeutrals_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedEcalEndcapPNeutrals_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedEcalEndcapPNeutrals_particles.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedEcalEndcapPNeutrals_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedEcalEndcapPNeutrals_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedEcalEndcapPNeutrals_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedEcalEndcapPNeutrals_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedEcalEndcapPNeutrals_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedEcalEndcapPNeutrals_tracks.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedHcalFarForwardZDCNeutrals_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_clusters.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedHcalFarForwardZDCNeutrals_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedHcalFarForwardZDCNeutrals_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedHcalFarForwardZDCNeutrals_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_particles.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedHcalFarForwardZDCNeutrals_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedHcalFarForwardZDCNeutrals_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedHcalFarForwardZDCNeutrals_tracks.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedJets_constituents vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedJets_constituents.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedJets_constituents.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLFHCALNeutrals_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLFHCALNeutrals_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLFHCALNeutrals_clusters.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLFHCALNeutrals_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLFHCALNeutrals_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLFHCALNeutrals_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLFHCALNeutrals_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLFHCALNeutrals_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLFHCALNeutrals_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLFHCALNeutrals_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLFHCALNeutrals_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLFHCALNeutrals_particles.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLFHCALNeutrals_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLFHCALNeutrals_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLFHCALNeutrals_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLFHCALNeutrals_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLFHCALNeutrals_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLFHCALNeutrals_tracks.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdaDecayProductsCM_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdaDecayProductsCM_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdaDecayProductsCM_clusters.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdaDecayProductsCM_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdaDecayProductsCM_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdaDecayProductsCM_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdaDecayProductsCM_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdaDecayProductsCM_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdaDecayProductsCM_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdaDecayProductsCM_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdaDecayProductsCM_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdaDecayProductsCM_particles.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdaDecayProductsCM_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdaDecayProductsCM_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdaDecayProductsCM_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdaDecayProductsCM_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdaDecayProductsCM_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdaDecayProductsCM_tracks.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdas_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdas_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdas_clusters.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdas_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdas_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdas_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdas_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdas_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdas_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdas_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdas_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdas_particles.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdas_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdas_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdas_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedLambdas_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedLambdas_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedLambdas_tracks.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralJets_constituents vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralJets_constituents.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralJets_constituents.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticleAssociations_rec vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticleAssociations_rec.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticleAssociations_rec.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticleAssociations_sim vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticleAssociations_sim.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticleAssociations_sim.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticleLinks_from vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticleLinks_from.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticleLinks_from.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticleLinks_to vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticleLinks_to.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticleLinks_to.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticles_clusters vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticles_clusters.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticles_clusters.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticles_particleIDUsed vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticles_particleIDUsed.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticles_particleIDUsed.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticles_particleIDs vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticles_particleIDs.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticles_particleIDs.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticles_particles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticles_particles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticles_particles.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticles_startVertex vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticles_startVertex.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticles_startVertex.index int32_t[]
+┃   ┣━━ 🌿 _ReconstructedNeutralParticles_tracks vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _ReconstructedNeutralParticles_tracks.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _ReconstructedNeutralParticles_tracks.index int32_t[]
 ┃   ┣━━ 🌿 _ReconstructedParticleAssociations_rec vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedParticleAssociations_rec.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedParticleAssociations_rec.index int32_t[]
@@ -5578,6 +5818,9 @@ The next is printout of uproot-browser
 ┃   ┣━━ 🌿 _ReconstructedTruthSeededChargedParticles_tracks vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _ReconstructedTruthSeededChargedParticles_tracks.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _ReconstructedTruthSeededChargedParticles_tracks.index int32_t[]
+┃   ┣━━ 🌿 _SecondaryVerticesAMVF_associatedParticles vector<podio::ObjectID>
+┃   ┃   ┣━━ 🍃 _SecondaryVerticesAMVF_associatedParticles.collectionID uint32_t[]
+┃   ┃   ┗━━ 🍃 _SecondaryVerticesAMVF_associatedParticles.index int32_t[]
 ┃   ┣━━ 🌿 _SecondaryVerticesHelix_associatedParticles vector<podio::ObjectID>
 ┃   ┃   ┣━━ 🍃 _SecondaryVerticesHelix_associatedParticles.collectionID uint32_t[]
 ┃   ┃   ┗━━ 🍃 _SecondaryVerticesHelix_associatedParticles.index int32_t[]

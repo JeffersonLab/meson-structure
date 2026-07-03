@@ -6,9 +6,9 @@ EDM4EIC structures related to lambdas
 graph TB
     %% Reconstructed Particles
     subgraph "Reconstructed Particles"
-        RFZDCLambdas[ReconstructedFarForwardZDCLambdas<br/>ReconstructedParticle]
-        RFZDCLambdaDecay[ReconstructedFarForwardZDCLambdaDecayProductsCM<br/>ReconstructedParticle]
-        RFZDCNeutrals[ReconstructedFarForwardZDCNeutrals<br/>ReconstructedParticle]
+        RFZDCLambdas[ReconstructedLambdas<br/>ReconstructedParticle]
+        RFZDCLambdaDecay[ReconstructedLambdaDecayProductsCM<br/>ReconstructedParticle]
+        RFZDCNeutrals[ReconstructedHcalFarForwardZDCNeutrals<br/>ReconstructedParticle]
     end
 
     %% Clusters
@@ -34,8 +34,6 @@ graph TB
         EcalZDCClusterAssoc[EcalFarForwardZDCClusterAssociations<br/>MCRecoClusterParticleAssociation]
         HcalZDCClusterAssoc[HcalFarForwardZDCClusterAssociations<br/>MCRecoClusterParticleAssociation]
         HcalZDCClusterAssocBaseline[HcalFarForwardZDCClusterAssociationsBaseline<br/>MCRecoClusterParticleAssociation]
-        EcalZDCRawHitAssoc[EcalFarForwardZDCRawHitAssociations<br/>MCRecoCalorimeterHitAssociation]
-        HcalZDCRawHitAssoc[HcalFarForwardZDCRawHitAssociations<br/>MCRecoCalorimeterHitAssociation]
     end
 
     %% MC Particles
@@ -62,7 +60,4 @@ graph TB
     HcalZDCClusterAssoc -->|sim| MCParticles
     HcalZDCClusterAssocBaseline -->|rec| HcalZDCClustersBaseline
     HcalZDCClusterAssocBaseline -->|sim| MCParticles
-
-    EcalZDCRawHitAssoc -->|rawHit| EcalZDCRawHits
-    HcalZDCRawHitAssoc -->|rawHit| HcalZDCRawHits
 ```

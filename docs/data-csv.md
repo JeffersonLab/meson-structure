@@ -3,24 +3,22 @@
 We provide the relevant part `*.EDM4EIC.root` data converted to the CSV format 
 
 - The CVS files are located in `csv` folder in the campaign directory. See [DATA ACCESS](data)
-- File names start the same as source `edm4eic.root` file and correspond to each other. E.g. `k_lambda_5x41_5000evt_001.*`
+- File names start the same as source `edm4eic.root` file and correspond to each other. E.g. `msf_ev1000_0001.*`
 - We also provide .csv.zip - zipped versions. Pandas can work with such files out of the box
 - Access to the CSV and .csv.zip files is the same. See [DATA ACCESS](data) page
 - CSV table names are embedded in extension before `.csv` , 
-  e.g. `*.mcdis.csv`, `*.mcpart_lambda.csv`
+  e.g. `*.mc_dis.csv`, `*.mcpart_lambda.csv`
 - Column names are listed in the first line of the file (standard for CSV)
 
 Example file names: 
 
 ```bash
 # Original file
-k_lambda_5x41_5000evt_001.edm4eic.root
+msf_ev1000_0001.edm4eic.root
 
 # Related CSV-s
-k_lambda_5x41_5000evt_001.mcdis.csv
-k_lambda_5x41_5000evt_001.mcpart_lambda.csv
-
-# Zi
+msf_ev1000_0001.mc_dis.csv
+msf_ev1000_0001.mcpart_lambda.csv
 ```
 
 All scripts that make EDM4HEP to CSV conversion are located at 
@@ -336,14 +334,16 @@ Gamma-one in ECALs:
 4. `gamone_EcalFarForwardZDCHits`
 5. `gamone_B0ECalHits`
 6. `gamone_EcalEndcapPHits`
-7. `gamone_EcalEndcapPInsertHits`
 
-Gamma-two in ECALs (same four):
+Gamma-two in ECALs (same three):
 
-8. `gamtwo_EcalFarForwardZDCHits`
-9. `gamtwo_B0ECalHits`
-10. `gamtwo_EcalEndcapPHits`
-11. `gamtwo_EcalEndcapPInsertHits`
+7. `gamtwo_EcalFarForwardZDCHits`
+8. `gamtwo_B0ECalHits`
+9. `gamtwo_EcalEndcapPHits`
+
+> The ECAL forward insert (`EcalEndcapPInsertHits`) was removed from the ePIC
+> geometry, so the former `gamone/gamtwo_EcalEndcapPInsertHits` columns no longer
+> exist. The HCAL forward insert (`HcalEndcapPInsertHits`) is unchanged.
 
 Full header ordering:
 
@@ -354,8 +354,7 @@ neut_id,…,neut_np, pizero_id,…,pizero_np, gamone_id,…,gamone_np, gamtwo_id
 neut_HcalFarForwardZDCHits, neut_HcalEndcapPInsertHits, neut_LFHCALHits,
 gamone_EcalFarForwardZDCHits, gamtwo_EcalFarForwardZDCHits,
 gamone_B0ECalHits,             gamtwo_B0ECalHits,
-gamone_EcalEndcapPHits,        gamtwo_EcalEndcapPHits,
-gamone_EcalEndcapPInsertHits,  gamtwo_EcalEndcapPInsertHits
+gamone_EcalEndcapPHits,        gamtwo_EcalEndcapPHits
 ```
 
 Notes:
@@ -388,12 +387,16 @@ RICHEndcapNHits, SiBarrelHits, TOFBarrelHits, TOFEndcapHits,
 TaggerTrackerHits, TrackerEndcapHits, VertexBarrelHits
 ```
 
-Calorimeter collections (7) checked for both `prot` and `pimin`:
+Calorimeter collections (6) checked for both `prot` and `pimin`:
 
 ```
-EcalFarForwardZDCHits, B0ECalHits, EcalEndcapPHits, EcalEndcapPInsertHits,
+EcalFarForwardZDCHits, B0ECalHits, EcalEndcapPHits,
 HcalFarForwardZDCHits, HcalEndcapPInsertHits, LFHCALHits
 ```
+
+> The ECAL forward insert (`EcalEndcapPInsertHits`) was removed from the ePIC
+> geometry, so the former `prot_/pimin_EcalEndcapPInsertHits` columns no longer
+> exist. The HCAL forward insert (`HcalEndcapPInsertHits`) is retained.
 
 Flag rule: `1` if the particle has at least one hit (tracker:
 `SimTrackerHit::getParticle()` matches; calo: any contribution matches), else `0`.
@@ -441,10 +444,10 @@ merged = prot_hits.merge(main, on=["event"], suffixes=("_hit", ""))
 
 ### reco_ff_lambdas
 
-- Files: `*.reco_ff_lambdas_ngamgam.csv`
+- Files: `*.reco_ff_lambda.csv`
 - Conversion script: [csv_convert/csv_reco_ff_lambda.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_reco_ff_lambda.cxx)
 
-Reconstructed Lambda particles and their decay products from the far-forward Zero Degree Calorimeter (ZDC), specifically for the decay channel Λ → n + π⁰ → n + γ + γ. This table uses the `ReconstructedFarForwardZDCLambdas` collection from EDM4EIC and flattens the decay hierarchy similar to `mcpart_lambda`.
+Reconstructed Lambda particles and their decay products from the far-forward reconstruction, specifically for the decay channel Λ → n + π⁰ → n + γ + γ. This table uses the `ReconstructedLambdas` collection from EDM4EIC (renamed from `ReconstructedFarForwardZDCLambdas` in the 2026-07 reco) and flattens the decay hierarchy similar to `mcpart_lambda`.
 
 The columns are grouped by particles in the decay chain:
 
@@ -503,13 +506,17 @@ Notes:
 
 ### ppim_combinatorics
 
-- Files: `*.ppim_combinatorics.csv`
+- Files: `*.combinatorics_ppm.csv`
 - Conversion script: [csv_convert/csv_edm4hep_combinatorics_ppim.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_edm4hep_combinatorics_ppim.cxx)
-- Analysis script: [csv_convert/analyse_ppim_combinatorics.py](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/analyse_ppim_combinatorics.py)
 
 Combinatoric proton + π⁻ candidate pairs for Λ → p + π⁻ searches using far-forward detectors.
 **Each row is one (proton candidate, pion candidate) pair** found in an event — events with zero
 candidates produce no rows.
+
+> The CSV header is always written, so a file with no candidate pairs is a valid
+> **header-only** CSV (not an empty file). This is common at low energy — e.g. at
+> 5x41 the proton rarely reaches the Roman Pots, so a file can legitimately have
+> the header and zero data rows.
 
 **Candidate selection (MC-truth level):**
 
@@ -580,11 +587,12 @@ prot_nhits_rp,prot_first_rp_x,prot_first_rp_y,prot_first_rp_z
 
 Notes:
 
-- Because rows are only written when at least one proton **and** one pion candidate exist, events
-  with zero candidates are absent from the file entirely.
+- Data rows are only written when at least one proton **and** one pion candidate exist. When an
+  event has zero candidates it contributes no rows; a file where **no** event has candidates is a
+  valid header-only CSV (see note above).
 - Columns `true_prot_id` / `true_pi_id` can be joined against `pi_id` / `prot_id` to identify
   **reversed assignments** — cases where the true proton reached B0 and the true pion reached the
-  Roman Pots — using `analyse_ppim_combinatorics.py`.
+  Roman Pots.
 - When combining multiple files, offset `evt` the same way as `event` in other tables
   (see [Combine Multiple Files](#combine-multiple-files) below).
 

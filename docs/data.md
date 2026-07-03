@@ -214,8 +214,10 @@ Where:
   - `*.afterburner.hist.root` - Afterburner before-after histograms 
   - `*.edm4hep.root` - DD4Hep (Genat4) output
   - `*.edm4eic.root` - **EICRecon reconstructed files**
-  - `*.mcdis.csv` - MC DIS CSV table
+  - `*.mc_dis.csv` - MC DIS CSV table
+  - `*.reco_dis.csv` - reconstructed DIS CSV table
   - `*.mcpart_lambda.csv` - MCParticles based CSV table full lambda decay values
+  - `*.reco_ff_lambda.csv` - reconstructed far-forward lambda CSV table
 
 > 5000evt indicate each file has 5k events
 
