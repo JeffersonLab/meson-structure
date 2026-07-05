@@ -30,8 +30,7 @@ Card layout:
       beam_effects: true
       generator: eic_mesonsf_generator
       physics: k-lambda
-    rucio_metadata:      # pre-filled template for a future rucio registration
-      ...
+      software_release: 26.06-stable
     n_files: 998
     files:
     - /work/.../msf_5x41_1000evt_0001.edm4eic.root
@@ -62,8 +61,6 @@ import yaml
 from omegaconf import OmegaConf
 
 from job_creator import load_config, load_config_for_energy
-
-ENERGY_RE = re.compile(r"^(\d+)x(\d+)$")           # 5x41 -> (5, 41)
 
 XROOTD_PREFIX_DEFAULT = "root://dtn-eic.jlab.org/"
 GENERATOR_DEFAULT = "eic_mesonsf_generator"        # github.com/JeffersonLab/eic_mesonsf_generator
@@ -137,32 +134,13 @@ def build_card(config, energy, input_dir, files):
     if q2_min is not None and q2_max is not None:
         metadata["q2"] = f"gt-{q2_min}to{q2_max}"
 
+    release = software_release_from_container(config.get("container"))
+    if release:
+        metadata["software_release"] = release
+
     extra = config.get("dataset_metadata")
     if extra:
         metadata.update(OmegaConf.to_container(extra, resolve=True))
-
-    # Pre-filled template for a future rucio registration; server-side fields
-    # (created_at, availability, ...) are omitted and null values are to-fill.
-    e_beam, i_beam = (int(v) for v in ENERGY_RE.match(energy).groups())
-    rucio_metadata = {
-        "account": None,
-        "scope": None,
-        "name": dataset,
-        "did_type": "DATASET",
-        "data_level": "reconstruction",
-        "electron_beam_energy_gev": e_beam,
-        "ion_beam_energy_gev": i_beam,
-        "ion_species": "p",
-        "generator": generator,
-        "geometry_config": f"craterlake_{energy}",
-        "is_background_mixed": has_background,
-        "requester_pwg": None,
-        "software_release": software_release_from_container(config.get("container")),
-    }
-    if q2_min is not None:
-        rucio_metadata["q2_min_gev2"] = q2_min
-    if q2_max is not None:
-        rucio_metadata["q2_max_gev2"] = q2_max
 
     return {
         "dataset": dataset,
@@ -170,7 +148,6 @@ def build_card(config, energy, input_dir, files):
         "xrootd": xrootd_prefix.rstrip("/") + "/" + dataset,
         "slug": slug,
         "metadata": metadata,
-        "rucio_metadata": rucio_metadata,
         "n_files": len(files),
         "files": files,
     }
