@@ -46,7 +46,7 @@ dry_run: false
 
 # Energies to process
 energies:
-#  - "5x41"
+  - "5x41"
   - "9x100"
   - "9x130"
   - "9x275"
@@ -60,6 +60,7 @@ energies:
 # variant (with proton beam-gas as a fifth source, status=6000), substitute
 # the file starting with "synrad_egasbrems_egascoulomb_egastouschek_hgas_...".
 background_configs:
+  "5x41":  "synrad_egasbrems_egascoulomb_egastouschek_hgas_5GeVx41GeV_vacuum_10000Ahr_machineruntime_50s.json"
   "9x100": "synrad_egasbrems_egascoulomb_egastouschek_hgas_10GeVx100GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
   "9x130": "synrad_egasbrems_egascoulomb_egastouschek_hgas_10GeVx130GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
   "9x275": "synrad_egasbrems_egascoulomb_egastouschek_hgas_10GeVx275GeV_GoldCoating_10um_10000Ahr_machineruntime_50s.json"
