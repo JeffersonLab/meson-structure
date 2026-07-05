@@ -41,7 +41,7 @@ dd4hep_output: "${base_dir}/dd4hep/${energy}"
 
 # Convert DD4Hep output to CSV for analysis
 csv_dd4hep_input: "${dd4hep_output}"
-csv_dd4hep_output: "${base_dir}/csv_dd4hep/${energy}"
+csv_dd4hep_output: "${base_dir}/csv-dd4hep/${energy}"
 
 # Reconstruction jobs
 eicrecon_input: "${dd4hep_output}"
@@ -49,4 +49,4 @@ eicrecon_output: "${base_dir}/reco/${energy}"
 
 
 csv_eicrecon_input: "${eicrecon_output}"
-csv_eicrecon_output: "${base_dir}/csv_reco/${energy}"
+csv_eicrecon_output: "${base_dir}/csv-reco/${energy}"

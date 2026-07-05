@@ -11,7 +11,7 @@ For each energy listed in the campaign YAML this script:
   2. loads `${background_config_dir}/<json>`, which is a list of entries
         {"file": <xrootd URL>, "freq": <events/ns>, "skip": <fraction>,
          "status": <generator-status offset>}
-  3. for every afterburned signal *.afterburner.hepmc file under
+  3. for every afterburned signal *.hepmc3.tree.root file under
      `bg_merger_input`, emits a container script that runs
      `SignalBackgroundMerger` with --signalFreq 0 (= exactly one signal per
      2 us frame) and one --bgFile entry per cocktail source.
@@ -186,7 +186,7 @@ def process_energy(config, energy, config_path=None):
         return None
 
     input_files = find_inputs_or_skip(
-        config.bg_merger_input, "*.afterburner.hepmc", energy,
+        config.bg_merger_input, "*.hepmc3.tree.root", energy,
         config.bg_merger_output,
     )
     if input_files is None:
@@ -202,7 +202,7 @@ def process_energy(config, energy, config_path=None):
     runner = JobCreator(
         input_files=input_files,
         output_file_name_func=exension_replacer(
-            ".afterburner.hepmc", ".bg.hepmc3.tree.root"
+            ".hepmc3.tree.root", ".bg.hepmc3.tree.root"
         ),
         output_dir=config.bg_merger_output,
         bind_dirs=config.bind_dirs,
