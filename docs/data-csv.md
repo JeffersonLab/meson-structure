@@ -19,6 +19,7 @@ msf_ev1000_0001.edm4eic.root
 # Related CSV-s
 msf_ev1000_0001.mc_dis.csv
 msf_ev1000_0001.mcpart_lambda.csv
+msf_ev1000_0001.reco_particles.csv
 ```
 
 All scripts that make EDM4HEP to CSV conversion are located at 
@@ -503,6 +504,64 @@ Notes:
 - ZDC reconstructed lambdas look only Lambda decays (Λ → n + π⁰ → n + γ + γ channel)
 - If a particle is not reconstructed or missing, its columns will contain null values
 - The `n_particles` field for the Lambda indicates the number of reconstructed daughter particles
+
+### reco_particles
+
+- Files: `*.reco_particles.csv`
+- Conversion script: [csv_convert/csv_reco_particles.cxx](https://github.com/JeffersonLab/meson-structure/blob/main/csv_convert/csv_reco_particles.cxx)
+
+**All** final reconstructed particles from the `ReconstructedParticles` EDM4EIC collection,
+**one particle per row** (unlike the Λ tables, this is a flat dump of every particle — no
+decay-chain grouping). Each row carries the particle kinematics plus the multiplicities of the
+objects it is related to (clusters, tracks) and, going one level deeper through those relations,
+the number of underlying calorimeter and tracker hits.
+
+> The converter takes an optional collection argument, so it can also flatten other
+> `ReconstructedParticle` collections without recompiling, e.g.
+> `root -x -l -b -q 'csv_reco_particles.cxx("f.root","out.csv",-1,"ReconstructedChargedParticles")'`
+> (CLI: `-c ReconstructedChargedParticles`). By default it reads `ReconstructedParticles`.
+
+Columns:
+
+1.  `event`                 — event number (primary key). Multiple rows per event.
+2.  `id`                    — particle index in the collection
+3.  `pdg`                   — particle PDG code
+4.  `charge`                — electric charge
+5.  `energy`                — total energy [GeV]
+6.  `mass`                  — mass [GeV/c²]
+7.  `px`                    — momentum x-component [GeV/c]
+8.  `py`                    — momentum y-component [GeV/c]
+9.  `pz`                    — momentum z-component [GeV/c]
+10. `ref_x`                 — reference point x-coordinate [mm]
+11. `ref_y`                 — reference point y-coordinate [mm]
+12. `ref_z`                 — reference point z-coordinate [mm]
+13. `pid_goodness`          — particle ID quality metric
+14. `type`                  — reconstruction type flag
+15. `n_clusters`            — number of associated clusters
+16. `n_tracks`              — number of associated tracks
+17. `n_particles`           — number of daughter (sub-)particles
+18. `n_particle_ids`        — number of particle ID objects
+19. `n_cluster_hits`        — total calorimeter hits across all associated clusters (Σ `Cluster::getHits()`)
+20. `n_track_measurements`  — total `Measurement2D` objects across all associated tracks
+21. `n_tracker_hits`        — total tracker hits behind those measurements (Σ `Measurement2D::getHits()`)
+
+The complete column list is:
+
+```
+event,id,pdg,charge,energy,mass,px,py,pz,ref_x,ref_y,ref_z,pid_goodness,type,
+n_clusters,n_tracks,n_particles,n_particle_ids,
+n_cluster_hits,n_track_measurements,n_tracker_hits
+```
+
+Notes:
+
+- The last three columns (`n_cluster_hits`, `n_track_measurements`, `n_tracker_hits`) follow the
+  relation graph `ReconstructedParticle → Cluster → CalorimeterHit` and
+  `ReconstructedParticle → Track → Measurement2D → TrackerHit` and, for now, report only the
+  **counts** of those connected objects rather than their contents.
+- A neutral (calorimeter-only) particle typically has `n_tracks == 0` and non-zero
+  `n_cluster_hits`; a charged track particle typically has `n_clusters == 0` and non-zero
+  `n_tracker_hits`.
 
 ### ppim_combinatorics
 
