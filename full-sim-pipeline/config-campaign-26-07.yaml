@@ -50,3 +50,14 @@ eicrecon_output: "${base_dir}/reco/${energy}"
 
 csv_eicrecon_input: "${eicrecon_output}"
 csv_eicrecon_output: "${base_dir}/csv-reco/${energy}"
+
+# --- Dataset cards (60_generate_dataset_cards.py) ---------------------------
+# One YAML card per (flavor, energy) goes to datasets_dir. Cards are readable
+# by ai-epic-background/full-sim-pipeline/41_create_csv_eicrecon_jobs.py:
+# point its config datasets_dir here to include these datasets.
+datasets_dir: "${base_dir}/datasets"
+
+# Event-generator DIS q2 range recorded in the cards
+# (eic_mesonsf_generator: x = 0.0001-1.0000, q2 = 1-500)
+q2_min: 1
+q2_max: 500
