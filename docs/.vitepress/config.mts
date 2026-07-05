@@ -1,16 +1,13 @@
-import markdownItKatex from '@traptitech/markdown-it-katex';
-import { withMermaid } from "vitepress-plugin-mermaid";
+import { defineConfig } from 'vitepress';
 import lightbox from "vitepress-plugin-lightbox"
 
 
-export default withMermaid({
+export default defineConfig({
     title: 'Meson Structure',
     description: 'Documentation for meson-structure analysis',
     base: '/meson-structure/',
 
-    // Improved head settings with proper KaTeX styling
     head: [
-        ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css' }],
         ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
         ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }],
     ],
@@ -128,10 +125,8 @@ export default withMermaid({
         appearance: true
     },
 
-    // Enable KaTeX for math rendering
     markdown: {
         config: (md) => {
-            md.use(markdownItKatex);
             md.use(lightbox, {});
         }
     },

@@ -65,6 +65,16 @@ target_link_libraries(csv_reco_ff_lambda
         EDM4EIC::edm4eic EDM4EIC::edm4eicDict
         fmt::fmt)
 
+add_executable(csv_reco_particles csv_reco_particles.cxx)
+
+target_link_libraries(csv_reco_particles
+        PRIVATE
+        ROOT::Core ROOT::RIO ROOT::Tree ROOT::Hist ROOT::Gpad
+        podio::podio podio::podioRootIO podio::podioDict
+        EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+        EDM4EIC::edm4eic EDM4EIC::edm4eicDict
+        fmt::fmt)
+
 add_executable(csv_acceptance_ppim csv_edm4hep_acceptance_ppim.cxx)
 
 target_link_libraries(csv_acceptance_ppim

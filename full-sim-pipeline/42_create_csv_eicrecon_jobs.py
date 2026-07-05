@@ -64,6 +64,7 @@ def create_container_script_template():
     convert "reco_dis"       "csv_reco_dis.cxx"       "{csv_reco_dis}"
     convert "mcpart_lambda"  "csv_mcpart_lambda.cxx"  "{csv_mcpart_lambda}"
     convert "reco_ff_lambda" "csv_reco_ff_lambda.cxx" "{csv_reco_ff_lambda}"
+    convert "reco_particles" "csv_reco_particles.cxx" "{csv_reco_particles}"
 
     echo "==========================================================================="
     echo "Done. Outputs in: {input_dir} (rc=$rc)"
@@ -89,6 +90,7 @@ def make_custom_params_updater(config_path):
         params['csv_reco_dis'] = os.path.join(output_dir, f"{csv_basename}.reco_dis.csv")
         params['csv_mcpart_lambda'] = os.path.join(output_dir, f"{csv_basename}.mcpart_lambda.csv")
         params['csv_reco_ff_lambda'] = os.path.join(output_dir, f"{csv_basename}.reco_ff_lambda.csv")
+        params['csv_reco_particles'] = os.path.join(output_dir, f"{csv_basename}.reco_particles.csv")
 
         return params
     return custom_params_updater
