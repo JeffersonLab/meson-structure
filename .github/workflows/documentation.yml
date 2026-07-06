@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+  # Allow re-running the deploy manually from the Actions tab without a new commit
+  # (useful to retry a transient "Deployment failed, try again later").
+  workflow_dispatch:
+
+# Allow only one concurrent Pages deployment, and do NOT cancel an in-progress
+# run — overlapping deployments are a common cause of deploy-pages failing with
+# "Deployment failed, try again later.".
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -12,11 +22,16 @@ jobs:
       id-token: write
       contents: read
       pages: write
+    # deploy-pages deploys to the `github-pages` environment; the job must
+    # declare it or the Pages deployment is rejected.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 

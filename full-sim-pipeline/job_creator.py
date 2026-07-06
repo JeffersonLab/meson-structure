@@ -116,6 +116,7 @@ class JobCreator:
                  slurm_account: str = 'eic',
                  slurm_partition: str = 'production',
                  slurm_array_chunk: int = 10000,  # farm MaxArraySize = 10001
+                 slurm_files_per_job: int = 1,    # files/array task; 1 = one job per file (CSV stages override)
                  ):
         """Initialize JobCreator with configuration."""
         
@@ -142,6 +143,12 @@ class JobCreator:
         self.config['slurm_partition'] = slurm_partition
         # Max tasks per sbatch --array call (stay under the cluster MaxArraySize)
         self.config['slurm_array_chunk'] = slurm_array_chunk
+        # Number of input files each array task processes sequentially. Batching
+        # files into one job amortizes SLURM's per-job overhead so jobs run for
+        # minutes instead of seconds (farm admins flag <2 min jobs). Each file is
+        # still a separate singularity+converter invocation, so one bad file only
+        # warns and the rest of the chunk continues.
+        self.config['slurm_files_per_job'] = max(1, int(slurm_files_per_job))
         self.config['beam_config'] = beam_config
 
         # Store output filename function
@@ -267,11 +274,18 @@ class JobCreator:
         return script_path
     
     def get_default_array_template(self) -> str:
-        """SLURM job-array script: one array task = one container script.
+        """SLURM job-array script: one array task = a chunk of FILES_PER_JOB files.
 
-        Tasks look up their container script in container_scripts.list by
-        SLURM_ARRAY_TASK_ID (+ OFFSET, so the list can be submitted in chunks
-        that respect the cluster's MaxArraySize).
+        Each task processes its slice of container_scripts.list sequentially,
+        running one singularity+converter invocation per file. Batching many
+        short files into one job keeps job runtimes above the farm's minimum
+        (the scheduler penalizes floods of <2 min jobs) while preserving
+        per-file isolation: a file that fails only logs a warning and the rest
+        of the chunk continues.
+
+        The global task index is SLURM_ARRAY_TASK_ID + OFFSET (OFFSET lets the
+        task range be submitted in chunks that respect MaxArraySize). Task T
+        owns list lines [T*FILES_PER_JOB + 1 .. (T+1)*FILES_PER_JOB].
         """
         return textwrap.dedent("""\
         #!/bin/bash
@@ -284,22 +298,63 @@ class JobCreator:
         #SBATCH --output={logs_dir}/array_%A_%a.slurm.log
         #SBATCH --error={logs_dir}/array_%A_%a.slurm.err
 
-        set -e
+        # No `set -e`: one failing file must not abort the rest of the chunk.
+        set -uo pipefail
 
-        LINE=$((SLURM_ARRAY_TASK_ID + ${{OFFSET:-0}} + 1))
-        CONTAINER_SCRIPT=$(sed -n "${{LINE}}p" "{list_file}")
+        FILES_PER_JOB={files_per_job}
+        TASK=$((SLURM_ARRAY_TASK_ID + ${{OFFSET:-0}}))
+        START=$((TASK * FILES_PER_JOB))
 
-        if [ -z "$CONTAINER_SCRIPT" ]; then
-            echo "No entry at line $LINE of {list_file}; nothing to do."
-            exit 0
+        echo "############################################################"
+        echo "# CHUNK START   task=$SLURM_ARRAY_TASK_ID offset=${{OFFSET:-0}} global=$TASK"
+        echo "# list lines    $((START + 1))..$((START + FILES_PER_JOB))"
+        echo "# host          $(hostname)"
+        echo "# start         $(date)"
+        echo "############################################################"
+
+        n_ok=0
+        n_fail=0
+        failed=()
+        chunk_t0=$SECONDS
+
+        for i in $(seq 0 $((FILES_PER_JOB - 1))); do
+            LINE=$((START + i + 1))
+            CONTAINER_SCRIPT=$(sed -n "${{LINE}}p" "{list_file}")
+            [ -z "$CONTAINER_SCRIPT" ] && continue
+
+            echo ""
+            echo ">>>>> START  line $LINE  $CONTAINER_SCRIPT  ($(date +%H:%M:%S))"
+            file_t0=$SECONDS
+            if singularity exec {bindings} {container} "$CONTAINER_SCRIPT"; then
+                n_ok=$((n_ok + 1))
+                echo "<<<<< OK     line $LINE  ($((SECONDS - file_t0))s)"
+            else
+                n_fail=$((n_fail + 1))
+                failed+=("$CONTAINER_SCRIPT")
+                echo "<<<<< FAIL   line $LINE  ($((SECONDS - file_t0))s)  -- see log above"
+            fi
+        done
+
+        n_done=$((n_ok + n_fail))
+        echo ""
+        echo "############################################################"
+        echo "# CHUNK SUMMARY  global=$TASK"
+        echo "#   attempted : $n_done"
+        echo "#   ok        : $n_ok"
+        echo "#   failed    : $n_fail"
+        echo "#   walltime  : $((SECONDS - chunk_t0))s"
+        if [ "$n_fail" -gt 0 ]; then
+            echo "#   failed files:"
+            for f in "${{failed[@]}}"; do
+                echo "#     - $f"
+            done
         fi
+        echo "#   finished  : $(date)"
+        echo "############################################################"
 
-        echo "Array task $SLURM_ARRAY_TASK_ID (offset ${{OFFSET:-0}}): $CONTAINER_SCRIPT"
-        echo "Running on: $(hostname) at $(date)"
-
-        singularity exec {bindings} {container} "$CONTAINER_SCRIPT"
-
-        echo "Finished at $(date)"
+        # Non-zero exit if any file failed, so the task shows FAILED in sacct
+        # (but only after every file was attempted).
+        [ "$n_fail" -eq 0 ]
         """)
 
     def write_array_script(self) -> str:
@@ -322,6 +377,7 @@ class JobCreator:
             list_file=list_file,
             bindings=bindings,
             container=self.config['container'],
+            files_per_job=self.config['slurm_files_per_job'],
         )
 
         script_path = os.path.join(jobs_dir, 'array.slurm.sh')
@@ -341,23 +397,30 @@ class JobCreator:
         script_path = os.path.join(self.config['jobs_dir'], 'submit_all_slurm_jobs.sh')
         array_script = self.write_array_script()
 
-        n_jobs = len(self.generated_scripts['container'])
+        n_files = len(self.generated_scripts['container'])
+        files_per_job = self.config['slurm_files_per_job']
+        # Each array task processes files_per_job files, so we submit tasks
+        # (chunks of files), not one task per file. Round up so the last,
+        # possibly-partial chunk is covered.
+        n_tasks = (n_files + files_per_job - 1) // files_per_job
         chunk = self.config['slurm_array_chunk']
 
         script_lines = [
             "#!/bin/bash",
             "set -e",
             "",
-            f"# Submit all {n_jobs} jobs as SLURM job arrays (chunk size {chunk})",
+            f"# Submit {n_files} files as {n_tasks} SLURM array task(s), "
+            f"{files_per_job} file(s) per task (MaxArraySize chunk {chunk})",
             ""
         ]
-        for offset in range(0, n_jobs, chunk):
-            last = min(chunk, n_jobs - offset) - 1
+        for offset in range(0, n_tasks, chunk):
+            last = min(chunk, n_tasks - offset) - 1
             script_lines.append(
                 f"sbatch --array=0-{last} --export=ALL,OFFSET={offset} {array_script}")
 
         script_lines.append("")
-        script_lines.append(f"echo \"Submitted {n_jobs} jobs as SLURM array(s)!\"")
+        script_lines.append(
+            f"echo \"Submitted {n_files} files as {n_tasks} SLURM array task(s)!\"")
 
         with open(script_path, 'w') as f:
             f.write('\n'.join(script_lines))
@@ -464,6 +527,7 @@ class JobCreator:
         print(f"  Memory/CPU: {self.config['slurm_mem_per_cpu']}")
         print(f"  Account:    {self.config['slurm_account']}")
         print(f"  Partition:  {self.config['slurm_partition']}")
+        print(f"  Files/job:  {self.config['slurm_files_per_job']} (files per SLURM array task)")
         
         print("\nContainer:")
         print(f"  Image:      {self.config['container']}")

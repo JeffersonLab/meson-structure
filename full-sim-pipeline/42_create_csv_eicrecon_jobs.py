@@ -124,6 +124,7 @@ def process_energy(config, energy, config_path):
         events=config.event_count,
         container=config.container,
         beam_config=energy,
+        slurm_files_per_job=int(config.get('slurm_files_per_job', 20)),
     )
     runner.container_script_template = create_container_script_template()
     runner.container_script_params_updater = make_custom_params_updater(config_path)
