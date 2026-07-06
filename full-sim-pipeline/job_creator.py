@@ -154,8 +154,7 @@ class JobCreator:
         # Initialize storage for generated scripts
         self.generated_scripts = {
             'container': [],
-            'slurm': [],
-            'info': []
+            'slurm': []
         }
         
         # Pretty print configuration
@@ -262,26 +261,6 @@ class JobCreator:
         self.generated_scripts['slurm'].append(script_path)
         return script_path
     
-    def write_info_yaml(self, input_file: str) -> str:
-        """Write metadata YAML file for a single input file."""
-        basename = os.path.splitext(os.path.basename(input_file))[0]
-        yaml_path = os.path.join(self.config['jobs_dir'], f"{basename}.info.yaml")
-        
-        metadata = {
-            'timestamp': self.config['timestamp'],
-            'input_file': input_file,
-            'output_dir': self.config['output_dir'],
-            'container_image': self.config['container'],
-            'script_version': self.config['script_version'],
-            'config': self.config,
-        }
-        
-        with open(yaml_path, 'w') as f:
-            yaml.safe_dump(metadata, f, sort_keys=False)
-        
-        self.generated_scripts['info'].append(yaml_path)
-        return yaml_path
-    
     def write_submit_all_script(self):
         """Write master script to submit all SLURM jobs."""
         script_path = os.path.join(self.config['jobs_dir'], 'submit_all_slurm_jobs.sh')
@@ -360,11 +339,8 @@ class JobCreator:
         
         # Create SLURM script
         slurm_script = self.write_slurm_script(input_file, container_script)
-        
-        # Create info YAML
-        info_yaml = self.write_info_yaml(input_file)
-       
-    
+
+
     def run(self):
         """Main execution method."""
         if self.container_script_template is None:
@@ -429,7 +405,6 @@ class JobCreator:
         print(f"\nGenerated {len(self.config['input_files'])} job sets:")
         print(f"  - Container scripts: {len(self.generated_scripts['container'])}")
         print(f"  - SLURM scripts:     {len(self.generated_scripts['slurm'])}")
-        print(f"  - Info YAML files:   {len(self.generated_scripts['info'])}")
         print(f"\nMaster scripts:")
         print(f"  - Submit all (SLURM): {submit_script}")
         print(f"  - Run all (local):    {run_script}")
