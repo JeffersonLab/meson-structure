@@ -115,6 +115,7 @@ class JobCreator:
                  slurm_mem_per_cpu: str = '5G',  # Fixed parameter name
                  slurm_account: str = 'eic',
                  slurm_partition: str = 'production',
+                 slurm_array_chunk: int = 1000,
                  ):
         """Initialize JobCreator with configuration."""
         
@@ -124,8 +125,10 @@ class JobCreator:
             'script_version': '1.0.0'
         }
         
-        # Update config with parsed arguments
-        self.config['input_files'] = [os.path.abspath(f) for f in input_files]
+        # Update config with parsed arguments.
+        # Keep remote URLs (e.g. root:// XRootD PFNs) verbatim; only localize real paths.
+        self.config['input_files'] = [f if '://' in f else os.path.abspath(f)
+                                      for f in input_files]
         self.config['output_dir'] = os.path.abspath(output_dir)
         self.config['jobs_dir'] = os.path.join(self.config['output_dir'], 'jobs')
         self.config['logs_dir'] = os.path.join(self.config['output_dir'], 'logs')
@@ -137,6 +140,8 @@ class JobCreator:
         self.config['slurm_mem_per_cpu'] = slurm_mem_per_cpu  # Fixed name
         self.config['slurm_account'] = slurm_account
         self.config['slurm_partition'] = slurm_partition
+        # Max tasks per sbatch --array call (stay under the cluster MaxArraySize)
+        self.config['slurm_array_chunk'] = slurm_array_chunk
         self.config['beam_config'] = beam_config
 
         # Store output filename function
@@ -261,27 +266,102 @@ class JobCreator:
         self.generated_scripts['slurm'].append(script_path)
         return script_path
     
+    def get_default_array_template(self) -> str:
+        """SLURM job-array script: one array task = one container script.
+
+        Tasks look up their container script in container_scripts.list by
+        SLURM_ARRAY_TASK_ID (+ OFFSET, so the list can be submitted in chunks
+        that respect the cluster's MaxArraySize).
+        """
+        return textwrap.dedent("""\
+        #!/bin/bash
+        #SBATCH --account={slurm_account}
+        #SBATCH --partition={slurm_partition}
+        #SBATCH --job-name={job_name}
+        #SBATCH --time={slurm_time}
+        #SBATCH --cpus-per-task={slurm_cpus_per_task}
+        #SBATCH --mem-per-cpu={slurm_mem_per_cpu}
+        #SBATCH --output={logs_dir}/array_%A_%a.slurm.log
+        #SBATCH --error={logs_dir}/array_%A_%a.slurm.err
+
+        set -e
+
+        LINE=$((SLURM_ARRAY_TASK_ID + ${{OFFSET:-0}} + 1))
+        CONTAINER_SCRIPT=$(sed -n "${{LINE}}p" "{list_file}")
+
+        if [ -z "$CONTAINER_SCRIPT" ]; then
+            echo "No entry at line $LINE of {list_file}; nothing to do."
+            exit 0
+        fi
+
+        echo "Array task $SLURM_ARRAY_TASK_ID (offset ${{OFFSET:-0}}): $CONTAINER_SCRIPT"
+        echo "Running on: $(hostname) at $(date)"
+
+        singularity exec {bindings} {container} "$CONTAINER_SCRIPT"
+
+        echo "Finished at $(date)"
+        """)
+
+    def write_array_script(self) -> str:
+        """Write container_scripts.list and the job-array SLURM script."""
+        jobs_dir = self.config['jobs_dir']
+
+        list_file = os.path.join(jobs_dir, 'container_scripts.list')
+        with open(list_file, 'w') as f:
+            f.write('\n'.join(self.generated_scripts['container']) + '\n')
+
+        bindings = ' '.join([f'-B {d}:{d}' for d in self.config['bind_dirs']])
+        content = self.get_default_array_template().format(
+            slurm_account=self.config['slurm_account'],
+            slurm_partition=self.config['slurm_partition'],
+            slurm_time=self.config['slurm_time'],
+            slurm_cpus_per_task=self.config['slurm_cpus_per_task'],
+            slurm_mem_per_cpu=self.config['slurm_mem_per_cpu'],
+            job_name=self.config['beam_config'] or 'jobs',
+            logs_dir=self.config['logs_dir'],
+            list_file=list_file,
+            bindings=bindings,
+            container=self.config['container'],
+        )
+
+        script_path = os.path.join(jobs_dir, 'array.slurm.sh')
+        with open(script_path, 'w') as f:
+            f.write(content)
+        os.chmod(script_path, 0o755)
+        return script_path
+
     def write_submit_all_script(self):
-        """Write master script to submit all SLURM jobs."""
+        """Write master script that submits everything as SLURM job arrays.
+
+        One sbatch call covers up to slurm_array_chunk tasks (vs one sbatch
+        per file, which made submitting thousands of jobs as slow as running
+        them). Per-file .slurm.sh scripts are still generated for reruns of
+        individual files.
+        """
         script_path = os.path.join(self.config['jobs_dir'], 'submit_all_slurm_jobs.sh')
-        
+        array_script = self.write_array_script()
+
+        n_jobs = len(self.generated_scripts['container'])
+        chunk = self.config['slurm_array_chunk']
+
         script_lines = [
             "#!/bin/bash",
             "set -e",
             "",
-            "# Submit all generated SLURM jobs",
+            f"# Submit all {n_jobs} jobs as SLURM job arrays (chunk size {chunk})",
             ""
         ]
-        
-        for slurm_script in self.generated_scripts['slurm']:
-            script_lines.append(f"sbatch {slurm_script}")
-        
+        for offset in range(0, n_jobs, chunk):
+            last = min(chunk, n_jobs - offset) - 1
+            script_lines.append(
+                f"sbatch --array=0-{last} --export=ALL,OFFSET={offset} {array_script}")
+
         script_lines.append("")
-        script_lines.append(f"echo \"Submitted {len(self.generated_scripts['slurm'])} SLURM jobs!\"")
-        
+        script_lines.append(f"echo \"Submitted {n_jobs} jobs as SLURM array(s)!\"")
+
         with open(script_path, 'w') as f:
             f.write('\n'.join(script_lines))
-        
+
         os.chmod(script_path, 0o755)
         return script_path
     
@@ -503,7 +583,8 @@ def write_top_master_scripts(creators, top_dir=None):
     """Write top-level submit/run scripts that aggregate all per-energy creators.
 
     Produces two files at `top_dir`:
-      - submit_all_slurm_jobs.sh : sbatch every individual SLURM script
+      - submit_all_slurm_jobs.sh : run every per-dataset submit script
+                                   (each submits its jobs as SLURM arrays)
       - run_all_local.sh         : singularity exec every container script in sequence
 
     If `top_dir` is None, it is derived as the common parent of all
@@ -519,15 +600,16 @@ def write_top_master_scripts(creators, top_dir=None):
         top_dir = os.path.commonpath([c.config['output_dir'] for c in creators])
     os.makedirs(top_dir, exist_ok=True)
 
-    # ---- submit_all_slurm_jobs.sh : flat list of `sbatch <slurm_script>` ----
+    # ---- submit_all_slurm_jobs.sh : chain the per-dataset submit scripts ----
+    # Each per-dataset script submits its jobs as chunked SLURM job arrays
+    # (a handful of sbatch calls per dataset instead of one per file).
     submit_lines = ["#!/bin/bash", "set -e", "",
                     "# Aggregate top-level submit script across all energies", ""]
     total_slurm = 0
     for c in creators:
         submit_lines.append(f"# === {os.path.basename(c.config['output_dir'])} ===")
-        for s in c.generated_scripts['slurm']:
-            submit_lines.append(f"sbatch {s}")
-            total_slurm += 1
+        submit_lines.append(c.submit_all_script)
+        total_slurm += len(c.generated_scripts['container'])
         submit_lines.append("")
     submit_lines.append(f'echo "Submitted {total_slurm} SLURM jobs across {len(creators)} energies!"')
 
