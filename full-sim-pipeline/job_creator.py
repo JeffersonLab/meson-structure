@@ -115,7 +115,7 @@ class JobCreator:
                  slurm_mem_per_cpu: str = '5G',  # Fixed parameter name
                  slurm_account: str = 'eic',
                  slurm_partition: str = 'production',
-                 slurm_array_chunk: int = 1000,
+                 slurm_array_chunk: int = 10000,  # farm MaxArraySize = 10001
                  ):
         """Initialize JobCreator with configuration."""
         
