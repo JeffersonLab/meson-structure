@@ -33,11 +33,31 @@ def create_container_script_template():
 
     rc=0
 
+    # Compress a CSV to <csv>.zip at DEFLATE level 9 via zip_csv.py, verify it
+    # (CRC testzip + non-empty entry list + non-empty file), then delete the
+    # original CSV ONLY on verified success. On failure keep the CSV and remove
+    # the partial zip. (python3 -m zipfile -c would STORE uncompressed.)
+    zip_csv() {{
+      local csv="$1"
+      [ -s "$csv" ] || return 0           # nothing to zip (missing/empty)
+      [ -f "$csv.zip" ] && return 0        # already zipped on a previous run
+      echo "[ZIP] $csv -> $csv.zip (deflate-9)"
+      if python3 zip_csv.py "$csv" && [ -s "$csv.zip" ]; then
+        rm -f "$csv"
+        return 0
+      fi
+      echo "[WARN] zip_csv: verify failed for $csv -- keeping CSV"
+      rm -f "$csv.zip"
+      rc=1
+      return 1
+    }}
+
     convert() {{
       local label="$1" macro="$2" out="$3"
 
-      # Regenerate when the CSV is missing OR empty (-s: exists and non-empty).
-      if [ ! -s "$out" ]; then
+      # Regenerate when the CSV is missing/empty AND not already zipped (the CSV
+      # is deleted after a verified zip, so an existing .zip means "done").
+      if [ ! -s "$out" ] && [ ! -f "$out.zip" ]; then
         echo "[RUN] $label via $macro"
         if ! root -x -l -b -q "$macro(\\"{input_file}\\",\\"$out\\")"; then
           echo "[WARN] $label: macro returned non-zero"
@@ -51,13 +71,10 @@ def create_container_script_template():
           rc=1
         fi
       else
-        echo "[SKIP] $label CSV exists (non-empty)"
+        echo "[SKIP] $label (CSV or its .zip already exists)"
       fi
 
-      if [ -s "$out" ] && [ ! -f "$out.zip" ]; then
-        echo "[ZIP] $out -> $out.zip"
-        python3 -m zipfile -c "$out.zip" "$out" || {{ echo "[WARN] $label: zip failed"; rc=1; }}
-      fi
+      zip_csv "$out"
     }}
 
     convert "mc_dis"         "csv_mc_dis.cxx"         "{csv_mc_dis}"

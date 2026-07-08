@@ -23,6 +23,11 @@ data/events_top10.meta.json     + labels y (0, 1, ... one per input dataset)
 models/events_top10/model.pt    trained classifier + preprocessing constants
 models/events_top10/report.txt  accuracy, per-class metrics, confusion matrix
 models/events_top10/training_curves.png
+        │
+        │  scripts/infer.py  (apply a trained model to any dataset)
+        ▼
+<out>/predictions.csv           per-event predicted class + probabilities
+<out>/summary.txt + plots       predicted fractions, scores, (confusion/ROC if labeled)
 ```
 
 ## Step 1 — merge run CSVs into feather
@@ -128,6 +133,35 @@ Saved plots and how to read them:
   separately per true class (log-y). Clean humps at 0 and 1 = confident
   classifier; whatever piles up in the middle is what the classes genuinely
   share.
+
+## Step 4 — infer on a dataset
+
+`infer.py` applies an already-trained checkpoint to a dataset and writes/plots
+the predictions. It accepts either input type:
+
+- a **raw `*.feather`** (a new sample) — flattened with the same top_n stored
+  in the checkpoint, then scored (prediction only), or
+- a **prepared `*.npz`** — if it carries truth labels `y`, the script also
+  evaluates the model (accuracy, confusion matrix, ROC).
+
+The checkpoint is self-contained (weights + standardization mean/std + top_n +
+class names), so no training settings need to be repeated.
+
+```bash
+# Predict on a raw feather
+python scripts/infer.py \
+    models/events_msf_vs_dis_top10/msf_vs_dis_model.pt \
+    data/msf_2026-07_reco_9x130.feather \
+    -o out/msf_infer --prefix msf_infer
+
+# Evaluate on a labeled prepared dataset
+python scripts/infer.py models/events_top10/model.pt data/events_top10.npz
+```
+
+Outputs: `predictions.csv` (per event: predicted class + probability of every
+class, plus true class when labels exist), `summary.txt`, and plots
+(`predicted_fractions.png`, `score_distribution.png`, and
+`confusion_matrix.png` + `roc_curve.png` when labels are present).
 
 ## Physics caveat
 

@@ -22,6 +22,6 @@ echo "[INFO]  CSV_CONVERT_DIR    : $CSV_CONVERT_DIR"
 
 # Bind the whole campaign so script sees reco/ inside /work
 singularity exec -B "$CAMPAIGN":/work -B "$CSV_CONVERT_DIR":/code "$IMG" \
-   bash -c 'cd /code && python3 convert_campaign.py /work && cd /work && for f in *.csv; do python3 -m zipfile -c "$f.zip" "$f"; done'
+   bash -c 'cd /code && python3 convert_campaign.py /work && cd /work && for f in *.csv; do if python3 /code/zip_csv.py "$f" && [ -s "$f.zip" ]; then rm -f "$f"; else echo "[WARN] zip failed: $f"; rm -f "$f.zip"; fi; done'
 
 echo "[DONE]  Conversion job finished"

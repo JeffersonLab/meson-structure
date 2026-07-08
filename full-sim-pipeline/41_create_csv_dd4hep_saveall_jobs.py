@@ -35,7 +35,9 @@ def create_container_script_template():
 
     run_macro() {{
       local label="$1" macro="$2" out="$3"
-      if [ ! -s "$out" ]; then
+      # Regenerate only when the CSV is missing/empty AND not already zipped (the
+      # CSV is deleted after a verified zip, so an existing .zip means "done").
+      if [ ! -s "$out" ] && [ ! -f "$out.zip" ]; then
         echo "[RUN] $label via $macro"
         if ! root -x -l -b -q "$macro(\\"{input_file}\\",\\"$out\\")"; then
           echo "[WARN] $label: macro returned non-zero"; rc=1
@@ -44,29 +46,40 @@ def create_container_script_template():
           echo "[WARN] $label: produced empty $out -- removing"; rm -f "$out"; rc=1
         fi
       else
-        echo "[SKIP] $label ($out exists, non-empty)"
+        echo "[SKIP] $label ($out or its .zip exists)"
       fi
     }}
 
-    zip_if() {{
+    # Compress a CSV to <csv>.zip at DEFLATE level 9 via zip_csv.py, verify it
+    # (CRC testzip + non-empty entry list + non-empty file), then delete the
+    # original CSV ONLY on verified success. On failure keep the CSV and remove
+    # the partial zip. (python3 -m zipfile -c would STORE uncompressed.)
+    zip_csv() {{
       local f="$1"
-      if [ -s "$f" ] && [ ! -f "$f.zip" ]; then
-        echo "[ZIP] $f -> $f.zip"
-        python3 -m zipfile -c "$f.zip" "$f" || {{ echo "[WARN] zip $f failed"; rc=1; }}
+      [ -s "$f" ] || return 0
+      [ -f "$f.zip" ] && return 0
+      echo "[ZIP] $f -> $f.zip (deflate-9)"
+      if python3 zip_csv.py "$f" && [ -s "$f.zip" ]; then
+        rm -f "$f"
+        return 0
       fi
+      echo "[WARN] zip_csv: verify failed for $f -- keeping CSV"
+      rm -f "$f.zip"
+      rc=1
+      return 1
     }}
 
     # acceptance_ppim writes three CSVs (ppim + pimin_hits + prot_hits).
     run_macro "acceptance_ppim" "csv_edm4hep_acceptance_ppim.cxx" "{acceptance_ppim_output}"
-    zip_if "{acceptance_ppim_output}"
-    zip_if "{acceptance_ppim_pimin_hits_output}"
-    zip_if "{acceptance_ppim_prot_hits_output}"
+    zip_csv "{acceptance_ppim_output}"
+    zip_csv "{acceptance_ppim_pimin_hits_output}"
+    zip_csv "{acceptance_ppim_prot_hits_output}"
 
     run_macro "acceptance_npi0" "csv_edm4hep_acceptance_npi0.cxx" "{acceptance_npi0_output}"
-    zip_if "{acceptance_npi0_output}"
+    zip_csv "{acceptance_npi0_output}"
 
     run_macro "combinatorics_ppim" "csv_edm4hep_combinatorics_ppim.cxx" "{combinatorics_ppim_output}"
-    zip_if "{combinatorics_ppim_output}"
+    zip_csv "{combinatorics_ppim_output}"
 
     echo "==========================================================================="
     echo "Done. Outputs in: {input_dir} (rc=$rc)"

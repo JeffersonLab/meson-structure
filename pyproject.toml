@@ -29,4 +29,6 @@ dependencies = [
     "typer",
     "submitit",
     "pyhepmc>=2.16.1",
+    "torch",
+    "pyarrow",
 ]

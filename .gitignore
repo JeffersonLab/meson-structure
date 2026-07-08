@@ -210,3 +210,7 @@ analysis/gary_scripts/plots/
 analysis/gary_scripts/*.png
 
 .claude/
+
+analysis/ai-phys-bkg/models/events_msf_vs_dis_top10/
+
+analysis/ai-phys-bkg/models/events_top10/
