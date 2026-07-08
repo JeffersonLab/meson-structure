@@ -1,20 +1,11 @@
 # Data
-
-## Location
-
-
-The meson structure data is available from the following locations:
-
-**LATEST PROCESSED FILES**  
 *(last update of July 2026 — [campaign 2026-07](https://jeffersonlab.github.io/meson-structure/campaign-2026-07/campaign-2026-07.html))*
 
+## Location
 Campaign 2026-07 introduces the new `9xN` energy scheme (5x41, 9x100, 9x130,
-9x275 GeV) for the EIC early-science program. **1000 events per file** (~1000 files per
-energy).
+9x275 GeV) for the EIC early-science program. 
 
-> Unlike campaign 2026-06, this campaign has no `-official`/`-saveall`/
-> `-stv` split — reconstruction runs directly on the single
-> `dd4hep` output. For machine-background-mixed data, see the
+> For machine-background-mixed data, see the
 > [Machine background (2026-06)](#machine-background-2026-06) section below.
 
 Reconstruction-based analyses can use `reco` / `csv_reco` directly.
@@ -32,8 +23,9 @@ xrdfs root://dtn-eic.jlab.org
 ls /work/eic3/users/romanov/meson-structure-2026-07
 ```
 
+
 Subdirectories (per-energy dirs `5x41`, `9x100`, `9x130`, `9x275`; files named
-`msf_ev1000_NNNN.*`):
+`msf_ev1000_NNNN.*`) :
 
 - `afterburner` — eg output with crossing-angle + beam effects
 - `bg_merged`   — Afterburner + background merged
@@ -42,6 +34,8 @@ Subdirectories (per-energy dirs `5x41`, `9x100`, `9x130`, `9x275`; files named
 - `csv_dd4hep`  — acceptance / MC-truth CSVs from `dd4hep` (~21 GB)
 - `csv_reco`    — reconstruction CSVs from `reco` (`*.mc_dis.csv`, `*.reco_dis.csv`, `*.mcpart_lambda.csv`, `*.reco_ff_lambda.csv`; ~1.2 GB)
 - `eg-split`, `eg-hepmc`, `eg-original-2026-06` — event-generator inputs
+
+1000 events per file (~1000 files per energy)
 
 ```bash
 # available throuhg xrdfs root://dtn-eic.jlab.org
