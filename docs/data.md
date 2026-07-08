@@ -9,13 +9,11 @@ The meson structure data is available from the following locations:
 *(last update of July 2026 — [campaign 2026-07](https://jeffersonlab.github.io/meson-structure/campaign-2026-07/campaign-2026-07.html))*
 
 Campaign 2026-07 introduces the new `9xN` energy scheme (5x41, 9x100, 9x130,
-9x275 GeV) for the EIC early-science program. It is a **single-flavor**
-production: one afterburned signal → DD4hep → EICrecon, plus CSV tables from
-both the DD4hep and reco outputs. **1000 events per file** (~1000 files per
+9x275 GeV) for the EIC early-science program. **1000 events per file** (~1000 files per
 energy).
 
 > Unlike campaign 2026-06, this campaign has no `-official`/`-saveall`/
-> `-background`/`-stv` split — reconstruction runs directly on the single
+> `-stv` split — reconstruction runs directly on the single
 > `dd4hep` output. For machine-background-mixed data, see the
 > [Machine background (2026-06)](#machine-background-2026-06) section below.
 
@@ -37,12 +35,29 @@ ls /work/eic3/users/romanov/meson-structure-2026-07
 Subdirectories (per-energy dirs `5x41`, `9x100`, `9x130`, `9x275`; files named
 `msf_ev1000_NNNN.*`):
 
-- `afterburner` — eg output with crossing-angle + beam effects (`*.hepmc3.tree.root`, `*.hist.root`; ~6.5 GB)
+- `afterburner` — eg output with crossing-angle + beam effects
+- `bg_merged`   — Afterburner + background merged
 - `dd4hep`      — DD4hep full simulation (`*.edm4hep.root`; ~5.0 TB, ~1000 files/energy)
 - `reco`        — EICrecon reconstruction of `dd4hep` (`*.edm4eic.root`; ~2.2 TB, ~1000 files/energy)
 - `csv_dd4hep`  — acceptance / MC-truth CSVs from `dd4hep` (~21 GB)
 - `csv_reco`    — reconstruction CSVs from `reco` (`*.mc_dis.csv`, `*.reco_dis.csv`, `*.mcpart_lambda.csv`, `*.reco_ff_lambda.csv`; ~1.2 GB)
 - `eg-split`, `eg-hepmc`, `eg-original-2026-06` — event-generator inputs
+
+```bash
+# available throuhg xrdfs root://dtn-eic.jlab.org
+/work/eic/users/romanov/meson-structure-2026-07/eg-hepmc
+/work/eic/users/romanov/meson-structure-2026-07/eg-original-2026-06
+/work/eic/users/romanov/meson-structure-2026-07/eg-split
+/work/eic/users/romanov/meson-structure-2026-07/afterburner
+/work/eic/users/romanov/meson-structure-2026-07/bg_merged
+/work/eic/users/romanov/meson-structure-2026-07/dd4hep
+/work/eic/users/romanov/meson-structure-2026-07/reco
+/work/eic/users/romanov/meson-structure-2026-07/csv_dd4hep
+/work/eic/users/romanov/meson-structure-2026-07/csv_for_ai
+/work/eic/users/romanov/meson-structure-2026-07/csv_reco
+/work/eic/users/romanov/meson-structure-2026-07/analysis
+/work/eic/users/romanov/meson-structure-2026-07/datasets-no-background
+```
 
 Per-energy `.root` counts / sizes:
 
@@ -65,8 +80,7 @@ flags. See **[Backgrounds in ePIC simulation](./background.md)** for the full
 mechanism.
 
 > (!) The background datasets use the **old energy scheme** `10x100, 10x130,
-> 18x275` (5x41 is skipped — no official 5x41 cocktail is published) and
-> **5000 events per file**, named `k_lambda_{beam}_5000evt_NNNN.*`.
+> 18x275` (5x41 is skipped) and 5000 events per fil, named `k_lambda_{beam}_5000evt_NNNN.*`.
 
 On JLab ifarm, under `/work/eic3/users/romanov/meson-structure-2026-06`:
 
@@ -93,133 +107,6 @@ ls /work/eic3/users/romanov/meson-structure-2026-06/reco-background
 > [campaign 2026-06](https://jeffersonlab.github.io/meson-structure/campaign-2026-06/campaign-2026-06.html)
 > page.
 
-
-### Previous: 2026-05 production
-
-Campaign 2026-05 is the first full production run after the
-[#1069](https://github.com/eic/epic/issues/1069) /
-[#1081](https://github.com/eic/epic/pull/1081) fixes were folded in. It includes
-both the regular `dd4hep` flavor (fixed tracking volume) and a `dd4hep_saveall`
-flavor that keeps **all** MCParticles. EICrecon reconstruction is run on top of
-the `saveall` flavor.
-
-> There is an important distinction. Issue #1069 showed that
-> even with the tracking volume not all MCParticle daughters are
-> saved even if they reach calorimeter sensitives. The `_saveall`
-> flavor keeps all MCParticles and their connections to hits.
->
-> (!!!) ALL ACCEPTANCE STUDIES MUST BE DONE USING "_saveall" DATA.
-
-On JLab ifarm:
-
-```bash
-/work/eic3/users/romanov/meson-structure-2026-05
-```
-
-Subdirectories
-- afterburner        - eg + beam effects
-- dd4hep             - EDM4Hep simulated data, fixed tracking volume (#1069)
-- dd4hep_saveall     - EDM4Hep simulated data, all MCParticles saved (acceptance studies)
-- reco               - EICrecon reconstructed data (built on `dd4hep_saveall`)
-- csv_dd4hep         - CSVs from `dd4hep` (acceptance, fixed volume)
-- csv_dd4hep_saveall - CSVs from `dd4hep_saveall` (acceptance, all particles)
-- csv_reco           - reconstruction-based CSVs
-
-### Previous: 2026-04 investigation
-
-The 2026-04 dataset is a small investigation sample tied to issues
-[#1069](https://github.com/eic/epic/issues/1069) /
-[#1081](https://github.com/eic/epic/pull/1081) — DD4hep + afterburner only, no
-reconstruction. See
-[campaign 2026-04](https://jeffersonlab.github.io/meson-structure/campaign-2026-04/campaign-2026-04.html).
-
-```bash
-/work/eic3/users/romanov/meson-structure-2026-04-check
-```
-
-
-Older (and not valid in terms of issue \#1069 data:)
-
-On JLab ifarm:  
-
-```bash
-/volatile/eic/romanov/meson-structure-2026-03/reco
-
-# CSV files 
-/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon
-
-# priority queues (first 1'000'000 events == 200 files from each energy range):
-/volatile/eic/romanov/meson-structure-2026-03/reco/5x41-priority
-/volatile/eic/romanov/meson-structure-2026-03/reco/10x100-priority
-/volatile/eic/romanov/meson-structure-2026-03/reco/10x130-priority
-/volatile/eic/romanov/meson-structure-2026-03/reco/18x275-priority
-
-#CSV files are located in csv_eicrecon and csv_dd4hep folders now: 
-/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/5x41-priority
-/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/10x100-priority
-/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/10x130-priority
-/volatile/eic/romanov/meson-structure-2026-03/csv_eicrecon/18x275-priority
-
-```
-
-On XRootD (open for universities and public)
-
-```bash
-xrdfs root://dtn-eic.jlab.org
-ls /volatile/eic/romanov/meson-structure-2026-03/reco
-```
-
-In this campaign we put processing files in separate folders:
-
-- `eg-orig-kaon-lambda` - original event generator files, 10mil events in each energy range
-- `eg-hepmc` - event generator files split by 5k events and converted to HepMC
-- `afterburner` - generator files with applied crossing angle and beam effects
-- `dd4hep` - DD4Hep full simulation result (`edm4hep.root` files)
-- `reco` - EICrecon reconstruction results (`edm4eic.root` files)
-- `csv` -  CSV files from reconstructed results
-
-The campaign is made with [eic-shell v26.03.0](https://github.com/eic/containers/tree/v26.03.0-stable?tab=readme-ov-file) container
-
-Writing libraries versions (important for C++ readout compatibility):
-- podio: v01-03
-- edm4hep: v00-99-01
-- edm4eic: v8.0.1
-- cxxstd: 20
-
-**Original MCEG files** on ifarm:
-`/volatile/eic/romanov/meson-structure-2026-03/eg-orig-kaon-lambda`  
-*(last update of August 2025)*
-
-
-## File names: 
-
-
-File names are: 
-
-```bash
-# The pattern:
-k_lambda_{beam}_5000evt_{idx}.{ext}
-
-# e.g.
-k_lambda_10x100_5000evt_045.edm4eic.root
-```
-
-Where:
-
-- `{beam}` Beam energy configuration [5x41, 10x100, 18x275]
-- `{idx}` - zero padded index [001-200]
-- `{ext}`
-  - `*.info.yaml` - Input and processing metadata
-  - `*.afterburner.hepmc` - Beam effects afterburner output 
-  - `*.afterburner.hist.root` - Afterburner before-after histograms 
-  - `*.edm4hep.root` - DD4Hep (Genat4) output
-  - `*.edm4eic.root` - **EICRecon reconstructed files**
-  - `*.mc_dis.csv` - MC DIS CSV table
-  - `*.reco_dis.csv` - reconstructed DIS CSV table
-  - `*.mcpart_lambda.csv` - MCParticles based CSV table full lambda decay values
-  - `*.reco_ff_lambda.csv` - reconstructed far-forward lambda CSV table
-
-> 5000evt indicate each file has 5k events
 
 ## Accessing Data with XRootD
 
