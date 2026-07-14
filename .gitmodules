@@ -8,3 +8,7 @@
 [submodule "deps/epic-rad"]
 	path = submodules/epic-rad
 	url = https://github.com/Garypenman/epic-rad.git
+[submodule "simulation-pipeline"]
+	path = simulation-pipeline
+	url = https://github.com/JeffersonLab/msf-simulation-pipeline.git
+	branch = main
