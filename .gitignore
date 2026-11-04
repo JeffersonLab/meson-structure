@@ -3,10 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# heavy files
-
-*_verification.root
-
 # C extensions
 *.so
 
@@ -206,11 +202,10 @@ analysis/avnish_scripts/plots/
 analysis/avnish_scripts/*.png
 analysis/avnish_scripts/*.csv
 
-analysis/gary_scripts/plots/
-analysis/gary_scripts/*.png
+# Analysis outputs: keep figures, ignore intermediate files
+analysis/**/outputs/**
 
-.claude/
-
-analysis/ai-phys-bkg/models/events_msf_vs_dis_top10/
-
-analysis/ai-phys-bkg/models/events_top10/
+# Allow output directories and PNG figures
+!analysis/**/outputs/
+!analysis/**/outputs/**/
+!analysis/**/outputs/**/*.png
