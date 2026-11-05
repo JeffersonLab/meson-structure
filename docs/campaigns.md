@@ -5,6 +5,20 @@ This page documents the meson structure simulation campaigns.
 > (!) For the list of files go to [DATA PAGE](data.md) 
 
 
+## Campaign 2026-11
+
+[Campaign 2026-11 Link](./campaign-2026-11/campaign-2026-11.md)
+
+Overview:
+- Streaming-readout study set: 40k K⁺Λ signal events per energy (first 500
+  events of the first 80 files of 2026-07) simulated alone, then mixed after
+  Geant4 by TimeframeBuilder into 2 µs frames, into short "found event" frames
+  with the signal pinned at t = 0, plus 40k background-only 2 µs frames per
+  energy under `background-only-2026-11`.
+- Stops at EDM4hep: no reconstruction, no CSV.
+- Energies 5x41 (signal only), 9x100, 9x130, 9x275; image `eic_xl:26.11-stable`.
+
+
 ## Campaign 2026-07
 
 [Campaign 2026-07 Link](./campaign-2026-07/campaign-2026-07.md)

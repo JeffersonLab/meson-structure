@@ -1,7 +1,33 @@
 # Data
-*(last update of July 2026 — [campaign 2026-07](https://jeffersonlab.github.io/meson-structure/campaign-2026-07/campaign-2026-07.html))*
+*(last update of November 2026 — [campaign 2026-11](https://jeffersonlab.github.io/meson-structure/campaign-2026-11/campaign-2026-11.html))*
 
-## Location
+## Timeframe data (2026-11)
+
+Campaign [2026-11](https://jeffersonlab.github.io/meson-structure/campaign-2026-11/campaign-2026-11.html)
+is the streaming-readout study set: 40k K⁺Λ events per energy (9x100, 9x130,
+9x275; 5x41 signal only) simulated alone through Geant4 and mixed after
+Geant4 by TimeframeBuilder with the official ePIC background cocktails. It
+stops at EDM4hep (no `reco`, no CSV). Image `eic_xl:26.11-stable`.
+
+On JLab ifarm:
+
+```bash
+/work/eic3/users/romanov/meson-structure-2026-11
+  dd4hep/<E>/           # signal only, 80 files x 500 events per energy (*.edm4hep.root)
+  dd4hep-tfb2us/<E>/    # 2 us frames: one signal at a random crossing + background, 500 frames per file
+  dd4hep-tfb70ns/<E>/   # short "found event" frames: signal pinned at t = 0 + background
+/work/eic3/users/romanov/background-only-2026-11
+  frames-2us/<E>/       # background-only 2 us frames, 80 files x 500 frames per energy
+  pools/<E>/<source>/   # per-source Geant4 pools the frames are built from
+```
+
+Frame files carry the ePIC status offsets per background source (2000 SynRad,
+3000 e-gas, 4000 Coulomb, 5000 Touschek, 6000 p-gas) and a `SubEventHeaders`
+collection listing every sub-event with its time offset; see
+[Backgrounds in ePIC simulation](./background.md). File counts and sizes are
+filled in when the production finishes.
+
+## Location (2026-07)
 Campaign 2026-07 introduces the new `9xN` energy scheme (5x41, 9x100, 9x130,
 9x275 GeV) for the EIC early-science program. 
 
@@ -16,12 +42,8 @@ On JLab ifarm:
 /work/eic3/users/romanov/meson-structure-2026-07
 ```
 
-On XRootD (open for universities and public)
-
-```bash
-xrdfs root://dtn-eic.jlab.org
-ls /work/eic3/users/romanov/meson-structure-2026-07
-```
+XRootD: not exported from the new public door (see
+[Accessing Data with XRootD](#accessing-data-with-xrootd)).
 
 
 Subdirectories (per-energy dirs `5x41`, `9x100`, `9x130`, `9x275`; files named
@@ -38,7 +60,7 @@ Subdirectories (per-energy dirs `5x41`, `9x100`, `9x130`, `9x275`; files named
 1000 events per file (~1000 files per energy)
 
 ```bash
-# available throuhg xrdfs root://dtn-eic.jlab.org
+# on ifarm (not exported through XRootD, see below)
 /work/eic/users/romanov/meson-structure-2026-07/eg-hepmc
 /work/eic/users/romanov/meson-structure-2026-07/eg-original-2026-06
 /work/eic/users/romanov/meson-structure-2026-07/eg-split
@@ -91,10 +113,6 @@ Per-energy `.root` file counts (background):
 | 10x130 | 200         | 200                 | 43                |
 | 18x275 | 200         | 200                 | 107               |
 
-```bash
-xrdfs root://dtn-eic.jlab.org
-ls /work/eic3/users/romanov/meson-structure-2026-06/reco-background
-```
 
 > Campaign 2026-06 also produced non-background flavors (`dd4hep-official`,
 > `dd4hep-saveall`, `dd4hep-stv`, and their `reco`/`csv`) — see the
@@ -104,23 +122,25 @@ ls /work/eic3/users/romanov/meson-structure-2026-06/reco-background
 
 ## Accessing Data with XRootD
 
-The data is available remoutly through XRootD via:  
+> (!) `dtn-eic.jlab.org` is retired (it no longer resolves, checked 2026-10-14).
+> The public JLab door is now `root://dtn2304.jlab.org:8443/` and it exports
+> `/jlab-osdf-ro/eic/EPIC/{volatile,cache,work}` only — the user campaign
+> directories under `/work/eic3/users/romanov` are **not** reachable through
+> it. Use the ifarm paths above on the JLab farm, or ask for a copy. The
+> `xrdfs`/`xrdcp` examples below are kept for the exported ePIC directories.
+> The door needs an XRootD 5.9+ client (the `eic_xl` images have it).
 
-```
-root://dtn-eic.jlab.org
-```
-
-**To browse the available files** one can use `xrdfs` command:
+**To browse the exported files** one can use `xrdfs` command:
 
 ```bash
-xrdfs root://dtn-eic.jlab.org
-ls /volatile/eic/romanov/meson-structure-2026-03/reco
+xrdfs root://dtn2304.jlab.org:8443/
+ls /jlab-osdf-ro/eic/EPIC/volatile/EVGEN/BACKGROUNDS
 ```
 
 **To download** files: 
 
 ```bash
-xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2026-03/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root ./
+xrdcp root://dtn2304.jlab.org:8443//jlab-osdf-ro/eic/EPIC/volatile/EVGEN/BACKGROUNDS/BEAMGAS/electron/coulomb/EIC_ESR_Xsuite/dataprod_rel_1.0.1/10x275/10000Ahr/MachineRuntime50s/dataprod_rel_1.0.1_electron_coulomb_10x275_10000Ahr.hepmc3.tree.root ./
 ```
 
 **To use directly in scripts**:
@@ -129,5 +149,5 @@ xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2026-03/reco
 # Both uproot and pyroot can work with links directly 
 # if XRootD is installed in the system
 import uproot
-file = uproot.open("root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2026-03/reco/5x41-priority/k_lambda_5x41_5000evt_001.edm4eic.root")
+file = uproot.open("root://dtn2304.jlab.org:8443//jlab-osdf-ro/eic/EPIC/volatile/EVGEN/BACKGROUNDS/BEAMGAS/electron/coulomb/EIC_ESR_Xsuite/dataprod_rel_1.0.1/10x275/10000Ahr/MachineRuntime50s/dataprod_rel_1.0.1_electron_coulomb_10x275_10000Ahr.hepmc3.tree.root")
 ```

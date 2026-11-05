@@ -80,7 +80,7 @@ Per-energy `.root` file counts and sizes (from the ifarm disk):
 ## Pipeline config
 
 The campaign is driven by
-[`full-sim-pipeline/config-campaign-26-07.yaml`](https://github.com/JeffersonLab/meson-structure/blob/main/full-sim-pipeline/config-campaign-26-07.yaml):
+[`simulation-pipeline/configs/config-msf-26-07.yaml`](https://github.com/JeffersonLab/msf-simulation-pipeline/blob/main/configs/config-msf-26-07.yaml) (the excerpt below shows the keys as they were in the original `full-sim-pipeline/config-campaign-26-07.yaml`):
 
 ```yaml
 base_dir: "/work/eic3/users/romanov/meson-structure-2026-07"

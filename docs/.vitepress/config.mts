@@ -53,8 +53,8 @@ export default defineConfig({
             {
                 // Only the current campaign is shown here; older campaigns stay
                 // reachable via the Campaigns page (/campaigns).
-                text: 'Campaign 2026-07',
-                link: '/campaign-2026-07/campaign-2026-07',
+                text: 'Campaign 2026-11',
+                link: '/campaign-2026-11/campaign-2026-11',
                 items: [
                 ]
             },
