@@ -16,16 +16,32 @@ On JLab ifarm:
   dd4hep/<E>/           # signal only, 80 files x 500 events per energy (*.edm4hep.root)
   dd4hep-tfb2us/<E>/    # 2 us frames: one signal at a random crossing + background, 500 frames per file
   dd4hep-tfb200ns/<E>/  # 200 ns "found event" frames: signal pinned at t = 0 + background, 500 frames per file
+  reco/<E>/ reco-tfb200ns/<E>/ reco-tfb2us/<E>/     # EICrecon 1.43.0 output of the three above (in production)
+  csv-reco/<E>/ csv-tfb200ns/<E>/ csv-tfb2us/<E>/   # eic2ai CSV zips, one per role (in production)
+  dd4hep-merger/<E>/    # control sample: merger-path 2 us frames (9x100, 9x275; 40 files)
 /work/eic3/users/romanov/background-only-2026-11
   frames-2us/<E>/       # background-only 2 us frames, 80 files x 500 frames per energy
+  reco-2us/<E>/ csv-2us/<E>/   # their EICrecon output and eic2ai CSV zips (in production)
+  frames-2us-merger/<E>/       # control sample: merger-path background-only frames (9x100, 9x275; 40 files)
   pools/<E>/<source>/   # per-source Geant4 pools the frames are built from
 ```
 
 Frame files carry the ePIC status offsets per background source (2000 SynRad,
 3000 e-gas, 4000 Coulomb, 5000 Touschek, 6000 p-gas) and a `SubEventHeaders`
 collection listing every sub-event with its time offset; see
-[Backgrounds in ePIC simulation](./background.md). File counts and sizes are
-filled in when the production finishes.
+[Backgrounds in ePIC simulation](./background.md).
+
+Production finished 2026-11-05: 80 files × 500 events or frames per energy
+in every dataset. Sizes per energy (9x100 / 9x130 / 9x275): signal 60 / 72 /
+62 GB (5x41: 28 GB), 200 ns frames 87 / 99 / 89 GB, 2 µs frames 325 / 338 /
+335 GB, background-only 2 µs frames 265 / 265 / 271 GB, pools 98 / 98 /
+116 GB. EICrecon output (`reco/<E>`, `reco-tfb200ns/<E>`, `reco-tfb2us/<E>`,
+`background-only-2026-11/reco-2us/<E>`) and eic2ai CSV zips (`csv-reco/<E>`,
+`csv-tfb200ns/<E>`, `csv-tfb2us/<E>`, `background-only-2026-11/csv-2us/<E>`)
+are in production (2026-11-05); a merger-path control sample (20,000 frames
+at 9x100 and 9x275, `dd4hep-merger/<E>`, `frames-2us-merger/<E>`) is being
+produced for the comparison of the two mixing methods. See the campaign page
+for the details.
 
 ## Location (2026-07)
 Campaign 2026-07 introduces the new `9xN` energy scheme (5x41, 9x100, 9x130,

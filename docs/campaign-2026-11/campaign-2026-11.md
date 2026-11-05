@@ -122,7 +122,68 @@ Background-only directory:
 Every TimeframeBuilder job keeps its exact configuration in `jobs/<name>.tfb.yaml`
 next to the output.
 
-File counts and sizes are filled in when the production finishes.
+Production finished 2026-11-05 (pools and signal overnight, 200 ns frames by
+04:00, 2 µs frames by 12:00 ET); every file has 500 events or frames:
+
+| Dataset | Energies | Files per energy | Size per energy (9x100 / 9x130 / 9x275) |
+| --- | --- | --- | --- |
+| signal `dd4hep/<E>/` | 5x41, 9x100, 9x130, 9x275 | 80 (40,000 events) | 28 (5x41) / 60 / 72 / 62 GB |
+| 200 ns frames `dd4hep-tfb200ns/<E>/` | 9x100, 9x130, 9x275 | 80 (40,000 frames) | 87 / 99 / 89 GB |
+| 2 µs frames `dd4hep-tfb2us/<E>/` | 9x100, 9x130, 9x275 | 80 (40,000 frames) | 325 / 338 / 335 GB |
+| background-only 2 µs `background-only-2026-11/frames-2us/<E>/` | 9x100, 9x130, 9x275 | 80 (40,000 frames) | 265 / 265 / 271 GB |
+| background pools `background-only-2026-11/pools/<E>/<source>/` | 9x100, 9x130, 9x275 | 127 (SynRad 34, e-gas 30, Coulomb 6, Touschek 50, p-gas 7) | 98 / 98 / 116 GB |
+
+About 2.9 TB in total. Job wall times per 500: signal 17–40 min, 200 ns
+frames 3.5–19.5 min, 2 µs frames 28–67 min; TimeframeBuilder needs
+1.7–2.0 GB resident. Eleven production files (first and last 200 ns file of
+every energy, two background-only and three 2 µs signal files) passed
+`check_tfb_frames.py`: 500 frames each, one signal per frame at the
+configured time, background rates at the cocktail values (about 26,550
+SynRad photons per 2 µs frame), generator statuses only in the cocktail
+blocks.
+
+
+## Reconstruction and CSV (added 2026-11-05)
+
+After the frames were done the campaign was extended to EICrecon and eic2ai
+CSV on all four datasets, with the same pipeline config
+(`eicrecon`, `csv_signal`, `csv_tfb200ns`, `csv_tfb2us`, `csv_bkg2us`):
+
+| Input | EICrecon output | CSV output (eic2ai, one zip per role) |
+| --- | --- | --- |
+| `dd4hep/<E>/` | `reco/<E>/` | `csv-reco/<E>/` (all 15 roles) |
+| `dd4hep-tfb200ns/<E>/` | `reco-tfb200ns/<E>/` | `csv-tfb200ns/<E>/` (all 15 roles) |
+| `dd4hep-tfb2us/<E>/` | `reco-tfb2us/<E>/` | `csv-tfb2us/<E>/` (14 roles, no `mc_particles`) |
+| `background-only-2026-11/frames-2us/<E>/` | `background-only-2026-11/reco-2us/<E>/` | `background-only-2026-11/csv-2us/<E>/` (14 roles) |
+
+EICrecon is the image's 1.43.0; it seeds B0 tracks from Geant4 secondaries
+by default (EICrecon PR #2901), so no truth-seeding flags are set. Measured
+per 500: signal 6 min and 3.1 GB, 200 ns frames 12 min and up to 8 GB,
+2 µs frames 35–45 min and up to 10 GB (some 9x275 frames exceeded 5 GB per
+CPU, hence 8 and 10 GB per CPU in the config). EICrecon does not copy
+`SubEventHeaders` to its output; the simulation files keep it. eic2ai
+(sroai/eic2ai 234d2cd, built in this image) needs 1–1.3 GB and 1–8 min per
+file pair. One eic2ai rule was added for TimeframeBuilder frames: the
+builder adds the source offset to every particle of a sub-event, so a
+Geant4 secondary carries e.g. 2000 and its primary 2001; a status that is a
+multiple of 1000 is now `prt_origin` 4 (secondary of background), as in the
+merger-based CSVs. The `prt_gen_status` column keeps the source band on
+every hit row. Counts and sizes of these outputs are added when the arrays
+finish.
+
+### Control sample on the merger path
+
+To compare the two mixing methods, 20,000 2 µs frames per energy at 9x100
+and 9x275 were also produced the old way: `SignalBackgroundMerger` mixes the
+afterburner HepMC with the cocktail before Geant4 and npsim simulates whole
+frames (stages 11 and 22; `bg_merged/<E>/{msf_merger,bkg_merger}/`,
+`dd4hep-merger/<E>/`, `background-only-2026-11/frames-2us-merger/<E>/`).
+The signal set is the same first 40 files × 500 events as the
+TimeframeBuilder flavours; the background-only frames carry a ghost signal
+(status 7000, never simulated). A whole 2 µs frame takes about 4.5 s in
+Geant4 (37 min per 500, 2.7 GB). The comparison (hits per frame per
+collection by origin, time and energy distributions, signal hit yields) is
+reported separately.
 
 
 ## Pipeline config
@@ -156,5 +217,6 @@ python simulation_pipeline/13_create_timeframe_builder_jobs.py tfb_200ns -c $CFG
 Each `NN_create_*_jobs.py` writes per-file container + SLURM scripts under
 `<output>/jobs/` plus `submit_all_slurm_jobs.sh` / `run_all_local.sh`. Arrays
 are submitted with the standing `%16` throttle; the Geant4 stages ask 4 GB per
-CPU (2.5 to 3.2 GB resident measured), TimeframeBuilder 2 GB. SLURM logs go
+CPU (2.5 to 3.2 GB resident measured), TimeframeBuilder 3 GB (1.7 to 2.0 GB
+resident measured on 2 µs frames). SLURM logs go
 to `/farm_out/romanov/...` and are gzip-copied next to the job scripts at exit.
