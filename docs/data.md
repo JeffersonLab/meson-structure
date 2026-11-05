@@ -15,7 +15,7 @@ On JLab ifarm:
 /work/eic3/users/romanov/meson-structure-2026-11
   dd4hep/<E>/           # signal only, 80 files x 500 events per energy (*.edm4hep.root)
   dd4hep-tfb2us/<E>/    # 2 us frames: one signal at a random crossing + background, 500 frames per file
-  dd4hep-tfb70ns/<E>/   # short "found event" frames: signal pinned at t = 0 + background
+  dd4hep-tfb200ns/<E>/  # 200 ns "found event" frames: signal pinned at t = 0 + background, 500 frames per file
 /work/eic3/users/romanov/background-only-2026-11
   frames-2us/<E>/       # background-only 2 us frames, 80 files x 500 frames per energy
   pools/<E>/<source>/   # per-source Geant4 pools the frames are built from

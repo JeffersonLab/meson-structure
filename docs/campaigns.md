@@ -12,7 +12,7 @@ This page documents the meson structure simulation campaigns.
 Overview:
 - Streaming-readout study set: 40k K⁺Λ signal events per energy (first 500
   events of the first 80 files of 2026-07) simulated alone, then mixed after
-  Geant4 by TimeframeBuilder into 2 µs frames, into short "found event" frames
+  Geant4 by TimeframeBuilder into 2 µs frames, into 200 ns "found event" frames
   with the signal pinned at t = 0, plus 40k background-only 2 µs frames per
   energy under `background-only-2026-11`.
 - Stops at EDM4hep: no reconstruction, no CSV.

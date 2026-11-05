@@ -32,14 +32,15 @@ Datasets per energy:
 | --- | --- | --- |
 | signal | K⁺Λ events alone through Geant4 (`Geant4TVUserParticleHandler`) | `dd4hep/<E>/` |
 | 2 µs frames | one signal event at a random bunch crossing of a 2 µs frame + background | `dd4hep-tfb2us/<E>/` |
-| short frames | one signal event pinned at **t = 0** of a short frame + background (the "found event" readout window; length under study, see below) | `dd4hep-tfb70ns/<E>/` |
+| 200 ns frames | one signal event pinned at **t = 0** of a 200 ns frame + background (the "found event" readout window, see below) | `dd4hep-tfb200ns/<E>/` |
 | background-only 2 µs frames | 40,000 frames per energy, background cocktail only | `background-only-2026-11/frames-2us/<E>/` |
 | background pools | each cocktail source alone through Geant4 (inputs of TimeframeBuilder) | `background-only-2026-11/pools/<E>/<source>/` |
 
 Background cocktails are the closest-energy ePIC recipes: the
 `10GeVxN GoldCoating 10um + hgas` cocktails for the 9xN beams. The 5x41 cocktail
 needs SynRad 5x100, electron beam-gas 5 GeV and proton beam-gas 41 GeV inputs
-that are not on the farm nor on the public XRootD door, so 5x41 has no frames.
+that are neither on the farm nor on the public XRootD door (checked
+2026-11-04), so 5x41 is skipped for pools and frames and has the signal only.
 
 Frame contents follow the ePIC convention: background particles carry the
 cocktail status offsets (2000 SynRad, 3000 e-gas, 4000 Coulomb, 5000 Touschek,
@@ -47,7 +48,7 @@ cocktail status offsets (2000 SynRad, 3000 e-gas, 4000 Coulomb, 5000 Touschek,
 are 10.15 ns apart and beam-gas sources are attached to the beam time.
 
 
-## Short frames: why the signal is pinned at t = 0
+## 200 ns frames: the "found event" readout window
 
 The idea: pretend an event-finding stage located the physics event inside a
 long streaming frame and cut a short readout window around it; that window
@@ -56,13 +57,18 @@ signal must sit at a known time. TimeframeBuilder 0.9.2 draws a random offset
 for every source, so the campaign uses a build with a per-source
 `fixed_time_offset` option (branch `fixed-time-offset`, built in the
 `eic_xl:26.11-stable` image, installed as `meson-structure-2026-11/bin/timeframe_builder`).
+The signal is placed at t = 0 and the background offsets are drawn in
+[0, 200) ns on the 10.15 ns bunch grid, so no background from before the
+signal is included.
 
-Window length: measured on 2026-07 signal at 9x130, B0 hits arrive at
-19–25 ns after the collision, the Off-Momentum trackers at 85–91 ns, the
-Roman Pots at 108–116 ns and the ZDC from 119 ns; a 70 ns window keeps the
-central detector and B0 only. The final length is being decided (candidates
-150, 200 and 300 ns) and this page is updated with it.
-
+Window length: measured on 2026-07 signal at 9x130 (raw Geant4 hit times),
+B0 hits arrive 19–25 ns after the collision, the Off-Momentum trackers at
+85–91 ns, the Roman Pots at 108–116 ns and the ZDC from 119 ns; 99.3 % of the
+signal tracker hits fall within t0 + 200 ns. A 70 ns window (three times the
+light travel time to the B0 region) would keep the central detector and B0
+only, so the window is **200 ns** (about 20 bunch crossings). Hadron
+calorimeter afterglow from slow neutrons continues for tens of µs and is cut
+by any window.
 
 ## Software stack
 
@@ -85,7 +91,7 @@ Campaign directory:
 
 - `dd4hep/<E>/`          — signal-only DD4hep output (`*.edm4hep.root`, 80 files x 500 events per energy)
 - `dd4hep-tfb2us/<E>/`   — 2 µs frames, one signal per frame (`msf_tfb2us_<E>_NNNN.edm4hep.root`, 500 frames per file)
-- `dd4hep-tfb70ns/<E>/`  — short frames, signal at t = 0 (`msf_tfb70ns_<E>_NNNN.edm4hep.root`)
+- `dd4hep-tfb200ns/<E>/` — 200 ns frames, signal at t = 0 (`msf_tfb200ns_<E>_NNNN.edm4hep.root`, 500 frames per file)
 - `datasets/`            — the dataset cards of every stage
 - `bin/timeframe_builder` — the patched TimeframeBuilder
 
@@ -126,10 +132,10 @@ bash scripts/msf_2026_11_make_cards.sh npsim
 python simulation_pipeline/20_create_npsim_jobs.py -c $CFG
 
 # frames (after the pools and the signal exist)
-bash scripts/msf_2026_11_make_cards.sh bkg_2us tfb_2us tfb_70ns
+bash scripts/msf_2026_11_make_cards.sh bkg_2us tfb_2us tfb_200ns
 python simulation_pipeline/13_create_timeframe_builder_jobs.py bkg_2us  -c $CFG
 python simulation_pipeline/13_create_timeframe_builder_jobs.py tfb_2us  -c $CFG
-python simulation_pipeline/13_create_timeframe_builder_jobs.py tfb_70ns -c $CFG
+python simulation_pipeline/13_create_timeframe_builder_jobs.py tfb_200ns -c $CFG
 ```
 
 Each `NN_create_*_jobs.py` writes per-file container + SLURM scripts under
