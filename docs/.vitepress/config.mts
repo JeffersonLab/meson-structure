@@ -85,6 +85,7 @@ export default defineConfig({
             {
                 text: 'Other',
                 items: [
+                    { text: 'Λ toy-model', link: '/interactive-lambda-acceptance' },
                     { text: 'Publications', link: '/publications' },
                     { text: 'Dynamic plots', link: '/eg-dynamic-plots' },
                     { text: 'Decay plots', link: '/plots' },
