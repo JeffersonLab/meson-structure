@@ -54,12 +54,15 @@ The idea: pretend an event-finding stage located the physics event inside a
 long streaming frame and cut a short readout window around it; that window
 then goes through reconstruction as if it were a triggered event. For this the
 signal must sit at a known time. TimeframeBuilder 0.9.2 draws a random offset
-for every source, so the campaign uses a build with a per-source
-`fixed_time_offset` option (branch `fixed-time-offset`, built in the
-`eic_xl:26.11-stable` image, installed as `meson-structure-2026-11/bin/timeframe_builder`).
-The signal is placed at t = 0 and the background offsets are drawn in
-[0, 200) ns on the 10.15 ns bunch grid, so no background from before the
-signal is included.
+for every source, so the campaign uses a patched build with a per-source
+`fixed_time_offset` option (see Software stack). The signal is placed at
+t = 0 and the background bunch crossings are drawn in [0, 200) ns on the
+10.15 ns grid, so no crossing before the signal's is included. Beam-gas and
+SynRad sources are attached to the beam (`attach_to_beam`, the ePIC cocktail
+convention): their sub-event time is the bunch time plus the vertex z / c, so
+an event 14 m upstream of the IP carries a time 47 ns before its crossing.
+Sub-event times therefore range from about -50 ns to +220 ns in the 200 ns
+frames; the hits still arrive at the detector together with their bunch.
 
 Window length: measured on 2026-07 signal at 9x130 (raw Geant4 hit times),
 B0 hits arrive 19–25 ns after the collision, the Off-Momentum trackers at
@@ -78,7 +81,19 @@ Official EIC image from cvmfs:
 /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:26.11-stable
 ```
 
-TimeframeBuilder: v0.9.2 plus the `fixed_time_offset` patch (see above).
+TimeframeBuilder: v0.9.2 plus two patches, built in the `eic_xl:26.11-stable`
+image and installed as `meson-structure-2026-11/bin/timeframe_builder`
+(source: `TimeframeBuilder` branch `fixed-time-offset`):
+
+1. `fixed_time_offset` per source (YAML key and `--source:NAME:fixed_time_offset`),
+   used to pin the signal at t = 0 in the 200 ns frames.
+2. `repeat_on_eof` fix for EDM4hep sources. In 0.9.2 the event index is never
+   wrapped at the end of a pool; `TChain::GetEntry` past the end reads
+   nothing and the last event is merged again and again with its time and
+   `generatorStatus` offsets applied cumulatively. Every frame job of this
+   campaign reads its pools several times over, so without the fix all
+   frames after the first pass over a pool would have been wrong (found in
+   the 9x130 smoke test, 2026-11-05).
 
 
 ## Data layout (ifarm)
@@ -140,5 +155,6 @@ python simulation_pipeline/13_create_timeframe_builder_jobs.py tfb_200ns -c $CFG
 
 Each `NN_create_*_jobs.py` writes per-file container + SLURM scripts under
 `<output>/jobs/` plus `submit_all_slurm_jobs.sh` / `run_all_local.sh`. Arrays
-are submitted with the standing `%16` throttle and 2 GB per CPU; SLURM logs go
+are submitted with the standing `%16` throttle; the Geant4 stages ask 4 GB per
+CPU (2.5 to 3.2 GB resident measured), TimeframeBuilder 2 GB. SLURM logs go
 to `/farm_out/romanov/...` and are gzip-copied next to the job scripts at exit.
